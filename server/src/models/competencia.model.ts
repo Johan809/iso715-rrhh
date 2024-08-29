@@ -9,7 +9,7 @@ const COMPETENCIA_ESTADOS = {
 };
 
 type CompetenciaDocument = Document & {
-  _id: number;
+  idsec: number;
   descripcion: string;
   estado: string;
 };
@@ -21,7 +21,7 @@ type CompetenciaInput = {
 
 const competenciaSchema = new Schema(
   {
-    _id: {
+    idsec: {
       type: Schema.Types.Number,
     },
     descripcion: {
@@ -49,7 +49,7 @@ competenciaSchema.pre("save", async function (next) {
       { new: true, upsert: true }
     );
 
-    doc._id = counter.seq;
+    doc.idsec = counter.seq;
   }
 
   next();

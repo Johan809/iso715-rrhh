@@ -12,7 +12,7 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use("/competencias", competenciaRouter);
+app.use("/", competenciaRouter());
 
 app.get("/", (req, res) => {
   return res.json({ message: "Hello World!" });
