@@ -8,8 +8,6 @@ const { DB_URI } = process.env;
 
 const connectToDatabase = async (): Promise<void> => {
   const options: ConnectOptions = {};
-
-  console.log("connectToDatabase", DB_URI);
   await mongoose.connect(<string>DB_URI, options);
 };
 

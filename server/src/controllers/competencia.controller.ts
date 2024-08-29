@@ -39,7 +39,7 @@ const getAllCompetencias = async (req: Request, res: Response) => {
 const getCompetencia = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const competencia = await Competencia.findOne({ _id: id });
+    const competencia = await Competencia.findOne({ idsec: id });
     if (!competencia) {
       return res
         .status(404)
@@ -56,7 +56,7 @@ const updateCompetencia = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { descripcion, estado } = req.body;
 
-    const competencia = await Competencia.findOne({ _id: id });
+    const competencia = await Competencia.findOne({ idsec: id });
     if (!competencia) {
       return res
         .status(404)
@@ -68,8 +68,11 @@ const updateCompetencia = async (req: Request, res: Response) => {
       });
     }
 
-    await Competencia.updateOne({ _id: id }, { descripcion, estado });
-    const competenciaUpdated = await Competencia.findOne({ _id: id });
+    await Competencia.updateOne(
+      { _id: competencia._id },
+      { descripcion, estado }
+    );
+    const competenciaUpdated = await Competencia.findOne({ idsec: id });
     return res.status(200).json({ data: competenciaUpdated });
   } catch (err) {
     console.error("updateCompetencia", err);
