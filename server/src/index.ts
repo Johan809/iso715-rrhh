@@ -7,6 +7,8 @@ import { roleRoute as roleRouter } from "./routes/role.route";
 import { usuarioRoute as usuarioRouter } from "./routes/usuario.route";
 import { capacitacionRouter } from "./routes/capacitacion.route";
 import { puestoRouter } from "./routes/puesto.route";
+import { experienciaLaboralRouter } from "./routes/experienciaLaboral.route";
+import { candidatoRouter } from "./routes/candidato.route";
 
 dotenv.config();
 
@@ -23,6 +25,8 @@ app.use("/", competenciaRouter());
 app.use("/", idiomaRouter());
 app.use("/", capacitacionRouter());
 app.use("/", puestoRouter());
+app.use("/", experienciaLaboralRouter());
+app.use("/", candidatoRouter());
 
 app.get("/", (req, res) => {
   return res.json({ message: "Hello World!" });
