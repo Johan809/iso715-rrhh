@@ -26,11 +26,21 @@ const createRole = async (req: Request, res: Response) => {
 
 const getAllRole = async (req: Request, res: Response) => {
   try {
-    const roles = await Role.find().sort("-createdAt").exec();
+    const { nombre, estado } = req.query;
+
+    const filter: any = {};
+    if (nombre) {
+      filter.nombre = { $regex: nombre, $options: "i" };
+    }
+    if (estado) {
+      filter.estado = estado;
+    }
+
+    const roles = await Role.find(filter).sort("-createdAt").exec();
     return res.status(200).json({ data: roles });
   } catch (err) {
-    console.error("getAllIdiomas", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.error("getAllRoles", err);
+    return res.status(500).json({ message: "Server Error", Exception: err });
   }
 };
 

@@ -26,7 +26,19 @@ const createIdioma = async (req: Request, res: Response) => {
 
 const getAllIdiomas = async (req: Request, res: Response) => {
   try {
-    const idiomas = await Idioma.find().sort("-createdAt").exec();
+    const { nombre, estado } = req.query;
+
+    const filter: any = {};
+    if (nombre) {
+      // Filtro por nombre, insensible a mayúsculas/minúsculas
+      filter.nombre = { $regex: nombre, $options: "i" };
+    }
+    if (estado) {
+      // Filtro por estado
+      filter.estado = estado;
+    }
+
+    const idiomas = await Idioma.find(filter).sort("-createdAt").exec();
     return res.status(200).json({ data: idiomas });
   } catch (err) {
     console.error("getAllIdiomas", err);

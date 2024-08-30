@@ -44,11 +44,29 @@ const createUsuario = async (req: Request, res: Response) => {
 
 const getAllUsuarios = async (req: Request, res: Response) => {
   try {
-    // Popula el campo role para devolver toda la información del Role asociado
-    const usuarios = await Usuario.find()
+    // Obtener parámetros de búsqueda de la consulta
+    const { nombre, email, estado, role } = req.query;
+
+    const filter: any = {};
+    if (nombre) {
+      filter.nombre = { $regex: nombre, $options: "i" };
+    }
+    if (email) {
+      filter.email = { $regex: email, $options: "i" };
+    }
+    if (estado) {
+      filter.estado = estado;
+    }
+    if (role) {
+      // Asumiendo que 'role' es el id del rol
+      filter.role = role;
+    }
+
+    const usuarios = await Usuario.find(filter)
       .populate("role")
       .sort("-createdAt")
       .exec();
+
     return res.status(200).json({ data: usuarios });
   } catch (err) {
     console.error("getAllUsuarios", err);
