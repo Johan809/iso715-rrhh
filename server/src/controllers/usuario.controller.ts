@@ -1,12 +1,6 @@
 import { Request, Response } from "express";
 import { Usuario, UsuarioInput } from "../models/usuario.model";
 import { Role } from "../models/role.model";
-import crypto from "crypto";
-
-const hashPassword = (password: string) => {
-  const salt = crypto.randomBytes(16).toString("hex");
-  return crypto.pbkdf2Sync(password, salt, 100, 64, `sha512`).toString(`hex`);
-};
 
 const createUsuario = async (req: Request, res: Response) => {
   try {
@@ -26,10 +20,11 @@ const createUsuario = async (req: Request, res: Response) => {
       });
     }
 
+    const hashedPwd = await Usuario.hashPwd(password);
     const usuarioInput: UsuarioInput = {
       nombre,
       email,
-      password: hashPassword(password),
+      password: hashedPwd,
       role: role._id, // Asignar el ObjectId del Role encontrado
       estado: estado ?? true,
     };
@@ -63,6 +58,7 @@ const getAllUsuarios = async (req: Request, res: Response) => {
     }
 
     const usuarios = await Usuario.find(filter)
+      .select("-password")
       .populate("role")
       .sort("-createdAt")
       .exec();
@@ -78,7 +74,9 @@ const getUsuario = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     // Popula el campo role
-    const usuario = await Usuario.findOne({ idsec: id }).populate("role");
+    const usuario = await Usuario.findOne({ idsec: id })
+      .select("-password")
+      .populate("role");
     if (!usuario) {
       return res
         .status(404)

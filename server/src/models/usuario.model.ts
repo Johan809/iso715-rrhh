@@ -1,4 +1,5 @@
 import mongoose, { Schema, Model, Document } from "mongoose";
+import { hash, compare, genSalt } from "bcryptjs";
 import { Counter } from "./contador.schema";
 import { RoleDocument } from "./role.model";
 
@@ -16,19 +17,24 @@ type UsuarioDocument = Document & {
   nombre: string;
   email: string;
   password: string;
-  role: mongoose.Types.ObjectId | RoleDocument | number; // Referencia a la colección 'roles'
+  role?: mongoose.Types.ObjectId | RoleDocument | number; // Referencia a la colección 'roles'
   estado: boolean;
+  comparePwd(enteredPwd: string): Promise<boolean>;
 };
+
+interface IUsuarioModel extends Model<UsuarioDocument> {
+  hashPwd(pwd: string): Promise<string>;
+}
 
 type UsuarioInput = {
   nombre: UsuarioDocument["nombre"];
   email: UsuarioDocument["email"];
   password: UsuarioDocument["password"];
-  role: UsuarioDocument["role"];
+  role?: UsuarioDocument["role"];
   estado: UsuarioDocument["estado"];
 };
 
-const usuarioSchema = new Schema(
+const usuarioSchema = new Schema<UsuarioDocument, IUsuarioModel>(
   {
     idsec: {
       type: Schema.Types.Number,
@@ -39,18 +45,22 @@ const usuarioSchema = new Schema(
     },
     email: {
       type: Schema.Types.String,
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Por favor ingrese un email válido.",
+      ],
       required: true,
       unique: true,
     },
     password: {
       type: Schema.Types.String,
       required: true,
+      minLenght: 8,
     },
     role: {
       type: Schema.Types.ObjectId,
       ref: "Role",
-      required: true,
-      index: true,
+      required: false,
     },
     estado: {
       type: Schema.Types.Boolean,
@@ -60,8 +70,24 @@ const usuarioSchema = new Schema(
   {
     collection: "usuarios",
     timestamps: true,
+    statics: {
+      async hashPwd(pwd: string): Promise<string> {
+        console.log("hashing pwds");
+        const salt = await genSalt(10);
+        const _hash = await hash(pwd, salt);
+        return _hash;
+      },
+    },
   }
 );
+
+usuarioSchema.methods.comparePwd = async function (
+  enteredPwd: string
+): Promise<boolean> {
+  console.log("comparing pwds");
+  const doc = this as UsuarioDocument;
+  return await compare(enteredPwd, doc.password);
+};
 
 usuarioSchema.pre("save", async function (next) {
   const doc = this as UsuarioDocument;
@@ -78,7 +104,7 @@ usuarioSchema.pre("save", async function (next) {
   next();
 });
 
-const Usuario: Model<UsuarioDocument> = mongoose.model<UsuarioDocument>(
+const Usuario = mongoose.model<UsuarioDocument, IUsuarioModel>(
   "Usuario",
   usuarioSchema
 );

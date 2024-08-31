@@ -12,11 +12,13 @@ type RoleDocument = Document & {
   idsec: Number;
   nombre: string;
   estado: string;
+  nivel: number;
 };
 
 type RoleInput = {
   nombre: RoleDocument["nombre"];
   estado: RoleDocument["estado"];
+  nivel: RoleDocument["nivel"];
 };
 
 const rolSchema = new Schema(
@@ -28,6 +30,10 @@ const rolSchema = new Schema(
       type: Schema.Types.String,
       required: true,
       unique: true,
+    },
+    nivel: {
+      type: Schema.Types.Number,
+      required: true,
     },
     estado: {
       type: Schema.Types.String,

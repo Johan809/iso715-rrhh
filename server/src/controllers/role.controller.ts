@@ -3,16 +3,17 @@ import { Role, ROLE_ESTADOS, RoleInput } from "../models/role.model";
 
 const createRole = async (req: Request, res: Response) => {
   try {
-    const { nombre, estado } = req.body;
+    const { nombre, nivel, estado } = req.body;
 
-    if (!nombre) {
+    if (!nombre || !nivel) {
       return res.status(422).json({
-        message: "El campo Nombre es requerido",
+        message: "El campo Nombre y Nivel son requeridos",
       });
     }
 
     const RoleInput: RoleInput = {
       nombre,
+      nivel,
       estado: estado ?? ROLE_ESTADOS.ACTIVO,
     };
 
@@ -26,7 +27,7 @@ const createRole = async (req: Request, res: Response) => {
 
 const getAllRole = async (req: Request, res: Response) => {
   try {
-    const { nombre, estado } = req.query;
+    const { nombre, estado, nivel } = req.query;
 
     const filter: any = {};
     if (nombre) {
@@ -34,6 +35,9 @@ const getAllRole = async (req: Request, res: Response) => {
     }
     if (estado) {
       filter.estado = estado;
+    }
+    if (nivel) {
+      filter.nivel = nivel;
     }
 
     const roles = await Role.find(filter).sort("-createdAt").exec();
@@ -63,7 +67,7 @@ const getRole = async (req: Request, res: Response) => {
 const updateRole = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { nombre, estado } = req.body;
+    const { nombre, estado, nivel } = req.body;
 
     const role = await Role.findOne({ idsec: id });
     if (!role) {
@@ -71,13 +75,13 @@ const updateRole = async (req: Request, res: Response) => {
         .status(404)
         .json({ message: `Rol con Id: ${id} no fue encontrado.` });
     }
-    if (!nombre) {
+    if (!nombre || !nivel) {
       return res.status(422).json({
-        message: "El campo Nombre es requerido",
+        message: "Los campos Nombre y Nivel son requeridos",
       });
     }
 
-    await Role.updateOne({ _id: role._id }, { nombre, estado });
+    await Role.updateOne({ _id: role._id }, { nombre, estado, nivel });
     const roleUpdated = await Role.findOne({ idsec: id });
     return res.status(200).json({ data: roleUpdated });
   } catch (err) {
