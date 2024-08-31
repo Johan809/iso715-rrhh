@@ -75,7 +75,7 @@ const empleadoSchema = new Schema<EmpleadoDocument>(
 empleadoSchema.pre("save", async function (next) {
   const doc = this as EmpleadoDocument;
   if (doc.isNew) {
-    const counter = await Counter.findOneAndUpdate(
+    const counter = await Counter.findByIdAndUpdate(
       { _id: "empleadoId" },
       { $inc: { seq: 1 } },
       { new: true, upsert: true }

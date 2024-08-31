@@ -11,6 +11,7 @@ import { experienciaLaboralRouter } from "./routes/experienciaLaboral.route";
 import { candidatoRouter } from "./routes/candidato.route";
 import { empleadoRouter } from "./routes/empleado.route";
 import { authRouter } from "./routes/auth.route";
+import { errorHandler } from "./lib/error.middleware";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(errorHandler);
 app.use("/api", roleRouter());
 app.use("/api", usuarioRouter());
 app.use("/api", competenciaRouter());

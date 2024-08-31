@@ -2,6 +2,7 @@ import mongoose, { Schema, Model, Document } from "mongoose";
 import { hash, compare, genSalt } from "bcryptjs";
 import { Counter } from "./contador.schema";
 import { RoleDocument } from "./role.model";
+import { EMAIL_REGEX } from "../lib/constants";
 
 const USUARIO_ESTADOS = {
   ACTIVO: "A",
@@ -45,17 +46,14 @@ const usuarioSchema = new Schema<UsuarioDocument, IUsuarioModel>(
     },
     email: {
       type: Schema.Types.String,
-      match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        "Por favor ingrese un email válido.",
-      ],
+      match: [EMAIL_REGEX, "Por favor ingrese un email válido."],
       required: true,
       unique: true,
     },
     password: {
       type: Schema.Types.String,
       required: true,
-      minLenght: 8,
+      minLenght: 6,
     },
     role: {
       type: Schema.Types.ObjectId,
@@ -72,7 +70,6 @@ const usuarioSchema = new Schema<UsuarioDocument, IUsuarioModel>(
     timestamps: true,
     statics: {
       async hashPwd(pwd: string): Promise<string> {
-        console.log("hashing pwds");
         const salt = await genSalt(10);
         const _hash = await hash(pwd, salt);
         return _hash;
@@ -84,7 +81,6 @@ const usuarioSchema = new Schema<UsuarioDocument, IUsuarioModel>(
 usuarioSchema.methods.comparePwd = async function (
   enteredPwd: string
 ): Promise<boolean> {
-  console.log("comparing pwds");
   const doc = this as UsuarioDocument;
   return await compare(enteredPwd, doc.password);
 };

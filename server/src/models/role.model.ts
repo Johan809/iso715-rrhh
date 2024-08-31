@@ -50,7 +50,7 @@ rolSchema.pre("save", async function (next) {
   const doc = this as RoleDocument;
   if (doc.isNew) {
     const counter = await Counter.findByIdAndUpdate(
-      { _id: "idiomaId" },
+      { _id: "roleId" },
       { $inc: { seq: 1 } },
       { new: true, upsert: true }
     );

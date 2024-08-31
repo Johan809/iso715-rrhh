@@ -1,14 +1,36 @@
 import { Request, Response } from "express";
 import { Usuario, UsuarioInput } from "../models/usuario.model";
 import { Role } from "../models/role.model";
+import { EMAIL_REGEX } from "../lib/constants";
 
 const createUsuario = async (req: Request, res: Response) => {
   try {
-    const { nombre, email, password, role_id, estado } = req.body;
+    const { nombre, password, role_id, estado } = req.body;
+    let { email } = req.body;
+    email = (<string>email).toLowerCase();
 
     if (!nombre || !email || !password || !role_id) {
       return res.status(422).json({
-        message: "Los campos Nombre, Email, Password y Rol son requeridos",
+        message: "Los campos Nombre, Email, Contraseña y Rol son requeridos",
+      });
+    }
+    if (!EMAIL_REGEX.test(email)) {
+      return res.status(422).json({
+        message: "Debe proveer un email válido.",
+      });
+    }
+
+    const checkUsername = await Usuario.findOne({ nombre });
+    const checkEmail = await Usuario.findOne({ email });
+    if (checkUsername) {
+      return res.status(409).send({
+        statusCode: 409,
+        message: "Este nombre de usuario no esta disponible.",
+      });
+    } else if (checkEmail) {
+      return res.status(409).send({
+        statusCode: 409,
+        message: "Esta dirección de correo electrónico ya está en uso.",
       });
     }
 
@@ -30,7 +52,10 @@ const createUsuario = async (req: Request, res: Response) => {
     };
 
     const usuarioCreated = await Usuario.create(usuarioInput);
-    return res.status(201).json({ data: usuarioCreated });
+    const user = await Usuario.findById(usuarioCreated._id)
+      .select("-password")
+      .populate("role");
+    return res.status(201).json({ data: user });
   } catch (err) {
     console.error("createUsuario", err);
     return res.status(500).json({ message: "Server Error", Exception: err });
@@ -136,8 +161,14 @@ const updateUsuario = async (req: Request, res: Response) => {
 const deleteUsuario = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    await Usuario.findByIdAndDelete(id);
+    const user = await Usuario.findOne({ idsec: id });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: `Usuario con Id: ${id} no fue encontrado.` });
+    }
 
+    await Usuario.findByIdAndDelete(user._id);
     return res.status(200).json({ message: "Usuario eliminado exitosamente." });
   } catch (err) {
     console.error("deleteUsuario", err);

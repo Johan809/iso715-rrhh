@@ -93,6 +93,13 @@ const updateRole = async (req: Request, res: Response) => {
 const deleteRole = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    const roleToDelete = await Role.findOne({ idsec: id });
+    if (!roleToDelete) {
+      return res
+        .status(404)
+        .json({ message: `Rol con Id: ${id} no fue encontrado.` });
+    }
+
     await Role.findOneAndDelete({ idsec: id });
     return res.status(200).json({ message: "Rol eliminado exitosamente." });
   } catch (err) {

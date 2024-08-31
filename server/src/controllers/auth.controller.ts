@@ -1,7 +1,24 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { Role, RoleDocument } from "src/models/role.model";
-import { Usuario, UsuarioInput } from "../models/usuario.model";
+import { EMAIL_REGEX } from "../lib/constants";
+import { Role, RoleDocument } from "../models/role.model";
+import {
+  Usuario,
+  UsuarioDocument,
+  UsuarioInput,
+} from "../models/usuario.model";
+
+const getToken = (user: UsuarioDocument): string => {
+  return jwt.sign(
+    {
+      id: user.idsec,
+      email: user.email,
+      role: (<RoleDocument>user?.role).nivel,
+    },
+    <string>process.env.JWT_SECRET,
+    { expiresIn: "2h" }
+  );
+};
 
 const register = async (req: Request, res: Response) => {
   try {
@@ -41,6 +58,11 @@ const register = async (req: Request, res: Response) => {
         message: "Esta dirección de correo electrónico ya está en uso.",
       });
     }
+    if (!EMAIL_REGEX.test(email)) {
+      return res.status(422).json({
+        message: "Por favor ingrese un email válido.",
+      });
+    }
 
     //el nivel 1 es el nivel menor, por defecto para los usuarios
     const role = await Role.findOne({ nivel: 1 });
@@ -55,14 +77,18 @@ const register = async (req: Request, res: Response) => {
     };
 
     const registerUser = await Usuario.create(usuarioInput);
-    registerUser.populate("role");
+    const user = (await Usuario.findById(registerUser._id).populate(
+      "role"
+    )) as UsuarioDocument;
+    const token = getToken(user);
 
     return res.status(200).json({
       message: "Usuario registrado exitosamente.",
+      token,
       data: {
-        nombre: registerUser.nombre,
-        email: registerUser.email,
-        role: (<RoleDocument>registerUser.role).nivel,
+        nombre: user.nombre,
+        email: user.email,
+        role: (<RoleDocument>user.role).nivel,
       },
     });
   } catch (err) {
@@ -90,10 +116,9 @@ const login = async (req: Request, res: Response) => {
       });
     }
 
-    const user = await Usuario.findOne({ email });
+    const user = await Usuario.findOne({ email }).populate("role");
     if (!user) {
-      res.status(404).send({
-        statusCode: 404,
+      return res.status(404).send({
         message:
           "Usuario no encontrado. Revise su correo electrónico o nombre de usuario y vuelva a intentarlo. Si no tienes una cuenta, regístrate.",
       });
@@ -101,24 +126,13 @@ const login = async (req: Request, res: Response) => {
 
     const isPwdValid = await user?.comparePwd(password);
     if (!isPwdValid) {
-      res.status(401).send({
-        statusCode: 401,
+      return res.status(401).send({
         message:
           "Credenciales no válidas. Ingrese un correo electrónico válido o un nombre de usuario y contraseña.",
       });
     }
 
-    //me quede aqui, necesitaria completar esta parte
-    const token = jwt.sign(
-      {
-        id: user?.idsec,
-        email: user?.email,
-        role: (<RoleDocument>user?.role).nivel,
-      },
-      <string>process.env.JWT_SECRET,
-      { expiresIn: "2h" }
-    );
-
+    const token = getToken(user);
     return res.status(200).json({
       message: "Inicio de sesión exitoso.",
       token,
