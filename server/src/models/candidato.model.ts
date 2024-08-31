@@ -1,15 +1,13 @@
 import mongoose, { Schema, Model, Document } from "mongoose";
 import { Counter } from "./contador.schema";
-import { Competencia } from "./competencia.model";
-import { Capacitacion } from "./capacitacion.model";
-import { ExperienciaLaboral } from "./experienciaLaboral.model";
-import { Puesto } from "./puesto.model";
 
 const CANDIDATO_ESTADOS = {
   ACTIVO: "A",
   ACTIVO_LABEL: "Activo",
   INACTIVO: "I",
   INACTIVO_LABEL: "Inactivo",
+  CONTRATADO: "C",
+  CONTRATADO_LABEL: "Contratado",
 };
 
 type CandidatoDocument = Document & {

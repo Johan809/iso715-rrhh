@@ -13,6 +13,7 @@ const createPuesto = async (req: Request, res: Response) => {
       nivelRiesgo,
       nivelMinimoSalario,
       nivelMaximoSalario,
+      idioma,
       estado,
     } = req.body;
 
@@ -46,6 +47,7 @@ const createPuesto = async (req: Request, res: Response) => {
       nivelRiesgo,
       nivelMinimoSalario,
       nivelMaximoSalario,
+      idioma,
       estado: estado ?? PUESTO_ESTADOS.ACTIVO,
     };
 
@@ -72,7 +74,10 @@ const getAllPuestos = async (req: Request, res: Response) => {
       filter.estado = estado;
     }
 
-    const puestos = await Puesto.find(filter).sort("-createdAt").exec();
+    const puestos = await Puesto.find(filter)
+      .populate("idioma")
+      .sort("-createdAt")
+      .exec();
     return res.status(200).json({ data: puestos });
   } catch (err) {
     console.error("getAllPuestos", err);
@@ -83,7 +88,7 @@ const getAllPuestos = async (req: Request, res: Response) => {
 const getPuesto = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const puesto = await Puesto.findOne({ idsec: id });
+    const puesto = await Puesto.findOne({ idsec: id }).populate("idioma");
     if (!puesto) {
       return res
         .status(404)
@@ -104,6 +109,7 @@ const updatePuesto = async (req: Request, res: Response) => {
       nivelRiesgo,
       nivelMinimoSalario,
       nivelMaximoSalario,
+      idioma,
       estado,
     } = req.body;
 
@@ -141,10 +147,19 @@ const updatePuesto = async (req: Request, res: Response) => {
 
     await Puesto.updateOne(
       { _id: puesto._id },
-      { nombre, nivelRiesgo, nivelMinimoSalario, nivelMaximoSalario, estado }
+      {
+        nombre,
+        nivelRiesgo,
+        nivelMinimoSalario,
+        nivelMaximoSalario,
+        idioma,
+        estado,
+      }
     );
 
-    const puestoUpdated = await Puesto.findOne({ idsec: id });
+    const puestoUpdated = await Puesto.findOne({ idsec: id }).populate(
+      "idioma"
+    );
     return res.status(200).json({ data: puestoUpdated });
   } catch (err) {
     console.error("updatePuesto", err);

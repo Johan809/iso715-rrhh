@@ -9,6 +9,7 @@ import { capacitacionRouter } from "./routes/capacitacion.route";
 import { puestoRouter } from "./routes/puesto.route";
 import { experienciaLaboralRouter } from "./routes/experienciaLaboral.route";
 import { candidatoRouter } from "./routes/candidato.route";
+import { empleadoRouter } from "./routes/empleado.route";
 
 dotenv.config();
 
@@ -19,14 +20,15 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use("/", roleRouter());
-app.use("/", usuarioRouter());
-app.use("/", competenciaRouter());
-app.use("/", idiomaRouter());
-app.use("/", capacitacionRouter());
-app.use("/", puestoRouter());
-app.use("/", experienciaLaboralRouter());
-app.use("/", candidatoRouter());
+app.use("/api/", roleRouter());
+app.use("/api/", usuarioRouter());
+app.use("/api/", competenciaRouter());
+app.use("/api/", idiomaRouter());
+app.use("/api/", capacitacionRouter());
+app.use("/api/", puestoRouter());
+app.use("/api/", experienciaLaboralRouter());
+app.use("/api/", candidatoRouter());
+app.use("/api/", empleadoRouter());
 
 app.get("/", (req, res) => {
   return res.json({ message: "Hello World!" });

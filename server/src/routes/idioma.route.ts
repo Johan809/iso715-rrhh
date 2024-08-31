@@ -11,13 +11,9 @@ const idiomaRoute = () => {
   const router = Router();
 
   router.post("/idiomas", createIdioma);
-
   router.get("/idiomas", getAllIdiomas);
-
   router.get("/idiomas/:id", getIdioma);
-
   router.put("/idiomas/:id", updateIdioma);
-
   router.delete("/idiomas/:id", deleteIdioma);
 
   return router;
