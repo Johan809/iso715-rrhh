@@ -1,9 +1,13 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Usuario, UsuarioInput } from "../models/usuario.model";
 import { Role } from "../models/role.model";
 import { EMAIL_REGEX } from "../lib/constants";
 
-const createUsuario = async (req: Request, res: Response) => {
+const createUsuario = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { nombre, password, role_id, estado } = req.body;
     let { email } = req.body;
@@ -57,14 +61,17 @@ const createUsuario = async (req: Request, res: Response) => {
       .populate("role");
     return res.status(201).json({ data: user });
   } catch (err) {
-    console.error("createUsuario", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - createUsuario");
+    next(err);
   }
 };
 
-const getAllUsuarios = async (req: Request, res: Response) => {
+const getAllUsuarios = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    // Obtener parámetros de búsqueda de la consulta
     const { nombre, email, estado, role } = req.query;
 
     const filter: any = {};
@@ -78,7 +85,6 @@ const getAllUsuarios = async (req: Request, res: Response) => {
       filter.estado = estado;
     }
     if (role) {
-      // Asumiendo que 'role' es el id del rol
       filter.role = role;
     }
 
@@ -90,12 +96,12 @@ const getAllUsuarios = async (req: Request, res: Response) => {
 
     return res.status(200).json({ data: usuarios });
   } catch (err) {
-    console.error("getAllUsuarios", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - getAllUsuarios");
+    next(err);
   }
 };
 
-const getUsuario = async (req: Request, res: Response) => {
+const getUsuario = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     // Popula el campo role
@@ -109,12 +115,16 @@ const getUsuario = async (req: Request, res: Response) => {
     }
     return res.status(200).json({ data: usuario });
   } catch (err) {
-    console.error("getUsuario", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - getUsuario");
+    next(err);
   }
 };
 
-const updateUsuario = async (req: Request, res: Response) => {
+const updateUsuario = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const { nombre, role_id, estado } = req.body;
@@ -153,12 +163,16 @@ const updateUsuario = async (req: Request, res: Response) => {
     );
     return res.status(200).json({ data: usuarioUpdated });
   } catch (err) {
-    console.error("updateUsuario", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - updateUsuario");
+    next(err);
   }
 };
 
-const deleteUsuario = async (req: Request, res: Response) => {
+const deleteUsuario = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const user = await Usuario.findOne({ idsec: id });
@@ -171,8 +185,8 @@ const deleteUsuario = async (req: Request, res: Response) => {
     await Usuario.findByIdAndDelete(user._id);
     return res.status(200).json({ message: "Usuario eliminado exitosamente." });
   } catch (err) {
-    console.error("deleteUsuario", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - deleteUsuario");
+    next(err);
   }
 };
 

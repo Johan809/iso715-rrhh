@@ -11,7 +11,7 @@ import { experienciaLaboralRouter } from "./routes/experienciaLaboral.route";
 import { candidatoRouter } from "./routes/candidato.route";
 import { empleadoRouter } from "./routes/empleado.route";
 import { authRouter } from "./routes/auth.route";
-import { errorHandler } from "./lib/error.middleware";
+import { errorHandler } from "./lib/middleware/errors";
 
 dotenv.config();
 
@@ -22,7 +22,6 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(errorHandler);
 app.use("/api", roleRouter());
 app.use("/api", usuarioRouter());
 app.use("/api", competenciaRouter());
@@ -37,6 +36,8 @@ app.use("/api", authRouter());
 app.get("/", (req, res) => {
   return res.json({ message: "Hello World!" });
 });
+
+app.use(errorHandler);
 
 app.listen(PORT, async () => {
   await connectToDatabase();

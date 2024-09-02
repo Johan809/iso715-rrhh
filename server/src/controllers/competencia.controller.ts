@@ -1,11 +1,15 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   Competencia,
   COMPETENCIA_ESTADOS,
   CompetenciaInput,
 } from "../models/competencia.model";
 
-const createCompetencia = async (req: Request, res: Response) => {
+const createCompetencia = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { descripcion, estado } = req.body;
 
@@ -23,41 +27,43 @@ const createCompetencia = async (req: Request, res: Response) => {
     const competenciaCreated = await Competencia.create(competenciaInput);
     return res.status(201).json({ data: competenciaCreated });
   } catch (err) {
-    console.error("createCompetencia", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - createCompetencia");
+    next(err);
   }
 };
 
-const getAllCompetencias = async (req: Request, res: Response) => {
+const getAllCompetencias = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    // Extraer los query parameters
     const { descripcion, estado } = req.query;
 
-    // Construir un objeto de filtro
     const filter: any = {};
-
     if (descripcion) {
-      // Filtro por descripción, insensible a mayúsculas/minúsculas
       filter.descripcion = { $regex: descripcion, $options: "i" };
     }
     if (estado) {
-      // Filtro por estado
       filter.estado = estado;
     }
 
-    // Buscar las competencias con los filtros aplicados
     const competencias = await Competencia.find(filter)
       .sort("-createdAt")
       .exec();
 
     return res.status(200).json({ data: competencias });
   } catch (err) {
-    console.error("getAllCompetencias", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - getAllCompetencias");
+    next(err);
   }
 };
 
-const getCompetencia = async (req: Request, res: Response) => {
+const getCompetencia = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const competencia = await Competencia.findOne({ idsec: id });
@@ -68,12 +74,16 @@ const getCompetencia = async (req: Request, res: Response) => {
     }
     return res.status(200).json({ data: competencia });
   } catch (err) {
-    console.error("getCompetencia", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - getCompetencia");
+    next(err);
   }
 };
 
-const updateCompetencia = async (req: Request, res: Response) => {
+const updateCompetencia = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const { descripcion, estado } = req.body;
@@ -97,22 +107,32 @@ const updateCompetencia = async (req: Request, res: Response) => {
     const competenciaUpdated = await Competencia.findOne({ idsec: id });
     return res.status(200).json({ data: competenciaUpdated });
   } catch (err) {
-    console.error("updateCompetencia", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - updateCompetencia");
+    next(err);
   }
 };
 
-const deleteCompetencia = async (req: Request, res: Response) => {
+const deleteCompetencia = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
-    await Competencia.findByIdAndDelete(id);
+    const competencia = await Competencia.findOne({ idsec: id });
+    if (!competencia) {
+      return res
+        .status(404)
+        .json({ message: `Competencia con Id: ${id} no fue encontrada.` });
+    }
 
+    await Competencia.findByIdAndDelete(competencia._id);
     return res
       .status(200)
       .json({ message: "Competencia eliminada exitosamente." });
   } catch (err) {
-    console.error("deleteCompetencia", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - deleteCompetencia");
+    next(err);
   }
 };
 

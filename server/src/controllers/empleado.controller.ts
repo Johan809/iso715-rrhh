@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   Empleado,
   EMPLEADO_ESTADOS,
@@ -6,7 +6,11 @@ import {
 } from "../models/empleado.model";
 import { Candidato, CandidatoDocument } from "../models/candidato.model";
 
-const createEmpleado = async (req: Request, res: Response) => {
+const createEmpleado = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const {
       cedula,
@@ -45,12 +49,16 @@ const createEmpleado = async (req: Request, res: Response) => {
     const empleadoCreated = await Empleado.create(empleadoInput);
     return res.status(201).json({ data: empleadoCreated });
   } catch (err) {
-    console.error("createEmpleado", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - createEmpleado");
+    next(err);
   }
 };
 
-const getAllEmpleados = async (req: Request, res: Response) => {
+const getAllEmpleados = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { nombre, puesto, departamento, estado } = req.query;
 
@@ -67,12 +75,12 @@ const getAllEmpleados = async (req: Request, res: Response) => {
 
     return res.status(200).json({ data: empleados });
   } catch (err) {
-    console.error("getAllEmpleados", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - getAllEmpleados");
+    next(err);
   }
 };
 
-const getEmpleado = async (req: Request, res: Response) => {
+const getEmpleado = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const empleado = await Empleado.findOne({ idsec: id }).populate("puesto");
@@ -84,12 +92,16 @@ const getEmpleado = async (req: Request, res: Response) => {
     }
     return res.status(200).json({ data: empleado });
   } catch (err) {
-    console.error("getEmpleado", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - getEmpleado");
+    next(err);
   }
 };
 
-const updateEmpleado = async (req: Request, res: Response) => {
+const updateEmpleado = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const {
@@ -127,26 +139,40 @@ const updateEmpleado = async (req: Request, res: Response) => {
 
     return res.status(200).json({ data: empleadoUpdated });
   } catch (err) {
-    console.error("updateEmpleado", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - updateEmpleado");
+    next(err);
   }
 };
 
-const deleteEmpleado = async (req: Request, res: Response) => {
+const deleteEmpleado = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
-    await Empleado.findOneAndDelete({ idsec: id });
+    const empleado = await Empleado.findOne({ idsec: id });
+    if (!empleado) {
+      return res
+        .status(404)
+        .json({ message: `Empleado con Id: ${id} no fue encontrado.` });
+    }
 
+    await Empleado.findByIdAndDelete(empleado._id);
     return res
       .status(200)
       .json({ message: "Empleado eliminado exitosamente." });
   } catch (err) {
-    console.error("deleteEmpleado", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - deleteEmpleado");
+    next(err);
   }
 };
 
-const createEmpleadoFromCandidato = async (req: Request, res: Response) => {
+const createEmpleadoFromCandidato = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
 
@@ -175,8 +201,8 @@ const createEmpleadoFromCandidato = async (req: Request, res: Response) => {
 
     return res.status(201).json({ data: empleadoCreated });
   } catch (err) {
-    console.error("createEmpleadoFromCandidato", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - createEmpleadoFromCandidato");
+    next(err);
   }
 };
 

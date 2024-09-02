@@ -1,10 +1,14 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   ExperienciaLaboral,
   ExperienciaLaboralInput,
 } from "../models/experienciaLaboral.model";
 
-const createExperienciaLaboral = async (req: Request, res: Response) => {
+const createExperienciaLaboral = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { empresa, puestoOcupado, fechaDesde, fechaHasta, salario } =
       req.body;
@@ -34,12 +38,16 @@ const createExperienciaLaboral = async (req: Request, res: Response) => {
     );
     return res.status(201).json({ data: experienciaLaboralCreated });
   } catch (err) {
-    console.error("createExperienciaLaboral", err);
-    return res.status(500).json({ message: "Server Error", exception: err });
+    console.log("error - createExperienciaLaboral");
+    next(err);
   }
 };
 
-const getAllExperienciasLaborales = async (req: Request, res: Response) => {
+const getAllExperienciasLaborales = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const {
       empresa,
@@ -52,11 +60,9 @@ const getAllExperienciasLaborales = async (req: Request, res: Response) => {
 
     const query: any = {};
     if (empresa) {
-      // Búsqueda insensible a mayúsculas/minúsculas
       query.empresa = new RegExp(empresa as string, "i");
     }
     if (puestoOcupado) {
-      // Búsqueda insensible a mayúsculas/minúsculas
       query.puestoOcupado = new RegExp(puestoOcupado as string, "i");
     }
     if (fechaDesde) {
@@ -77,12 +83,16 @@ const getAllExperienciasLaborales = async (req: Request, res: Response) => {
       .exec();
     return res.status(200).json({ data: experienciasLaborales });
   } catch (err) {
-    console.error("getAllExperienciasLaborales", err);
-    return res.status(500).json({ message: "Server Error", exception: err });
+    console.log("getAllExperienciasLaborales");
+    next(err);
   }
 };
 
-const getExperienciaLaboral = async (req: Request, res: Response) => {
+const getExperienciaLaboral = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const experienciaLaboral = await ExperienciaLaboral.findOne({ idsec: id });
@@ -95,12 +105,16 @@ const getExperienciaLaboral = async (req: Request, res: Response) => {
 
     return res.status(200).json({ data: experienciaLaboral });
   } catch (err) {
-    console.error("getExperienciaLaboral", err);
-    return res.status(500).json({ message: "Server Error", exception: err });
+    console.log("error - getExperienciaLaboral");
+    next(err);
   }
 };
 
-const updateExperienciaLaboral = async (req: Request, res: Response) => {
+const updateExperienciaLaboral = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const { empresa, puestoOcupado, fechaDesde, fechaHasta, salario } =
@@ -124,22 +138,32 @@ const updateExperienciaLaboral = async (req: Request, res: Response) => {
     });
     return res.status(200).json({ data: experienciaLaboralUpdated });
   } catch (err) {
-    console.error("updateExperienciaLaboral", err);
-    return res.status(500).json({ message: "Server Error", exception: err });
+    console.log("error - updateExperienciaLaboral");
+    next(err);
   }
 };
 
-const deleteExperienciaLaboral = async (req: Request, res: Response) => {
+const deleteExperienciaLaboral = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
-    await ExperienciaLaboral.findOneAndDelete({ idsec: id });
+    const experiencia = await ExperienciaLaboral.findOne({ idsec: id });
+    if (!experiencia) {
+      return res.status(404).json({
+        message: `Experiencia Laboral con Id: ${id} no fue encontrada.`,
+      });
+    }
 
+    await ExperienciaLaboral.findByIdAndDelete(experiencia._id);
     return res
       .status(200)
       .json({ message: "Experiencia Laboral eliminada exitosamente." });
   } catch (err) {
-    console.error("deleteExperienciaLaboral", err);
-    return res.status(500).json({ message: "Server Error", exception: err });
+    console.log("error - deleteExperienciaLaboral");
+    next(err);
   }
 };
 

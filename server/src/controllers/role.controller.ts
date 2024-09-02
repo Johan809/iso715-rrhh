@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Role, ROLE_ESTADOS, RoleInput } from "../models/role.model";
 
-const createRole = async (req: Request, res: Response) => {
+const createRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { nombre, nivel, estado } = req.body;
 
@@ -20,12 +20,12 @@ const createRole = async (req: Request, res: Response) => {
     const RoleCreated = await Role.create(RoleInput);
     return res.status(201).json({ data: RoleCreated });
   } catch (err) {
-    console.error("createRole", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - createRole");
+    next(err);
   }
 };
 
-const getAllRole = async (req: Request, res: Response) => {
+const getAllRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { nombre, estado, nivel } = req.query;
 
@@ -43,12 +43,12 @@ const getAllRole = async (req: Request, res: Response) => {
     const roles = await Role.find(filter).sort("-createdAt").exec();
     return res.status(200).json({ data: roles });
   } catch (err) {
-    console.error("getAllRoles", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - getAllRoles");
+    next(err);
   }
 };
 
-const getRole = async (req: Request, res: Response) => {
+const getRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const role = await Role.findOne({ idsec: id });
@@ -59,12 +59,12 @@ const getRole = async (req: Request, res: Response) => {
     }
     return res.status(200).json({ data: role });
   } catch (err) {
-    console.error("getRole", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - getRole");
+    next(err);
   }
 };
 
-const updateRole = async (req: Request, res: Response) => {
+const updateRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { nombre, estado, nivel } = req.body;
@@ -85,12 +85,12 @@ const updateRole = async (req: Request, res: Response) => {
     const roleUpdated = await Role.findOne({ idsec: id });
     return res.status(200).json({ data: roleUpdated });
   } catch (err) {
-    console.error("updateRole", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - updateRole");
+    next(err);
   }
 };
 
-const deleteRole = async (req: Request, res: Response) => {
+const deleteRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const roleToDelete = await Role.findOne({ idsec: id });
@@ -103,8 +103,8 @@ const deleteRole = async (req: Request, res: Response) => {
     await Role.findOneAndDelete({ idsec: id });
     return res.status(200).json({ message: "Rol eliminado exitosamente." });
   } catch (err) {
-    console.error("deleteRole", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - deleteRole");
+    next(err);
   }
 };
 

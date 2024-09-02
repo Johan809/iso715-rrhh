@@ -7,10 +7,12 @@ import {
   getEmpleado,
   updateEmpleado,
 } from "../controllers/empleado.controller";
+import { authMiddleware } from "../lib/middleware/auth";
 
 const empleadoRouter = () => {
   const router = Router();
 
+  router.use(authMiddleware);
   router.post("/empleados", createEmpleado);
   router.get("/empleados", getAllEmpleados);
   router.get("/empleados/:id", getEmpleado);

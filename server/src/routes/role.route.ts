@@ -6,10 +6,12 @@ import {
   updateRole,
   deleteRole,
 } from "../controllers/role.controller";
+import { authMiddleware } from "../lib/middleware/auth";
 
 const roleRoute = () => {
   const router = Router();
 
+  router.use(authMiddleware);
   router.post("/roles", createRole);
   router.get("/roles", getAllRole);
   router.get("/roles/:id", getRole);

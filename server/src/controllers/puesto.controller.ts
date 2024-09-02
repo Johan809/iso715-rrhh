@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   Puesto,
   PuestoInput,
@@ -6,7 +6,11 @@ import {
   NIVEL_RIESGO,
 } from "../models/puesto.model";
 
-const createPuesto = async (req: Request, res: Response) => {
+const createPuesto = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const {
       nombre,
@@ -54,12 +58,16 @@ const createPuesto = async (req: Request, res: Response) => {
     const puestoCreated = await Puesto.create(puestoInput);
     return res.status(201).json({ data: puestoCreated });
   } catch (err) {
-    console.error("createPuesto", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - createPuesto");
+    next(err);
   }
 };
 
-const getAllPuestos = async (req: Request, res: Response) => {
+const getAllPuestos = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { nombre, nivelRiesgo, estado } = req.query;
 
@@ -80,12 +88,12 @@ const getAllPuestos = async (req: Request, res: Response) => {
       .exec();
     return res.status(200).json({ data: puestos });
   } catch (err) {
-    console.error("getAllPuestos", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - getAllPuestos");
+    next(err);
   }
 };
 
-const getPuesto = async (req: Request, res: Response) => {
+const getPuesto = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const puesto = await Puesto.findOne({ idsec: id }).populate("idioma");
@@ -96,12 +104,16 @@ const getPuesto = async (req: Request, res: Response) => {
     }
     return res.status(200).json({ data: puesto });
   } catch (err) {
-    console.error("getPuesto", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - getPuesto");
+    next(err);
   }
 };
 
-const updatePuesto = async (req: Request, res: Response) => {
+const updatePuesto = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const {
@@ -119,25 +131,21 @@ const updatePuesto = async (req: Request, res: Response) => {
         .status(404)
         .json({ message: `Puesto con Id: ${id} no fue encontrado.` });
     }
-
     if (!nombre) {
       return res.status(422).json({
         message: "El campo Nombre es requerido",
       });
     }
-
     if (nivelRiesgo && !Object.values(NIVEL_RIESGO).includes(nivelRiesgo)) {
       return res.status(422).json({
         message: "El campo Nivel de Riesgo es inválido",
       });
     }
-
     if (nivelMinimoSalario === undefined || nivelMaximoSalario === undefined) {
       return res.status(422).json({
         message: "Los campos Nivel Mínimo y Máximo de Salario son requeridos",
       });
     }
-
     if (nivelMinimoSalario > nivelMaximoSalario) {
       return res.status(422).json({
         message:
@@ -162,12 +170,16 @@ const updatePuesto = async (req: Request, res: Response) => {
     );
     return res.status(200).json({ data: puestoUpdated });
   } catch (err) {
-    console.error("updatePuesto", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - updatePuesto");
+    next(err);
   }
 };
 
-const deletePuesto = async (req: Request, res: Response) => {
+const deletePuesto = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const puesto = await Puesto.findOne({ idsec: id });
@@ -181,8 +193,8 @@ const deletePuesto = async (req: Request, res: Response) => {
 
     return res.status(200).json({ message: "Puesto eliminado exitosamente." });
   } catch (err) {
-    console.error("deletePuesto", err);
-    return res.status(500).json({ message: "Server Error", Exception: err });
+    console.log("error - deletePuesto");
+    next(err);
   }
 };
 

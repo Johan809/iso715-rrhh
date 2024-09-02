@@ -1,27 +1,27 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   Capacitacion,
   CapacitacionInput,
-  CapacitacionDocument,
   NIVEL_LIST,
 } from "../models/capacitacion.model";
 
-const createCapacitacion = async (req: Request, res: Response) => {
+const createCapacitacion = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { descripcion, nivel, fechaDesde, fechaHasta, institucion } =
       req.body;
 
     if (!descripcion || !nivel || !fechaDesde || !fechaHasta || !institucion) {
-      return res.status(422).json({
-        message:
-          "Todos los campos son obligatorios: Descripción, Nivel, Fecha Desde, Fecha Hasta, Institución",
-      });
+      throw new Error(
+        "Todos los campos son obligatorios: Descripción, Nivel, Fecha Desde, Fecha Hasta, Institución"
+      );
     }
 
     if (!Object.values(NIVEL_LIST).includes(nivel)) {
-      return res.status(422).json({
-        message: "El nivel proporcionado no es válido.",
-      });
+      throw new Error("El nivel proporcionado no es válido.");
     }
 
     const capacitacionInput: CapacitacionInput = {
@@ -35,44 +35,70 @@ const createCapacitacion = async (req: Request, res: Response) => {
     const capacitacionCreated = await Capacitacion.create(capacitacionInput);
     return res.status(201).json({ data: capacitacionCreated });
   } catch (err) {
-    console.error("createCapacitacion", err);
-    return res
-      .status(500)
-      .json({ message: "Error del servidor", Exception: err });
+    console.log("error - createCapacitacion");
+    next(err);
   }
 };
 
-const getAllCapacitaciones = async (req: Request, res: Response) => {
+const getAllCapacitaciones = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const capacitaciones = await Capacitacion.find().sort("-createdAt").exec();
+    const { descripcion, nivel, fechaDesde, fechaHasta, institucion } =
+      req.query;
+
+    const filter: any = {};
+    if (descripcion) {
+      filter.descripcion = { $regex: descripcion, $options: "i" };
+    }
+    if (nivel) {
+      filter.nivel = nivel;
+    }
+    if (fechaDesde) {
+      filter.fechaDesde = { $gte: new Date(fechaDesde as string) };
+    }
+    if (fechaHasta) {
+      filter.fechaHasta = { $lte: new Date(fechaHasta as string) };
+    }
+    if (institucion) {
+      filter.institucion = { $regex: institucion, $options: "i" };
+    }
+
+    const capacitaciones = await Capacitacion.find(filter)
+      .sort("-createdAt")
+      .exec();
     return res.status(200).json({ data: capacitaciones });
   } catch (err) {
-    console.error("getAllCapacitaciones", err);
-    return res
-      .status(500)
-      .json({ message: "Error del servidor", Exception: err });
+    console.log("error - getAllCapacitaciones");
+    next(err);
   }
 };
 
-const getCapacitacion = async (req: Request, res: Response) => {
+const getCapacitacion = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const capacitacion = await Capacitacion.findOne({ idsec: id });
     if (!capacitacion) {
-      return res
-        .status(404)
-        .json({ message: `Capacitación con Id: ${id} no fue encontrada.` });
+      throw new Error(`Capacitación con Id: ${id} no fue encontrada.`);
     }
     return res.status(200).json({ data: capacitacion });
   } catch (err) {
-    console.error("getCapacitacion", err);
-    return res
-      .status(500)
-      .json({ message: "Error del servidor", Exception: err });
+    console.log("error - getCapacitacion");
+    next(err);
   }
 };
 
-const updateCapacitacion = async (req: Request, res: Response) => {
+const updateCapacitacion = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const { descripcion, nivel, fechaDesde, fechaHasta, institucion } =
@@ -105,10 +131,8 @@ const updateCapacitacion = async (req: Request, res: Response) => {
     const capacitacionUpdated = await Capacitacion.findOne({ idsec: id });
     return res.status(200).json({ data: capacitacionUpdated });
   } catch (err) {
-    console.error("updateCapacitacion", err);
-    return res
-      .status(500)
-      .json({ message: "Error del servidor", Exception: err });
+    console.log("error - updateCapacitacion");
+    next(err);
   }
 };
 

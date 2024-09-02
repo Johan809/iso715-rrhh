@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Candidato, CandidatoInput } from "../models/candidato.model";
-import { Competencia } from "../models/competencia.model";
-import { Capacitacion } from "../models/capacitacion.model";
-import { ExperienciaLaboral } from "../models/experienciaLaboral.model";
-import { Puesto } from "../models/puesto.model";
 
-const createCandidato = async (req: Request, res: Response) => {
+const createCandidato = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const {
       cedula,
@@ -26,9 +26,7 @@ const createCandidato = async (req: Request, res: Response) => {
       !departamento ||
       salarioAspira === undefined
     ) {
-      return res.status(422).json({
-        message: "Todos los campos son requeridos.",
-      });
+      throw new Error("Todos los campos son requeridos.");
     }
 
     const candidatoInput: CandidatoInput = {
@@ -46,12 +44,16 @@ const createCandidato = async (req: Request, res: Response) => {
     const candidatoCreated = await Candidato.create(candidatoInput);
     return res.status(201).json({ data: candidatoCreated });
   } catch (err) {
-    console.error("createCandidato", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - createCandidato");
+    next(err);
   }
 };
 
-const getAllCandidatos = async (req: Request, res: Response) => {
+const getAllCandidatos = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const {
       nombre,
@@ -85,12 +87,16 @@ const getAllCandidatos = async (req: Request, res: Response) => {
 
     return res.status(200).json({ data: candidatos });
   } catch (err) {
-    console.error("getAllCandidatos", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - getAllCandidatos");
+    next(err);
   }
 };
 
-const getCandidato = async (req: Request, res: Response) => {
+const getCandidato = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const candidato = await Candidato.findOne({ idsec: id })
@@ -100,18 +106,20 @@ const getCandidato = async (req: Request, res: Response) => {
       .populate("experienciaLaboral");
 
     if (!candidato) {
-      return res
-        .status(404)
-        .json({ message: `Candidato con Id: ${id} no fue encontrado.` });
+      throw new Error(`Candidato con Id: ${id} no fue encontrado.`);
     }
     return res.status(200).json({ data: candidato });
   } catch (err) {
-    console.error("getCandidato", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - getCandidato");
+    next(err);
   }
 };
 
-const updateCandidato = async (req: Request, res: Response) => {
+const updateCandidato = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
     const {
@@ -129,9 +137,7 @@ const updateCandidato = async (req: Request, res: Response) => {
     const candidato = await Candidato.findOne({ idsec: id });
 
     if (!candidato) {
-      return res
-        .status(404)
-        .json({ message: `Candidato con Id: ${id} no fue encontrado.` });
+      throw new Error(`Candidato con Id: ${id} no fue encontrado.`);
     }
 
     const updatedData: Partial<CandidatoInput> = {
@@ -155,22 +161,30 @@ const updateCandidato = async (req: Request, res: Response) => {
 
     return res.status(200).json({ data: candidatoUpdated });
   } catch (err) {
-    console.error("updateCandidato", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - updateCandidato");
+    next(err);
   }
 };
 
-const deleteCandidato = async (req: Request, res: Response) => {
+const deleteCandidato = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { id } = req.params;
-    await Candidato.findOneAndDelete({ idsec: id });
+    const candidato = await Candidato.findOne({ idsec: id });
+    if (!candidato) {
+      throw new Error(`El candidato con Id: ${id} no fue encontrado`);
+    }
 
+    await Candidato.findByIdAndDelete(candidato._id);
     return res
       .status(200)
       .json({ message: "Candidato eliminado exitosamente." });
   } catch (err) {
-    console.error("deleteCandidato", err);
-    return res.status(500).json({ message: "Server Error", exc: err });
+    console.log("error - deleteCandidato");
+    next(err);
   }
 };
 

@@ -6,10 +6,12 @@ import {
   updateIdioma,
   deleteIdioma,
 } from "../controllers/idioma.controller";
+import { authMiddleware } from "../lib/middleware/auth";
 
 const idiomaRoute = () => {
   const router = Router();
 
+  router.use(authMiddleware);
   router.post("/idiomas", createIdioma);
   router.get("/idiomas", getAllIdiomas);
   router.get("/idiomas/:id", getIdioma);
