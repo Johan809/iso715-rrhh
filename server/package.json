@@ -1,5 +1,5 @@
 {
-  "name": "node-typescript-starter",
+  "name": "iso715-rrhh-server",
   "version": "1.0.0",
   "description": "Node project starter with Typescript, ESLint and Prettier",
   "main": "index.js",
