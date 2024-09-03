@@ -7,11 +7,12 @@ import {
   deleteExperienciaLaboral,
 } from "../controllers/experienciaLaboral.controller";
 import { authMiddleware } from "../lib/middleware/auth";
+import { NIVEL_ROLES } from "../lib/constants";
 
 const experienciaLaboralRouter = () => {
   const router = Router();
 
-  router.use(authMiddleware);
+  router.use(authMiddleware(NIVEL_ROLES.USUARIO));
   router.post("/experiencias-laborales", createExperienciaLaboral);
   router.get("/experiencias-laborales", getAllExperienciasLaborales);
   router.get("/experiencias-laborales/:id", getExperienciaLaboral);

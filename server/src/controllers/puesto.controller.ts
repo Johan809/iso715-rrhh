@@ -14,6 +14,7 @@ const createPuesto = async (
   try {
     const {
       nombre,
+      descripcion,
       nivelRiesgo,
       nivelMinimoSalario,
       nivelMaximoSalario,
@@ -26,19 +27,16 @@ const createPuesto = async (
         message: "El campo Nombre es requerido",
       });
     }
-
     if (!nivelRiesgo || !Object.values(NIVEL_RIESGO).includes(nivelRiesgo)) {
       return res.status(422).json({
         message: "El campo Nivel de Riesgo es inválido o está vacío",
       });
     }
-
     if (nivelMinimoSalario === undefined || nivelMaximoSalario === undefined) {
       return res.status(422).json({
         message: "Los campos Nivel Mínimo y Máximo de Salario son requeridos",
       });
     }
-
     if (nivelMinimoSalario > nivelMaximoSalario) {
       return res.status(422).json({
         message:
@@ -48,6 +46,7 @@ const createPuesto = async (
 
     const puestoInput: PuestoInput = {
       nombre,
+      descripcion,
       nivelRiesgo,
       nivelMinimoSalario,
       nivelMaximoSalario,
@@ -118,6 +117,7 @@ const updatePuesto = async (
     const { id } = req.params;
     const {
       nombre,
+      descripcion,
       nivelRiesgo,
       nivelMinimoSalario,
       nivelMaximoSalario,
@@ -157,6 +157,7 @@ const updatePuesto = async (
       { _id: puesto._id },
       {
         nombre,
+        descripcion,
         nivelRiesgo,
         nivelMinimoSalario,
         nivelMaximoSalario,
@@ -190,7 +191,6 @@ const deletePuesto = async (
     }
 
     await Puesto.findByIdAndDelete(puesto._id);
-
     return res.status(200).json({ message: "Puesto eliminado exitosamente." });
   } catch (err) {
     console.log("error - deletePuesto");

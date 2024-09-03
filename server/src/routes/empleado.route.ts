@@ -8,11 +8,12 @@ import {
   updateEmpleado,
 } from "../controllers/empleado.controller";
 import { authMiddleware } from "../lib/middleware/auth";
+import { NIVEL_ROLES } from "../lib/constants";
 
 const empleadoRouter = () => {
   const router = Router();
 
-  router.use(authMiddleware);
+  router.use(authMiddleware(NIVEL_ROLES.RECURSOS));
   router.post("/empleados", createEmpleado);
   router.get("/empleados", getAllEmpleados);
   router.get("/empleados/:id", getEmpleado);

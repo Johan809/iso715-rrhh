@@ -7,11 +7,12 @@ import {
   updateCompetencia,
 } from "../controllers/competencia.controller";
 import { authMiddleware } from "../lib/middleware/auth";
+import { NIVEL_ROLES } from "../lib/constants";
 
 const competenciaRouter = () => {
   const router = Router();
 
-  router.use(authMiddleware);
+  router.use(authMiddleware(NIVEL_ROLES.RECURSOS));
   router.post("/competencias", createCompetencia);
   router.get("/competencias", getAllCompetencias);
   router.get("/competencias/:id", getCompetencia);

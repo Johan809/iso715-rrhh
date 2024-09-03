@@ -17,6 +17,7 @@ const NIVEL_RIESGO = {
 type PuestoDocument = Document & {
   idsec: number;
   nombre: string;
+  descripcion: string;
   nivelRiesgo: string;
   nivelMinimoSalario: number;
   nivelMaximoSalario: number;
@@ -26,6 +27,7 @@ type PuestoDocument = Document & {
 
 type PuestoInput = {
   nombre: PuestoDocument["nombre"];
+  descripcion: PuestoDocument["descripcion"];
   nivelRiesgo: PuestoDocument["nivelRiesgo"];
   nivelMinimoSalario: PuestoDocument["nivelMinimoSalario"];
   nivelMaximoSalario: PuestoDocument["nivelMaximoSalario"];
@@ -41,7 +43,9 @@ const puestoSchema = new Schema<PuestoDocument>(
     nombre: {
       type: Schema.Types.String,
       required: true,
-      unique: true,
+    },
+    descripcion: {
+      type: Schema.Types.String,
     },
     nivelRiesgo: {
       type: Schema.Types.String,
