@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { EMAIL_REGEX } from "../lib/constants";
+import { EMAIL_REGEX, NIVEL_ROLES } from "../lib/constants";
 import { Role, RoleDocument } from "../models/role.model";
 import {
   Usuario,
@@ -65,7 +65,7 @@ const register = async (req: Request, res: Response) => {
     }
 
     //el nivel 1 es el nivel menor, por defecto para los usuarios
-    const role = await Role.findOne({ nivel: 1 });
+    const role = await Role.findOne({ nivel: NIVEL_ROLES.USUARIO });
     const hashedPwd = await Usuario.hashPwd(password);
 
     const usuarioInput: UsuarioInput = {

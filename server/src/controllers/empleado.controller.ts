@@ -5,6 +5,7 @@ import {
   EmpleadoInput,
 } from "../models/empleado.model";
 import { Candidato, CandidatoDocument } from "../models/candidato.model";
+import { Puesto } from "../models/puesto.model";
 
 const createEmpleado = async (
   req: Request,
@@ -15,7 +16,7 @@ const createEmpleado = async (
     const {
       cedula,
       nombre,
-      puesto,
+      puestoIdSec,
       departamento,
       salarioMensual,
       fechaIngreso,
@@ -25,7 +26,7 @@ const createEmpleado = async (
     if (
       !cedula ||
       !nombre ||
-      !puesto ||
+      !puestoIdSec ||
       !departamento ||
       salarioMensual === undefined ||
       !fechaIngreso
@@ -36,10 +37,12 @@ const createEmpleado = async (
       });
     }
 
+    const puesto = await Puesto.findOne({ idsec: puestoIdSec });
+
     const empleadoInput: EmpleadoInput = {
       cedula,
       nombre,
-      puesto,
+      puesto: puesto?._id,
       departamento,
       salarioMensual,
       fechaIngreso,
@@ -107,7 +110,7 @@ const updateEmpleado = async (
     const {
       cedula,
       nombre,
-      puesto,
+      puestoIdSec,
       departamento,
       salarioMensual,
       fechaIngreso,
@@ -122,10 +125,12 @@ const updateEmpleado = async (
         .json({ message: `Empleado con Id: ${id} no fue encontrado.` });
     }
 
+    const puesto = await Puesto.findOne({ idsec: puestoIdSec });
+
     const updatedData: Partial<EmpleadoInput> = {
       cedula,
       nombre,
-      puesto,
+      puesto: puesto?._id,
       departamento,
       salarioMensual,
       fechaIngreso,

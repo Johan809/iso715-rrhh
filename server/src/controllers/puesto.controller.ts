@@ -5,6 +5,7 @@ import {
   PUESTO_ESTADOS,
   NIVEL_RIESGO,
 } from "../models/puesto.model";
+import { Idioma } from "../models/idioma.model";
 
 const createPuesto = async (
   req: Request,
@@ -18,7 +19,7 @@ const createPuesto = async (
       nivelRiesgo,
       nivelMinimoSalario,
       nivelMaximoSalario,
-      idioma,
+      idioma: idiomaIdSec,
       estado,
     } = req.body;
 
@@ -44,13 +45,20 @@ const createPuesto = async (
       });
     }
 
+    if (!idiomaIdSec) {
+      return res.status(404).json({
+        message: `El idioma con Id: ${idiomaIdSec} no pudo ser encontrado`,
+      });
+    }
+    const idioma = await Idioma.findOne({ idsec: idiomaIdSec });
+
     const puestoInput: PuestoInput = {
       nombre,
       descripcion,
       nivelRiesgo,
       nivelMinimoSalario,
       nivelMaximoSalario,
-      idioma,
+      idioma: idioma?._id,
       estado: estado ?? PUESTO_ESTADOS.ACTIVO,
     };
 
@@ -68,9 +76,10 @@ const getAllPuestos = async (
   next: NextFunction
 ) => {
   try {
-    const { nombre, nivelRiesgo, estado } = req.query;
+    const { idsec, nombre, nivelRiesgo, estado } = req.query;
 
     const filter: any = {};
+    if (idsec) filter.idsec = idsec;
     if (nombre) {
       filter.nombre = { $regex: nombre, $options: "i" };
     }
@@ -121,7 +130,7 @@ const updatePuesto = async (
       nivelRiesgo,
       nivelMinimoSalario,
       nivelMaximoSalario,
-      idioma,
+      idioma: idiomaIdSec,
       estado,
     } = req.body;
 
@@ -152,6 +161,12 @@ const updatePuesto = async (
           "El Nivel Mínimo de Salario no puede ser mayor que el Nivel Máximo de Salario",
       });
     }
+    if (!idiomaIdSec) {
+      return res.status(404).json({
+        message: `El idioma con Id: ${idiomaIdSec} no pudo ser encontrado`,
+      });
+    }
+    const idioma = await Idioma.findOne({ idsec: idiomaIdSec });
 
     await Puesto.updateOne(
       { _id: puesto._id },
@@ -161,7 +176,7 @@ const updatePuesto = async (
         nivelRiesgo,
         nivelMinimoSalario,
         nivelMaximoSalario,
-        idioma,
+        idioma: idioma?._id,
         estado,
       }
     );

@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { Candidato, CandidatoInput } from "../models/candidato.model";
+import { Puesto } from "../models/puesto.model";
+import { Competencia } from "../models/competencia.model";
+import { Capacitacion } from "../models/capacitacion.model";
+import { ExperienciaLaboral } from "../models/experienciaLaboral.model";
 
 const createCandidato = async (
   req: Request,
@@ -10,34 +14,58 @@ const createCandidato = async (
     const {
       cedula,
       nombre,
-      puesto,
+      puestoIdSec,
       departamento,
       salarioAspira,
-      competencias,
-      capacitaciones,
-      experienciaLaboral,
+      competenciaIdSecList,
+      capacitacionIdSecList,
+      experienciaLaboralIdSecList,
       recomendadoPor,
     } = req.body;
 
     if (
       !cedula ||
       !nombre ||
-      !puesto ||
+      !puestoIdSec ||
       !departamento ||
       salarioAspira === undefined
     ) {
-      throw new Error("Todos los campos son requeridos.");
+      throw new Error(
+        "Los campos Cedula, Nombre, Puesto y Departamento son requeridos."
+      );
     }
+
+    const puesto = await Puesto.findOne({ idsec: puestoIdSec });
+    if (!puesto) {
+      throw new Error(`No se encontró un puesto con idsec ${puestoIdSec}`);
+    }
+
+    const competencias = await Competencia.find({
+      idsec: { $in: competenciaIdSecList },
+    });
+    const competenciasIds = competencias.map((x) => x._id);
+
+    const capacitaciones = await Capacitacion.find({
+      idsec: { $in: capacitacionIdSecList },
+    });
+    const capacitacionesIds = capacitaciones.map((x) => x._id);
+
+    const experencias = await ExperienciaLaboral.find({
+      idsec: { $in: experienciaLaboralIdSecList },
+    });
+    const experenciasIds = experencias.map((x) => x._id);
+
+    //puesto, competencias[], capacitaciones[], experienciaLaboral[]
 
     const candidatoInput: CandidatoInput = {
       cedula,
       nombre,
-      puesto,
+      puesto: puesto._id,
       departamento,
       salarioAspira,
-      competencias,
-      capacitaciones,
-      experienciaLaboral,
+      competencias: competenciasIds,
+      capacitaciones: capacitacionesIds,
+      experienciaLaboral: experenciasIds,
       recomendadoPor,
     };
 
@@ -56,6 +84,7 @@ const getAllCandidatos = async (
 ) => {
   try {
     const {
+      id,
       nombre,
       puestoAspira,
       departamento,
@@ -66,10 +95,11 @@ const getAllCandidatos = async (
 
     const filter: any = {};
 
-    if (nombre) filter.nombre = new RegExp(nombre as string, "i");
+    if (id) filter.idsec = id;
+    if (nombre) filter.nombre = new RegExp(<string>nombre, "i");
     if (puestoAspira) filter.puestoAspira = puestoAspira;
     if (departamento)
-      filter.departamento = new RegExp(departamento as string, "i");
+      filter.departamento = new RegExp(<string>departamento, "i");
     if (salarioMin || salarioMax) {
       filter.salarioAspira = {};
       if (salarioMin) filter.salarioAspira.$gte = salarioMin;
@@ -125,30 +155,56 @@ const updateCandidato = async (
     const {
       cedula,
       nombre,
-      puestoAspira,
+      puestoIdSec,
       departamento,
       salarioAspira,
-      competencias,
-      capacitaciones,
-      experienciaLaboral,
+      competenciaIdSecList,
+      capacitacionIdSecList,
+      experienciaLaboralIdSecList,
       recomendadoPor,
     } = req.body;
 
     const candidato = await Candidato.findOne({ idsec: id });
 
     if (!candidato) {
-      throw new Error(`Candidato con Id: ${id} no fue encontrado.`);
+      return res
+        .status(404)
+        .json({ message: `El candidato con Id: ${id} no fue encontrado` });
     }
+
+    const puesto = await Puesto.findOne({ idsec: puestoIdSec });
+    if (!puesto) {
+      throw new Error(`No se encontró un puesto con idsec ${puestoIdSec}`);
+    }
+
+    const competencias = await Competencia.find({
+      idsec: { $in: competenciaIdSecList },
+    });
+    const competenciaIds = competencias.map((competencia) => competencia._id);
+
+    const capacitaciones = await Capacitacion.find({
+      idsec: { $in: capacitacionIdSecList },
+    });
+    const capacitacionIds = capacitaciones.map(
+      (capacitacion) => capacitacion._id
+    );
+
+    const experienciasLaborales = await ExperienciaLaboral.find({
+      idsec: { $in: experienciaLaboralIdSecList },
+    });
+    const experienciaLaboralIds = experienciasLaborales.map(
+      (experiencia) => experiencia._id
+    );
 
     const updatedData: Partial<CandidatoInput> = {
       cedula,
       nombre,
-      puesto: puestoAspira,
+      puesto: puesto._id,
       departamento,
       salarioAspira,
-      competencias,
-      capacitaciones,
-      experienciaLaboral,
+      competencias: competenciaIds,
+      capacitaciones: capacitacionIds,
+      experienciaLaboral: experienciaLaboralIds,
       recomendadoPor,
     };
 
@@ -161,7 +217,7 @@ const updateCandidato = async (
 
     return res.status(200).json({ data: candidatoUpdated });
   } catch (err) {
-    console.log("error - updateCandidato");
+    console.log("error - updateCandidato", err);
     next(err);
   }
 };
@@ -175,7 +231,9 @@ const deleteCandidato = async (
     const { id } = req.params;
     const candidato = await Candidato.findOne({ idsec: id });
     if (!candidato) {
-      throw new Error(`El candidato con Id: ${id} no fue encontrado`);
+      return res
+        .status(404)
+        .json({ message: `El candidato con Id: ${id} no fue encontrado` });
     }
 
     await Candidato.findByIdAndDelete(candidato._id);
