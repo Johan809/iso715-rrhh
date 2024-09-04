@@ -55,8 +55,6 @@ const createCandidato = async (
     });
     const experenciasIds = experencias.map((x) => x._id);
 
-    //puesto, competencias[], capacitaciones[], experienciaLaboral[]
-
     const candidatoInput: CandidatoInput = {
       cedula,
       nombre,
@@ -86,7 +84,7 @@ const getAllCandidatos = async (
     const {
       id,
       nombre,
-      puestoAspira,
+      puestoIdSec,
       departamento,
       salarioMin,
       salarioMax,
@@ -97,7 +95,6 @@ const getAllCandidatos = async (
 
     if (id) filter.idsec = id;
     if (nombre) filter.nombre = new RegExp(<string>nombre, "i");
-    if (puestoAspira) filter.puestoAspira = puestoAspira;
     if (departamento)
       filter.departamento = new RegExp(<string>departamento, "i");
     if (salarioMin || salarioMax) {
@@ -106,6 +103,17 @@ const getAllCandidatos = async (
       if (salarioMax) filter.salarioAspira.$lte = salarioMax;
     }
     if (estado) filter.estado = estado;
+
+    if (puestoIdSec) {
+      const puesto = await Puesto.findOne({ idsec: puestoIdSec });
+      if (puesto) {
+        filter.puesto = puesto._id;
+      } else {
+        return res
+          .status(404)
+          .json({ message: `Puesto con idsec ${puestoIdSec} no encontrado` });
+      }
+    }
 
     const candidatos = await Candidato.find(filter)
       .populate("puesto")
@@ -117,7 +125,7 @@ const getAllCandidatos = async (
 
     return res.status(200).json({ data: candidatos });
   } catch (err) {
-    console.log("error - getAllCandidatos");
+    console.log("error - getAllCandidatos", err);
     next(err);
   }
 };
