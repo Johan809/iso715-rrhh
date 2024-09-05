@@ -1,6 +1,6 @@
-export enum Endpoint
-{
-  AUTHENTICATE     = 'authenticate',
-  FORGOT_PASSWORD  = 'forgot-password',
-  VALIDATE_ACCOUNT = 'validate-account',
+export enum Endpoint {
+  AUTHENTICATE = 'auth/login',
+  FORGOT_PASSWORD = 'auth/forgot-password',
+  VALIDATE_ACCOUNT = 'auth/validate-account',
+  CREATE_ACCOUNT = 'auth/register',
 }
