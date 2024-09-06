@@ -9,16 +9,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-
-// External modules
 import { TranslateModule } from '@ngx-translate/core';
 
-// Internal modules
 import { environment } from '@env/environment';
-
-// Services
 import { AppService } from '@services/app.service';
 import { StoreService } from '@services/store.service';
+import { ToastManager } from '@blocks/toast/toast.manager';
+import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +29,7 @@ import { StoreService } from '@services/store.service';
     NgIf,
     RouterLink,
     TranslateModule,
+    ProgressBarComponent,
   ],
 })
 export class LoginComponent {
@@ -43,10 +41,12 @@ export class LoginComponent {
 
   constructor(
     private router: Router,
-    private storeService: StoreService,
-    private appService: AppService
+    public storeService: StoreService,
+    private appService: AppService,
+    private toastManager: ToastManager
   ) {
     this.initFormGroup();
+    this.storeService.isLoading.set(false);
   }
 
   private initFormGroup(): void {
@@ -86,6 +86,9 @@ export class LoginComponent {
 
     if (!success) return;
 
-    this.router.navigate(['/home']);
+    this.toastManager.quickShow('Inicio de sesión exitoso.', 'success', true);
+    setTimeout(() => {
+      this.router.navigate(['/home']);
+    }, 2000);
   }
 }

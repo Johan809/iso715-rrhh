@@ -1,38 +1,31 @@
 // Angular modules
-import { NgIf }                 from '@angular/common';
-import { Component }            from '@angular/core';
-import { OnInit }               from '@angular/core';
+import { NgIf } from '@angular/common';
+import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
 
 // Services
-import { StoreService }         from '@services/store.service';
+import { StoreService } from '@services/store.service';
 
 // Components
 import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
-import { PageLayoutComponent }  from '@layouts/page-layout/page-layout.component';
+import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
 
 @Component({
-  selector    : 'app-home',
-  templateUrl : './home.component.html',
-  styleUrls   : ['./home.component.scss'],
-  standalone  : true,
-  imports     : [PageLayoutComponent, NgIf, ProgressBarComponent]
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
+  standalone: true,
+  imports: [PageLayoutComponent, NgIf, ProgressBarComponent],
 })
-export class HomeComponent implements OnInit
-{
-  constructor
-  (
-    public storeService : StoreService
-  )
-  { }
+export class HomeComponent implements OnInit {
+  constructor(public storeService: StoreService) {}
 
   // -------------------------------------------------------------------------------
   // NOTE Init ---------------------------------------------------------------------
   // -------------------------------------------------------------------------------
 
-  public ngOnInit() : void
-  {
-    setTimeout(_ =>
-    {
+  public ngOnInit(): void {
+    setTimeout((_) => {
       this.storeService.isLoading.set(false);
     }, 2000);
   }
@@ -56,5 +49,4 @@ export class HomeComponent implements OnInit
   // -------------------------------------------------------------------------------
   // NOTE Subscriptions ------------------------------------------------------------
   // -------------------------------------------------------------------------------
-
 }

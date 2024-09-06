@@ -86,7 +86,7 @@ const register = async (req: Request, res: Response) => {
       message: "Usuario registrado exitosamente.",
       token,
       data: {
-        nombre: user.nombre,
+        username: user.nombre,
         email: user.email,
         role: (<RoleDocument>user.role).nivel,
       },
@@ -137,7 +137,7 @@ const login = async (req: Request, res: Response) => {
       message: "Inicio de sesión exitoso.",
       token,
       data: {
-        nombre: user?.nombre,
+        username: user?.nombre,
         email: user?.email,
         role: (<RoleDocument>user?.role).nivel,
       },

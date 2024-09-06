@@ -18,3 +18,41 @@
     }
   }
 }
+
+/* General sidebar styles */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh; /* Full height */
+  width: 250px; /* Sidebar width */
+  background-color: #f8f9fa; /* Light background */
+  padding: 1rem;
+  z-index: 1000;
+  transition: all 0.3s;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav {
+  margin-top: 1rem;
+}
+
+.main-content {
+  margin-left: 250px; /* Adjust content to the right of the sidebar */
+  padding: 1rem;
+  transition: all 0.3s;
+}
+
+/* Optional: Style adjustments for responsiveness */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100px; /* Narrower sidebar for smaller screens */
+  }
+  .main-content {
+    margin-left: 100px; /* Adjust content margin */
+  }
+}

@@ -14,6 +14,7 @@ import { environment } from '@env/environment';
 import { StorageHelper } from '@helpers/storage.helper';
 import { Endpoint } from '@enums/endpoint.enum';
 import { StoreService } from './store.service';
+import { AuthResponse } from '@models/auth-response.model';
 
 @Injectable()
 export class AppService {
@@ -49,20 +50,17 @@ export class AppService {
   }
 
   public async authenticate(email: string, password: string): Promise<boolean> {
-    return Promise.resolve(true);
+    StorageHelper.removeToken();
 
-    // StorageHelper.removeToken();
+    const url = Endpoint.AUTHENTICATE;
+    const { data: response } = await this.api.post(url, { email, password });
 
-    // const url      = Endpoint.AUTHENTICATE;
-    // const { data } = await this.api.post(url, { email, password });
+    if (!response) return false;
 
-    // if (!data)
-    //   return false;
-
-    // const authResponse = new AuthResponse(data);
-    // StorageHelper.setToken(authResponse);
-    // this.initAuthHeader();
-    // return true;
+    const authResponse = new AuthResponse(response);
+    StorageHelper.setToken(authResponse);
+    this.initAuthHeader();
+    return true;
   }
 
   public async registerAccount(payload: {
@@ -70,7 +68,18 @@ export class AppService {
     email: string;
     password: string;
   }): Promise<boolean> {
-    return Promise.resolve(true);
+    const url = Endpoint.CREATE_ACCOUNT;
+    const { data: response } = await this.api.post(url, {
+      username: payload.username,
+      email: payload.email,
+      password: payload.password,
+    });
+
+    if (!response) return false;
+    const authResponse = new AuthResponse(response);
+    StorageHelper.setToken(authResponse);
+    this.initAuthHeader();
+    return true;
   }
 
   public async forgotPassword(email: string): Promise<boolean> {
@@ -94,29 +103,11 @@ export class AppService {
     // return !!data;
   }
 
-  // public async getLastLines(siteId : string) : Promise<Line[]>
-  // {
-  //   const url      = StringHelper.interpolate(Endpoint.GET_LAST_LINES, [ siteId ]);
-  //   const { data } = await this.api.get(url);
-
-  //   if (!data)
-  //     return [];
-
-  //   return ArrayTyper.asArray(Line, data);
-  // }
-
-  // !SECTION Methods
-
-  // ----------------------------------------------------------------------------------------------
-  // SECTION Helpers ------------------------------------------------------------------------------
-  // ----------------------------------------------------------------------------------------------
-
   private initAuthHeader(): void {
-    // const token = StorageHelper.getToken();
-    // if (!token)
-    //   return;
-    // this.api.defaults.headers.common['Authorization'] = `Bearer ${token.jwtToken}`;
-    // this.api.defaults.headers.common['Token']         = token.jwtToken;
+    const token = StorageHelper.getToken();
+    if (!token) return;
+    this.api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    this.api.defaults.headers.common['Token'] = token;
   }
 
   public initRequestInterceptor(instance: AxiosInstance): void {

@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 
 import { authRouter } from "./routes/auth.route";
 import { puestoRouter } from "./routes/puesto.route";
@@ -18,11 +19,13 @@ dotenv.config();
 
 const HOST = process.env.HOST || "http://localhost";
 const PORT = parseInt(process.env.PORT || "4500");
+const corsOptions = { origin: "http://localhost:4200", credentials: true };
 
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors(corsOptions));
 app.get("/", (req, res) => {
   return res.json({ message: "Hello World!" });
 });

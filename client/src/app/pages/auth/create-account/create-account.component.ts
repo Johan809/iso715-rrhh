@@ -11,8 +11,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
+import { ToastManager } from '@blocks/toast/toast.manager';
 import { environment } from '@env/environment';
+import { TranslateModule } from '@ngx-translate/core';
 import { AppService } from '@services/app.service';
 import { StoreService } from '@services/store.service';
 
@@ -28,6 +30,7 @@ import { StoreService } from '@services/store.service';
     NgIf,
     RouterLink,
     TranslateModule,
+    ProgressBarComponent,
   ],
 })
 export class CreateAccountComponent {
@@ -41,10 +44,12 @@ export class CreateAccountComponent {
 
   constructor(
     private router: Router,
-    private storeService: StoreService,
-    private appService: AppService
+    public storeService: StoreService,
+    private appService: AppService,
+    private toastManager: ToastManager
   ) {
     this.initFormGroup();
+    this.storeService.isLoading.set(false);
   }
 
   private initFormGroup(): void {
@@ -107,6 +112,13 @@ export class CreateAccountComponent {
 
     if (!success) return;
 
-    this.router.navigate(['/home']); // Redirect to home after successful registration
+    this.toastManager.quickShow(
+      'Usuario registrado exitosamente.',
+      'success',
+      true
+    );
+    setTimeout(() => {
+      this.router.navigate(['/home']);
+    }, 2000);
   }
 }

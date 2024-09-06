@@ -1,0 +1,14 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100vh;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.navbar-nav {
+  margin-top: 1rem;
+}
