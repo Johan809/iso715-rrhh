@@ -7,7 +7,7 @@ import { Competencia } from '@models/competencia.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CompetenciaService } from '@services/competencia.service';
 import { StoreService } from '@services/store.service';
-import { ModalCompetenciaComponent } from '../edit/modal-competencia.component';
+import { ModalCompetenciaComponent } from '../modal/modal-competencia.component';
 import { FormConfirmComponent } from '@forms/form-confirm/form-confirm.component';
 import { ToastManager } from '@blocks/toast/toast.manager';
 
