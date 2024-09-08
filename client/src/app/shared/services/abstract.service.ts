@@ -70,7 +70,14 @@ export abstract class AbstractService {
         console.log('interceptors.response.error', error);
         this.storeService.isLoading.set(false);
         if (error.code === 'ERR_CANCELED') return Promise.resolve(error);
-        this.toastManager.quickShow(error.message);
+        if (error.response?.data) {
+          this.toastManager.quickShow(
+            (<any>error.response?.data)['message'] ?? 'Ha ocurrido un error',
+            'warning'
+          );
+        } else {
+          this.toastManager.quickShow(error.message);
+        }
         return Promise.reject(error);
       }
     );

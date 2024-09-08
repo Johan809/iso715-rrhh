@@ -87,8 +87,6 @@ export class LoginComponent {
     if (!success) return;
 
     this.toastManager.quickShow('Inicio de sesión exitoso.', 'success', true);
-    setTimeout(() => {
-      this.router.navigate(['/home']);
-    }, 2000);
+    this.router.navigate(['/home']);
   }
 }

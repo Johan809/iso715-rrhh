@@ -17,6 +17,7 @@ import { StorageHelper } from '@helpers/storage.helper';
 import { AppService } from '@services/app.service';
 import { UserInfo } from 'src/app/lib/types';
 import { ToastManager } from '@blocks/toast/toast.manager';
+import { RoleLevel } from '@enums/role-level.enum';
 
 @Component({
   selector: 'app-layout-sidebar',
@@ -38,6 +39,12 @@ export class LayoutSidebarComponent implements OnInit {
   public isMenuCollapsed: boolean = true;
   public userInfo: UserInfo | null = null;
   public activeLink: string = 'home';
+  public ROLES = {
+    NOT_LOGGED: RoleLevel.NOT_LOGGED,
+    USER: RoleLevel.USER,
+    RRHH: RoleLevel.RRHH,
+    ADMIN: RoleLevel.ADMIN,
+  };
 
   constructor(
     private router: Router,
@@ -48,7 +55,11 @@ export class LayoutSidebarComponent implements OnInit {
   public ngOnInit(): void {
     this.userInfo = StorageHelper.getUserInfo();
     if (!this.userInfo) {
-      this.toastManager.quickShow('¡No hay una sesión iniciada!', 'warning');
+      this.toastManager.quickShow(
+        '¡No hay una sesión iniciada!',
+        'warning',
+        true
+      );
       this.router.navigate(['/auth/login']);
     }
   }

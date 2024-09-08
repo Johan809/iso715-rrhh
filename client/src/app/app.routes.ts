@@ -1,5 +1,7 @@
 // Angular modules
 import { Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
+import { RoleLevel } from '@enums/role-level.enum';
 
 export const routes: Routes = [
   {
@@ -18,6 +20,8 @@ export const routes: Routes = [
       import('./pages/competencias/list/competenciasList.component').then(
         (m) => m.CompetenciasListComponent
       ),
+    canActivate: [AuthGuard],
+    data: { requiredLevel: RoleLevel.RRHH },
   },
   {
     path: 'idiomas',
@@ -25,6 +29,9 @@ export const routes: Routes = [
       import('./pages/idiomas/idiomas.component').then(
         (m) => m.IdiomasComponent
       ),
+
+    canActivate: [AuthGuard],
+    data: { requiredLevel: RoleLevel.RRHH },
   },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {

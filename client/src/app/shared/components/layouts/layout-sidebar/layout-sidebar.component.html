@@ -32,6 +32,7 @@
         class="nav-link text-white cursor-pointer"
         [routerLink]="['/competencias']"
         [routerLinkActive]="['active']"
+        [class.hidden]="(userInfo?.role ?? ROLES.NOT_LOGGED) < ROLES.RRHH"
       >
         <i class="fa-solid fa-kitchen-set"></i>
         Competencias
@@ -42,6 +43,7 @@
         class="nav-link text-white cursor-pointer"
         [routerLink]="['/idiomas']"
         [routerLinkActive]="['active']"
+        [class.hidden]="(userInfo?.role ?? ROLES.NOT_LOGGED) < ROLES.RRHH"
       >
         <i class="fa-solid fa-language"></i>
         Idiomas
