@@ -15,8 +15,7 @@ const getToken = (user: UsuarioDocument): string => {
       email: user.email,
       role: (<RoleDocument>user?.role).nivel,
     },
-    <string>process.env.JWT_SECRET,
-    { expiresIn: "2h" }
+    <string>process.env.JWT_SECRET
   );
 };
 

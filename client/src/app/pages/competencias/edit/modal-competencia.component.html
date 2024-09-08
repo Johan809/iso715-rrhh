@@ -1,0 +1,51 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ modalTitle }}</h4>
+  <button
+    type="button"
+    class="btn-close text-dark d-flex"
+    aria-label="Close"
+    (click)="activeModal.dismiss()"
+  >
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+
+<div class="modal-body">
+  <app-progress-bar *ngIf="storeService.isLoading()" />
+
+  <div class="position-relative" [class.blockUI]="storeService.isLoading()">
+    <div class="mb-2">
+      <label for="txtDescripcion" class="form-label">Descripción</label>
+      <input
+        type="text"
+        class="form-control"
+        id="txtDescripcion"
+        [(ngModel)]="competencia.descripcion"
+      />
+    </div>
+    <div class="mb-2">
+      <label for="ddlEstado" class="form-label">Estado</label>
+      <select
+        name="estado"
+        id="ddlEstado"
+        class="form-select"
+        aria-label="Listado de Estados"
+        [(ngModel)]="competencia.estado"
+        [disabled]="IdSec == 0"
+      >
+        <option value="A">Activa</option>
+        <option value="I">Inactiva</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-success w-100"
+    (click)="onGrabarClick($event)"
+    [disabled]="this.storeService.isLoading()"
+  >
+    Grabar
+  </button>
+</div>

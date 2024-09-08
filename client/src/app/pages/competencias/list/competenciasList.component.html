@@ -1,0 +1,94 @@
+<app-page-layout>
+  <div class="container my-3">
+    <app-progress-bar *ngIf="storeService.isLoading()" />
+
+    <ng-container *ngIf="!storeService.isLoading()">
+      <div class="text-center">
+        <h1>Competencias</h1>
+        <hr />
+      </div>
+
+      <div id="filters-form">
+        <div class="row mb-3">
+          <div class="col">
+            <label for="txtDescripcion" class="form-label">Descripción</label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtDescripcion"
+              [(ngModel)]="where.descripcion"
+            />
+          </div>
+
+          <div class="col">
+            <label for="ddlEstado" class="form-label">Estado</label>
+            <select
+              name="estado"
+              id="ddlEstado"
+              class="form-select"
+              aria-label="Listado de Estados"
+              [(ngModel)]="where.estado"
+            >
+              <option value="" selected>Todos</option>
+              <option value="A">Activa</option>
+              <option value="I">Inactiva</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-secondary" (click)="onBuscar()">
+          <i class="fa-solid fa-magnifying-glass"></i> Buscar
+        </button>
+
+        <button class="btn btn-success mx-3" (click)="onCrear()">
+          <i class="fa-solid fa-plus"></i>
+          Crear Nuevo
+        </button>
+      </div>
+
+      <div class="table-responsive mt-3" *ngIf="competencias.length > 0">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Descripción</th>
+              <th>Estado</th>
+              <th>Fecha de creación</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let competencia of competencias">
+              <td>{{ competencia.idsec }}</td>
+              <td>{{ competencia.descripcion }}</td>
+              <td>
+                {{ competencia.estado === "A" ? "Activa" : "Inactiva" }}
+              </td>
+              <td>{{ competencia.createdAt | date : "short" }}</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary"
+                  (click)="onEdit(competencia.idsec)"
+                >
+                  <i class="fa-solid fa-pen-to-square"></i>
+                  Editar
+                </button>
+                <button
+                  class="btn btn-sm btn-danger mx-2"
+                  (click)="onDelete(competencia.idsec)"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="competencias.length === 0" class="alert alert-info mt-3">
+        No se encontraron competencias.
+      </div>
+    </ng-container>
+  </div>
+</app-page-layout>

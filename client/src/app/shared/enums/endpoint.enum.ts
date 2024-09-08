@@ -3,4 +3,5 @@ export enum Endpoint {
   FORGOT_PASSWORD = 'auth/forgot-password',
   VALIDATE_ACCOUNT = 'auth/validate-account',
   CREATE_ACCOUNT = 'auth/register',
+  COMPETENCIA = 'competencias',
 }

@@ -2,14 +2,14 @@
 // NOTE Variables -------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------
 
-@import 'variables.scss';
+@import "variables.scss";
 
 // ----------------------------------------------------------------------------------------------
 // NOTE Bootstrap -------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------
 
 // NOTE Complete bootstrap
-@import '../../../node_modules/bootstrap/scss/bootstrap.scss';
+@import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 
 // NOTE Bootstrap configuration
 // @import '../../../node_modules/bootstrap/scss/functions';
@@ -71,10 +71,23 @@
 // NOTE Project style ---------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------
 
-@import 'project.scss';
+@import "project.scss";
 
 // ----------------------------------------------------------------------------------------------
 // NOTE Overwrite styles ------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------
 
 // @import 'modules/_bootstrap.scss';
+
+/* Estilo para bloquear el contenedor */
+.blockUI::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  z-index: 100; /* Asegura que el backdrop esté por encima del contenido */
+  pointer-events: all; /* Bloquea la interacción del usuario */
+}

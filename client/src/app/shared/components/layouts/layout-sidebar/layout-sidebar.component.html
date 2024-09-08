@@ -17,19 +17,24 @@
   <hr />
   <ul class="nav nav-pills flex-column mb-auto">
     <li class="nav-item">
-      <a href="#" class="nav-link active" aria-current="page">
-        <svg class="bi pe-none me-2" width="16" height="16">
-          <use xlink:href="#home"></use>
-        </svg>
-        Home
+      <a
+        class="nav-link text-white"
+        aria-current="page"
+        [routerLink]="['/home']"
+        [routerLinkActive]="['active']"
+      >
+        <i class="fa-solid fa-house"></i>
+        {{ "HOME" | translate }}
       </a>
     </li>
     <li>
-      <a href="#" class="nav-link text-white">
-        <svg class="bi pe-none me-2" width="16" height="16">
-          <use xlink:href="#speedometer2"></use>
-        </svg>
-        Dashboard
+      <a
+        class="nav-link text-white cursor-pointer"
+        [routerLink]="['/competencias']"
+        [routerLinkActive]="['active']"
+      >
+        <i class="fa-solid fa-kitchen-set"></i>
+        Competencias
       </a>
     </li>
     <li>
@@ -60,26 +65,36 @@
   <hr />
   <div class="dropdown">
     <a
-      href="#"
       class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+      (click)="isMenuCollapsed = !isMenuCollapsed"
       data-bs-toggle="dropdown"
       aria-expanded="false"
     >
-      <img
-        src="https://github.com/mdo.png"
-        alt=""
-        width="32"
-        height="32"
-        class="rounded-circle me-2"
-      />
-      <strong>mdo</strong>
+      <strong>{{ this.userInfo?.username }}</strong>
     </a>
-    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-      <li><a class="dropdown-item" href="#">New project...</a></li>
-      <li><a class="dropdown-item" href="#">Settings</a></li>
-      <li><a class="dropdown-item" href="#">Profile</a></li>
-      <li><hr class="dropdown-divider" /></li>
-      <li><a class="dropdown-item" href="#">Sign out</a></li>
-    </ul>
+
+    <div
+      class="collapse navbar-collapse"
+      [ngbCollapse]="isMenuCollapsed"
+      id="navbarSupportedContent"
+    >
+      <ul class="navbar-nav mb-2 mb-lg-0 w-100">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [routerLink]="['/home']"
+            [routerLinkActive]="['active']"
+          >
+            {{ "HOME" | translate }}
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link cursor-pointer" (click)="onClickLogout()">
+            {{ "LOGOUT" | translate }}
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

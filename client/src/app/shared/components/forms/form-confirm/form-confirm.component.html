@@ -1,17 +1,22 @@
-<!-- NOTE Confirm form -->
-<form (ngSubmit)="onClickSubmit()">
+<div class="modal-header">
+  <h4 class="modal-title">Confirmación</h4>
+</div>
 
-  <div class="text-center py-3">
-    <p>{{ 'ALERT_DELETE_ENTRY' | translate }}</p>
-  </div>
+<div class="modal-body">
+  <form>
+    <div class="text-center py-3">
+      <p>{{ "ALERT_DELETE_ENTRY" | translate }}</p>
+    </div>
+  </form>
+</div>
 
-  <!-- NOTE Submit -->
+<div class="modal-footer">
   <div class="text-center">
     <button type="button" class="btn btn-light" (click)="onClickClose()">
-      {{ 'CLOSE' | translate }}
+      {{ "CLOSE" | translate }}
     </button>
-    <button type="submit" class="btn btn-danger ms-3">
-      {{ 'DELETE' | translate }}
+    <button type="submit" class="btn btn-danger ms-3" (click)="onClickSubmit()">
+      {{ "DELETE" | translate }}
     </button>
   </div>
-</form>
+</div>

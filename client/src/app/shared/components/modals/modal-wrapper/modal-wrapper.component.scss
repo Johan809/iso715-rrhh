@@ -1,6 +1,7 @@
 .modal-header {
   background: var(--bs-info);
-  &, button {
+  &,
+  button {
     color: white;
   }
   .modal-title {

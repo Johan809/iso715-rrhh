@@ -15,13 +15,14 @@ import { withRouterConfig } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { AngularSvgIconModule } from 'angular-svg-icon';
+import { AngularSvgIconModule, provideAngularSvgIcon } from 'angular-svg-icon';
 
 import { environment } from '@env/environment';
 import { routes } from './app.routes';
 
 import { AppService } from '@services/app.service';
 import { StoreService } from '@services/store.service';
+import { CompetenciaService } from '@services/competencia.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -53,9 +54,11 @@ export const appConfig: ApplicationConfig = {
     ),
     StoreService,
     AppService,
+    CompetenciaService,
     DatePipe,
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
     provideAnimations(),
     provideClientHydration(),
+    provideAngularSvgIcon(),
   ],
 };

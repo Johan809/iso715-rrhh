@@ -9,6 +9,7 @@ import { StorageKey } from '@enums/storage-key.enum';
 
 // Models
 import { AuthResponse } from '@models/auth-response.model';
+import { UserInfo } from 'src/app/lib/types';
 
 @Injectable()
 export class StorageHelper {
@@ -28,6 +29,12 @@ export class StorageHelper {
     if (typeof localStorage === 'undefined') return null;
     const token = StorageHelper.getItem(StorageKey.TOKEN);
     return token;
+  }
+
+  public static getUserInfo(): UserInfo | null {
+    if (typeof localStorage === 'undefined') return null;
+    const userInfo = StorageHelper.getItem(StorageKey.USER_INFO);
+    return userInfo;
   }
 
   public static setItem(key: string, value: any, prefix: boolean = true): void {
