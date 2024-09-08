@@ -15,12 +15,12 @@
 
   <div class="position-relative" [class.blockUI]="storeService.isLoading()">
     <div class="mb-2">
-      <label for="txtDescripcion" class="form-label">Descripción</label>
+      <label for="txtNombre" class="form-label">Descripción</label>
       <input
         type="text"
         class="form-control"
-        id="txtDescripcion"
-        [(ngModel)]="competencia.descripcion"
+        id="txtNombre"
+        [(ngModel)]="idioma.nombre"
       />
     </div>
     <div class="mb-2">
@@ -30,11 +30,11 @@
         id="ddlEstado"
         class="form-select"
         aria-label="Listado de Estados"
-        [(ngModel)]="competencia.estado"
+        [(ngModel)]="idioma.estado"
         [disabled]="IdSec == 0"
       >
-        <option value="A">Activa</option>
-        <option value="I">Inactiva</option>
+        <option value="A">Activo</option>
+        <option value="I">Inactivo</option>
       </select>
     </div>
   </div>

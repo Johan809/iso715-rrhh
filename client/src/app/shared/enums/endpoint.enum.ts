@@ -4,4 +4,5 @@ export enum Endpoint {
   VALIDATE_ACCOUNT = 'auth/validate-account',
   CREATE_ACCOUNT = 'auth/register',
   COMPETENCIA = 'competencias',
+  IDIOMA = 'idiomas',
 }

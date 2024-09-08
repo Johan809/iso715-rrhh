@@ -19,6 +19,13 @@ export const routes: Routes = [
         (m) => m.CompetenciasListComponent
       ),
   },
+  {
+    path: 'idiomas',
+    loadComponent: () =>
+      import('./pages/idiomas/idiomas.component').then(
+        (m) => m.IdiomasComponent
+      ),
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: '**',
