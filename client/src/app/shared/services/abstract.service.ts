@@ -73,7 +73,7 @@ export abstract class AbstractService {
         if (error.response?.data) {
           this.toastManager.quickShow(
             (<any>error.response?.data)['message'] ?? 'Ha ocurrido un error',
-            'warning'
+            <number>error?.status >= 500 ? 'danger' : 'warning'
           );
         } else {
           this.toastManager.quickShow(error.message);

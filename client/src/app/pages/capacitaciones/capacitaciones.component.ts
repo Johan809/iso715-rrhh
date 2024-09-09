@@ -1,16 +1,18 @@
 import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
 import { ToastManager } from '@blocks/toast/toast.manager';
+import { RoleLevel } from '@enums/role-level.enum';
 import { FormConfirmComponent } from '@forms/form-confirm/form-confirm.component';
+import { StorageHelper } from '@helpers/storage.helper';
 import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
 import { Capacitacion } from '@models/capacitacion.model';
 import { CapacitacionService } from '@services/capacitacion.service';
 import { StoreService } from '@services/store.service';
-import { CapacitacionWhere } from 'src/app/lib/types';
+import { UserInfo } from 'src/app/lib/types';
 import { CapacitacionModalComponent } from './capacitacion-modal/capacitacion-modal.component';
 
 @Component({
@@ -25,11 +27,13 @@ import { CapacitacionModalComponent } from './capacitacion-modal/capacitacion-mo
     FormsModule,
     PageLayoutComponent,
     ProgressBarComponent,
+    NgbDatepickerModule,
   ],
 })
 export class CapacitacionesComponent implements OnInit {
-  protected where: CapacitacionWhere = new Capacitacion.Where();
+  protected where = new Capacitacion.Where();
   protected capacitaciones: Capacitacion[] = [];
+  private userInfo: UserInfo | null = null;
   public NivelList = [{ value: '', label: 'Todos' }, ...Capacitacion.NIVELES];
 
   constructor(
@@ -40,11 +44,16 @@ export class CapacitacionesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.userInfo = StorageHelper.getUserInfo();
     this.buscar();
   }
 
   private buscar() {
     this.storeService.isLoading.set(true);
+    if (this.userInfo && this.userInfo.role === RoleLevel.USER) {
+      this.where.user_name = this.userInfo.username;
+    }
+    this.where.initDates();
     this.capacitacionService
       .getAll(this.where)
       .then((data) => {
@@ -56,6 +65,11 @@ export class CapacitacionesComponent implements OnInit {
 
   public onBuscar() {
     this.buscar();
+  }
+
+  public getNivelLabel(value: string | undefined): string {
+    const nivel = this.NivelList.find((n) => n.value === value);
+    return nivel ? nivel.label : 'Desconocido';
   }
 
   public onCrear() {

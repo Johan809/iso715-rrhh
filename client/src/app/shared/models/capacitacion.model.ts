@@ -1,4 +1,4 @@
-import { LabelValuePair } from 'src/app/lib/types';
+import { DateObject, LabelValuePair } from 'src/app/lib/types';
 
 const NIVEL_LIST = {
   GRADO: 'G',
@@ -23,7 +23,6 @@ export class Capacitacion {
   public fechaHasta?: Date;
   public institucion?: string;
   public user_name?: string;
-  public estado: string = 'A';
   public createdAt: Date | string | undefined;
   public updatedAt: Date | string | undefined;
   public _id: string | undefined;
@@ -53,9 +52,20 @@ export class Capacitacion {
   static Where = class {
     descripcion: string = '';
     nivel?: string = '';
-    fechaDesde?: string | Date;
-    fechaHasta?: string | Date;
+    fechaDesde?: string | Date | DateObject;
+    fechaHasta?: string | Date | DateObject;
     institucion?: string;
     user_name?: string;
+
+    public initDates() {
+      if (this.fechaDesde && typeof this.fechaDesde == 'object') {
+        let dObj = <DateObject>this.fechaDesde;
+        this.fechaDesde = new Date(dObj.year, dObj.month - 1, dObj.day);
+      }
+      if (this.fechaHasta && typeof this.fechaHasta == 'object') {
+        let dObj = <DateObject>this.fechaHasta;
+        this.fechaHasta = new Date(dObj.year, dObj.month - 1, dObj.day);
+      }
+    }
   };
 }

@@ -57,6 +57,19 @@ export class ModalCompetenciaComponent implements OnInit {
 
   public onGrabarClick(event: Event) {
     event.preventDefault();
-    this.grabar();
+    if (this.validate()) {
+      this.grabar();
+    }
+  }
+
+  private validate(): boolean {
+    let isValid = true;
+
+    if (!this.competencia.descripcion) {
+      this.toast.quickShow('La descripción es requerida', 'warning');
+      isValid = false;
+    }
+
+    return isValid;
   }
 }

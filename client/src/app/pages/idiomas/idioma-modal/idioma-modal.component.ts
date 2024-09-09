@@ -57,6 +57,19 @@ export class IdiomaModalComponent implements OnInit {
 
   public onGrabarClick(event: Event) {
     event.preventDefault();
-    this.grabar();
+    if (this.validate()) {
+      this.grabar();
+    }
+  }
+
+  private validate(): boolean {
+    let isValid = true;
+
+    if (!this.idioma.nombre) {
+      this.toast.quickShow('El Nombre es requerido', 'warning');
+      isValid = false;
+    }
+
+    return isValid;
   }
 }
