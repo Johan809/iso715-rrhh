@@ -1,0 +1,49 @@
+<app-page-layout>
+  <div class="container my-3">
+    <app-progress-bar *ngIf="storeService.isLoading()" />
+
+    <!-- to-do: terminar con esto -->
+    <ng-container *ngIf="!storeService.isLoading()">
+      <div class="text-center">
+        <h1>Capacitaciones</h1>
+        <hr />
+      </div>
+
+      <div id="filters-form">
+        <div class="row mb-3">
+          <div class="col">
+            <label for="txtDescripcion" class="form-label">Descripción</label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtDescripcion"
+              [(ngModel)]="where.descripcion"
+            />
+          </div>
+          <div class="col">
+            <label for="ddlNiveles" class="form-label">Nivel</label>
+            <select
+              name="nivel"
+              id="ddlNiveles"
+              class="form-select"
+              aria-label="Listado de Niveles"
+              [(ngModel)]="where.nivel"
+            >
+              <option
+                *ngFor="let nivel of NivelList"
+                [value]="nivel.value"
+                [attr.selected]="where.nivel == nivel.value"
+              >
+                {{ nivel.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="capacitaciones.length === 0" class="alert alert-info mt-3">
+        No se encontraron capacitaciones.
+      </div>
+    </ng-container>
+  </div>
+</app-page-layout>

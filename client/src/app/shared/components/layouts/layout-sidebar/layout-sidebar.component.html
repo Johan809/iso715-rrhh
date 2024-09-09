@@ -49,6 +49,17 @@
         Idiomas
       </a>
     </li>
+    <li>
+      <a
+        class="nav-link text-white cursor-pointer"
+        [routerLink]="['/capacitaciones']"
+        [routerLinkActive]="['active']"
+        [class.hidden]="(userInfo?.role ?? ROLES.NOT_LOGGED) < ROLES.USER"
+      >
+        <i class="fa-solid fa-certificate"></i>
+        Capacitaciones
+      </a>
+    </li>
   </ul>
 
   <hr />

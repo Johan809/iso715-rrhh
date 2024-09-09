@@ -23,6 +23,7 @@ type CapacitacionDocument = Document & {
   fechaDesde: Date;
   fechaHasta: Date;
   institucion: string;
+  user_name: string;
 };
 
 type CapacitacionInput = {
@@ -31,6 +32,7 @@ type CapacitacionInput = {
   fechaDesde: CapacitacionDocument["fechaDesde"];
   fechaHasta: CapacitacionDocument["fechaHasta"];
   institucion: CapacitacionDocument["institucion"];
+  user_name: CapacitacionDocument["user_name"];
 };
 
 const capacitacionSchema = new Schema(
@@ -65,6 +67,10 @@ const capacitacionSchema = new Schema(
     institucion: {
       type: Schema.Types.String,
       required: true,
+    },
+    user_name: {
+      type: Schema.Types.String,
+      required: false,
     },
   },
   {

@@ -33,6 +33,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { requiredLevel: RoleLevel.RRHH },
   },
+  {
+    path: 'capacitaciones',
+    loadComponent: () =>
+      import('./pages/capacitaciones/capacitaciones.component').then(
+        (m) => m.CapacitacionesComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { requiredLevel: RoleLevel.USER },
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: '**',

@@ -5,4 +5,5 @@ export enum Endpoint {
   CREATE_ACCOUNT = 'auth/register',
   COMPETENCIA = 'competencias',
   IDIOMA = 'idiomas',
+  CAPACITACION = 'capacitaciones',
 }

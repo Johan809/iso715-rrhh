@@ -11,12 +11,18 @@ const createCapacitacion = async (
   next: NextFunction
 ) => {
   try {
-    const { descripcion, nivel, fechaDesde, fechaHasta, institucion } =
-      req.body;
+    const {
+      descripcion,
+      nivel,
+      fechaDesde,
+      fechaHasta,
+      institucion,
+      user_name,
+    } = req.body;
 
     if (!descripcion || !nivel || !fechaDesde || !fechaHasta || !institucion) {
       throw new Error(
-        "Todos los campos son obligatorios: Descripción, Nivel, Fecha Desde, Fecha Hasta, Institución"
+        "Los campos son obligatorios: Descripción, Nivel, Fecha Desde, Fecha Hasta, Institución"
       );
     }
 
@@ -30,6 +36,7 @@ const createCapacitacion = async (
       fechaDesde,
       fechaHasta,
       institucion,
+      user_name,
     };
 
     const capacitacionCreated = await Capacitacion.create(capacitacionInput);
@@ -46,8 +53,14 @@ const getAllCapacitaciones = async (
   next: NextFunction
 ) => {
   try {
-    const { descripcion, nivel, fechaDesde, fechaHasta, institucion } =
-      req.query;
+    const {
+      descripcion,
+      nivel,
+      fechaDesde,
+      fechaHasta,
+      institucion,
+      user_name,
+    } = req.query;
 
     const filter: any = {};
     if (descripcion) {
@@ -64,6 +77,9 @@ const getAllCapacitaciones = async (
     }
     if (institucion) {
       filter.institucion = { $regex: institucion, $options: "i" };
+    }
+    if (user_name) {
+      filter.user_name = { $regex: user_name, $options: "i" };
     }
 
     const capacitaciones = await Capacitacion.find(filter)
@@ -101,8 +117,14 @@ const updateCapacitacion = async (
 ) => {
   try {
     const { id } = req.params;
-    const { descripcion, nivel, fechaDesde, fechaHasta, institucion } =
-      req.body;
+    const {
+      descripcion,
+      nivel,
+      fechaDesde,
+      fechaHasta,
+      institucion,
+      user_name,
+    } = req.body;
 
     const capacitacion = await Capacitacion.findOne({ idsec: id });
     if (!capacitacion) {
@@ -126,7 +148,7 @@ const updateCapacitacion = async (
 
     await Capacitacion.updateOne(
       { _id: capacitacion._id },
-      { descripcion, nivel, fechaDesde, fechaHasta, institucion }
+      { descripcion, nivel, fechaDesde, fechaHasta, institucion, user_name }
     );
     const capacitacionUpdated = await Capacitacion.findOne({ idsec: id });
     return res.status(200).json({ data: capacitacionUpdated });
