@@ -1,1 +1,112 @@
-<p>capacitacion-modal works!</p>
+<div class="modal-header">
+  <h4 class="modal-title">{{ modalTitle }}</h4>
+  <button
+    type="button"
+    class="btn-close text-dark d-flex"
+    aria-label="Close"
+    (click)="activeModal.dismiss()"
+  >
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+
+<div class="modal-body">
+  <app-progress-bar *ngIf="storeService.isLoading()" />
+
+  <section class="position-relative" [class.blockUI]="storeService.isLoading()">
+    <div class="mb-2">
+      <label for="txtDescripcion" class="form-label">Descripción</label>
+      <input
+        type="text"
+        class="form-control"
+        id="txtDescripcion"
+        [(ngModel)]="capacitacion.descripcion"
+      />
+    </div>
+
+    <div class="mb-2">
+      <label for="ddlNiveles" class="form-label">Nivel</label>
+      <select
+        name="nivel"
+        id="ddlNiveles"
+        class="form-select"
+        aria-label="Listado de Niveles"
+        [(ngModel)]="capacitacion.nivel"
+      >
+        <option
+          *ngFor="let nivel of NivelList"
+          [value]="nivel.value"
+          [attr.selected]="capacitacion.nivel == nivel.value"
+        >
+          {{ nivel.label }}
+        </option>
+      </select>
+    </div>
+
+    <div class="row mb-2">
+      <label class="form-label">Rango de fechas</label>
+      <div class="col">
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="Desde"
+            id="txtFechaDesde"
+            name="fechaDesde"
+            [(ngModel)]="capacitacion.fechaDesde"
+            ngbDatepicker
+            #fDesde="ngbDatepicker"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            (click)="fDesde.toggle()"
+            type="button"
+          >
+            <i class="fa-solid fa-calendar-days"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="Hasta"
+            id="txtFechaHasta"
+            name="fechaHasta"
+            [(ngModel)]="capacitacion.fechaHasta"
+            ngbDatepicker
+            #fHasta="ngbDatepicker"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            (click)="fHasta.toggle()"
+            type="button"
+          >
+            <i class="fa-solid fa-calendar-days"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <label for="txtInstitucion" class="form-label">Institución</label>
+      <input
+        type="text"
+        class="form-control"
+        id="txtInstitucion"
+        [(ngModel)]="capacitacion.institucion"
+      />
+    </div>
+  </section>
+</div>
+
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-success w-100"
+    (click)="onGrabarClick($event)"
+    [disabled]="this.storeService.isLoading()"
+  >
+    Grabar
+  </button>
+</div>

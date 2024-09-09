@@ -24,5 +24,9 @@
   "ALERT_DELETE_ENTRY": "¿Estás seguro de que deseas eliminar esta entrada?",
   "RESET_PASSWORD": "Restablecer contraseña",
   "FIELD_REQUIRED": "Este campo es obligatorio",
-  "FIELD_EMAIL": "Este campo debe ser un correo electrónico"
+  "FIELD_EMAIL": "Este campo debe ser un correo electrónico",
+  "WARNING": "Advertencia",
+  "DANGER": "Error",
+  "INFO": "Mensaje",
+  "SUCCESS": "Éxito"
 }

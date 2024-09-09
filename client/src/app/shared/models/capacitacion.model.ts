@@ -19,8 +19,8 @@ export class Capacitacion {
   public idsec: number;
   public descripcion?: string;
   public nivel?: string;
-  public fechaDesde?: Date;
-  public fechaHasta?: Date;
+  public fechaDesde?: Date | DateObject | string;
+  public fechaHasta?: Date | DateObject | string;
   public institucion?: string;
   public user_name?: string;
   public createdAt: Date | string | undefined;
@@ -36,6 +36,15 @@ export class Capacitacion {
       this.createdAt = new Date(<string>this.createdAt);
     if (this.updatedAt && typeof this.updatedAt == 'string')
       this.updatedAt = new Date(<string>this.updatedAt);
+
+    if (this.fechaDesde && typeof this.fechaDesde == 'object') {
+      let dObj = <DateObject>this.fechaDesde;
+      this.fechaDesde = new Date(dObj.year, dObj.month - 1, dObj.day);
+    }
+    if (this.fechaHasta && typeof this.fechaHasta == 'object') {
+      let dObj = <DateObject>this.fechaHasta;
+      this.fechaHasta = new Date(dObj.year, dObj.month - 1, dObj.day);
+    }
   }
 
   static get NIVELES(): LabelValuePair[] {

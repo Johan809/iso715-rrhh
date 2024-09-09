@@ -12,7 +12,7 @@ import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component'
 import { Capacitacion } from '@models/capacitacion.model';
 import { CapacitacionService } from '@services/capacitacion.service';
 import { StoreService } from '@services/store.service';
-import { UserInfo } from 'src/app/lib/types';
+import { DateObject, UserInfo } from 'src/app/lib/types';
 import { CapacitacionModalComponent } from './capacitacion-modal/capacitacion-modal.component';
 
 @Component({
@@ -70,6 +70,19 @@ export class CapacitacionesComponent implements OnInit {
   public getNivelLabel(value: string | undefined): string {
     const nivel = this.NivelList.find((n) => n.value === value);
     return nivel ? nivel.label : 'Desconocido';
+  }
+
+  public toDate(value: Date | string | DateObject | undefined): Date | null {
+    console.log('toDate', typeof value, value);
+    if (!value) return null;
+    if (value instanceof Date) return value;
+
+    if (typeof value == 'string') return new Date(value);
+
+    if (typeof value === 'object') {
+      return new Date(value.year, value.month - 1, value.day);
+    }
+    return null;
   }
 
   public onCrear() {

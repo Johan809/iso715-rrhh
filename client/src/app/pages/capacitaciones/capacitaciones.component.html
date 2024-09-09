@@ -124,20 +124,26 @@
             <tr *ngFor="let capacitacion of capacitaciones">
               <td>{{ capacitacion.descripcion }}</td>
               <td>{{ getNivelLabel(capacitacion.nivel) }}</td>
-              <td>{{ capacitacion.fechaDesde | date : "shortDate" }}</td>
-              <td>{{ capacitacion.fechaHasta | date : "shortDate" }}</td>
+              <td>
+                {{ toDate(capacitacion.fechaDesde) | date : "dd/MM/yyyy" }}
+              </td>
+              <td>
+                {{ toDate(capacitacion.fechaHasta) | date : "dd/MM/yyyy" }}
+              </td>
               <td>{{ capacitacion.institucion }}</td>
               <td>
                 <button
                   class="btn btn-sm btn-primary"
                   (click)="onEdit(capacitacion.idsec)"
                 >
+                  <i class="fa-solid fa-pen-to-square"></i>
                   Editar
                 </button>
                 <button
-                  class="btn btn-sm btn-danger"
+                  class="btn btn-sm btn-danger mx-2"
                   (click)="onDelete(capacitacion.idsec)"
                 >
+                  <i class="fa-solid fa-trash"></i>
                   Eliminar
                 </button>
               </td>
