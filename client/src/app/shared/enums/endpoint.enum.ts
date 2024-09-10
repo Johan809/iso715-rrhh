@@ -6,4 +6,5 @@ export enum Endpoint {
   COMPETENCIA = 'competencias',
   IDIOMA = 'idiomas',
   CAPACITACION = 'capacitaciones',
+  PUESTO = 'puestos',
 }

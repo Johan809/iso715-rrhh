@@ -16,7 +16,7 @@ export class Puesto {
   nivelRiesgo?: string;
   nivelMinimoSalario?: number;
   nivelMaximoSalario?: number;
-  idioma?: Idioma;
+  idioma?: Idioma | number;
   estado: string;
 
   constructor() {
@@ -32,4 +32,11 @@ export class Puesto {
       { label: PUESTO_ESTADOS.INACTIVO_LABEL, value: PUESTO_ESTADOS.INACTIVO },
     ];
   }
+
+  static Where = class {
+    idsec?: number;
+    nombre?: string;
+    nivelRiesgo?: string;
+    estado?: string;
+  };
 }
