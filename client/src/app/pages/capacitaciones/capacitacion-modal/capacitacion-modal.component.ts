@@ -64,11 +64,14 @@ export class CapacitacionModalComponent implements OnInit {
 
   private convertDate(fecha: string): DateObject | string {
     if (fecha) {
-      let date = new Date(fecha);
+      let str = fecha
+        .split('T')[0]
+        .split('-')
+        .map((x) => Number.parseInt(x));
       return <DateObject>{
-        year: date.getFullYear(),
-        month: date.getMonth() + 1,
-        day: date.getDay(),
+        year: str[0],
+        month: str[1],
+        day: str[2],
       };
     } else return '';
   }

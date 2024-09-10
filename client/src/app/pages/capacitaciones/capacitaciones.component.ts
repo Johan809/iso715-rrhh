@@ -73,7 +73,6 @@ export class CapacitacionesComponent implements OnInit {
   }
 
   public toDate(value: Date | string | DateObject | undefined): Date | null {
-    console.log('toDate', typeof value, value);
     if (!value) return null;
     if (value instanceof Date) return value;
 
@@ -111,7 +110,7 @@ export class CapacitacionesComponent implements OnInit {
       .then(() => {
         this.buscar();
       })
-      .catch((er) => console.error(er));
+      .catch(() => {});
   }
 
   public onDelete(id: number) {
@@ -134,6 +133,6 @@ export class CapacitacionesComponent implements OnInit {
             .finally(() => this.buscar());
         }
       })
-      .catch((err) => console.error(err));
+      .catch(() => {});
   }
 }
