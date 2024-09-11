@@ -127,7 +127,10 @@ export class CapacitacionesComponent implements OnInit {
             .delete(id)
             .then((res) => {
               if (res)
-                this.toast.quickShow(`Idioma Id: ${id} eliminado`, 'info');
+                this.toast.quickShow(
+                  `Capacitación Id: ${id} eliminado`,
+                  'info'
+                );
             })
             .catch((er) => this.toast.quickShow(er.Message))
             .finally(() => this.buscar());

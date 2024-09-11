@@ -1,1 +1,14 @@
-<p>puestos works!</p>
+<app-page-layout>
+  <div class="container my-3">
+    <app-progress-bar *ngIf="storeService.isLoading()" />
+
+    <ng-container *ngIf="!storeService.isLoading()">
+      <div class="text-center">
+        <h1>Puestos</h1>
+        <hr />
+      </div>
+
+      <!-- to-do: me quede aqui -->
+    </ng-container>
+  </div>
+</app-page-layout>

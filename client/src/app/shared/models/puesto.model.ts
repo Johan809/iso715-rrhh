@@ -8,6 +8,12 @@ const PUESTO_ESTADOS = {
   INACTIVO_LABEL: 'Inactivo',
 };
 
+const NIVEL_RIESGO = {
+  ALTO: 'ALTO',
+  MEDIO: 'MEDIO',
+  BAJO: 'BAJO',
+};
+
 export class Puesto {
   _id?: string;
   idsec: number;
@@ -30,6 +36,14 @@ export class Puesto {
     return [
       { label: PUESTO_ESTADOS.ACTIVO_LABEL, value: PUESTO_ESTADOS.ACTIVO },
       { label: PUESTO_ESTADOS.INACTIVO_LABEL, value: PUESTO_ESTADOS.INACTIVO },
+    ];
+  }
+
+  static get NivelRiesgoList(): LabelValuePair[] {
+    return [
+      { label: 'Alto', value: NIVEL_RIESGO.ALTO },
+      { label: 'Medio', value: NIVEL_RIESGO.MEDIO },
+      { label: 'Bajo', value: NIVEL_RIESGO.BAJO },
     ];
   }
 
