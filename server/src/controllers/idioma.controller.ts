@@ -23,7 +23,7 @@ const createIdioma = async (
     const idiomaCreated = await Idioma.create(idiomaInput);
     return res.status(201).json({ data: idiomaCreated });
   } catch (err) {
-    console.log("error - createIdioma");
+    console.error("error - createIdioma");
     next(err);
   }
 };
@@ -47,7 +47,7 @@ const getAllIdiomas = async (
     const idiomas = await Idioma.find(filter).sort("-createdAt").exec();
     return res.status(200).json({ data: idiomas });
   } catch (err) {
-    console.log("error - getAllIdiomas");
+    console.error("error - getAllIdiomas");
     next(err);
   }
 };
@@ -63,7 +63,7 @@ const getIdioma = async (req: Request, res: Response, next: NextFunction) => {
     }
     return res.status(200).json({ data: idioma });
   } catch (err) {
-    console.log("error - getIdioma");
+    console.error("error - getIdioma");
     next(err);
   }
 };
@@ -93,7 +93,7 @@ const updateIdioma = async (
     const idiomaUpdated = await Idioma.findOne({ idsec: id });
     return res.status(200).json({ data: idiomaUpdated });
   } catch (err) {
-    console.log("error - updateIdioma");
+    console.error("error - updateIdioma");
     next(err);
   }
 };
@@ -115,7 +115,7 @@ const deleteIdioma = async (
     await Idioma.findById(idioma._id);
     return res.status(200).json({ message: "Idioma eliminado exitosamente." });
   } catch (err) {
-    console.log("error - deleteIdioma");
+    console.error("error - deleteIdioma");
     next(err);
   }
 };

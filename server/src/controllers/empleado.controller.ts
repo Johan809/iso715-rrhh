@@ -52,7 +52,7 @@ const createEmpleado = async (
     const empleadoCreated = await Empleado.create(empleadoInput);
     return res.status(201).json({ data: empleadoCreated });
   } catch (err) {
-    console.log("error - createEmpleado");
+    console.error("error - createEmpleado");
     next(err);
   }
 };
@@ -78,7 +78,7 @@ const getAllEmpleados = async (
 
     return res.status(200).json({ data: empleados });
   } catch (err) {
-    console.log("error - getAllEmpleados");
+    console.error("error - getAllEmpleados");
     next(err);
   }
 };
@@ -95,7 +95,7 @@ const getEmpleado = async (req: Request, res: Response, next: NextFunction) => {
     }
     return res.status(200).json({ data: empleado });
   } catch (err) {
-    console.log("error - getEmpleado");
+    console.error("error - getEmpleado");
     next(err);
   }
 };
@@ -144,7 +144,7 @@ const updateEmpleado = async (
 
     return res.status(200).json({ data: empleadoUpdated });
   } catch (err) {
-    console.log("error - updateEmpleado");
+    console.error("error - updateEmpleado");
     next(err);
   }
 };
@@ -168,7 +168,7 @@ const deleteEmpleado = async (
       .status(200)
       .json({ message: "Empleado eliminado exitosamente." });
   } catch (err) {
-    console.log("error - deleteEmpleado");
+    console.error("error - deleteEmpleado");
     next(err);
   }
 };
@@ -206,7 +206,7 @@ const createEmpleadoFromCandidato = async (
 
     return res.status(201).json({ data: empleadoCreated });
   } catch (err) {
-    console.log("error - createEmpleadoFromCandidato");
+    console.error("error - createEmpleadoFromCandidato");
     next(err);
   }
 };

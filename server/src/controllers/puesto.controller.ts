@@ -65,7 +65,7 @@ const createPuesto = async (
     const puestoCreated = await Puesto.create(puestoInput);
     return res.status(201).json({ data: puestoCreated });
   } catch (err) {
-    console.log("error - createPuesto");
+    console.error("error - createPuesto");
     next(err);
   }
 };
@@ -96,7 +96,7 @@ const getAllPuestos = async (
       .exec();
     return res.status(200).json({ data: puestos });
   } catch (err) {
-    console.log("error - getAllPuestos");
+    console.error("error - getAllPuestos");
     next(err);
   }
 };
@@ -112,7 +112,7 @@ const getPuesto = async (req: Request, res: Response, next: NextFunction) => {
     }
     return res.status(200).json({ data: puesto });
   } catch (err) {
-    console.log("error - getPuesto");
+    console.error("error - getPuesto");
     next(err);
   }
 };
@@ -186,7 +186,7 @@ const updatePuesto = async (
     );
     return res.status(200).json({ data: puestoUpdated });
   } catch (err) {
-    console.log("error - updatePuesto");
+    console.error("error - updatePuesto");
     next(err);
   }
 };
@@ -208,7 +208,7 @@ const deletePuesto = async (
     await Puesto.findByIdAndDelete(puesto._id);
     return res.status(200).json({ message: "Puesto eliminado exitosamente." });
   } catch (err) {
-    console.log("error - deletePuesto");
+    console.error("error - deletePuesto");
     next(err);
   }
 };

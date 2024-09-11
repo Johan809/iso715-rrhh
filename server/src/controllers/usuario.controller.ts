@@ -61,7 +61,7 @@ const createUsuario = async (
       .populate("role");
     return res.status(201).json({ data: user });
   } catch (err) {
-    console.log("error - createUsuario");
+    console.error("error - createUsuario");
     next(err);
   }
 };
@@ -96,7 +96,7 @@ const getAllUsuarios = async (
 
     return res.status(200).json({ data: usuarios });
   } catch (err) {
-    console.log("error - getAllUsuarios");
+    console.error("error - getAllUsuarios");
     next(err);
   }
 };
@@ -115,7 +115,7 @@ const getUsuario = async (req: Request, res: Response, next: NextFunction) => {
     }
     return res.status(200).json({ data: usuario });
   } catch (err) {
-    console.log("error - getUsuario");
+    console.error("error - getUsuario");
     next(err);
   }
 };
@@ -163,7 +163,7 @@ const updateUsuario = async (
     );
     return res.status(200).json({ data: usuarioUpdated });
   } catch (err) {
-    console.log("error - updateUsuario");
+    console.error("error - updateUsuario");
     next(err);
   }
 };
@@ -185,7 +185,7 @@ const deleteUsuario = async (
     await Usuario.findByIdAndDelete(user._id);
     return res.status(200).json({ message: "Usuario eliminado exitosamente." });
   } catch (err) {
-    console.log("error - deleteUsuario");
+    console.error("error - deleteUsuario");
     next(err);
   }
 };

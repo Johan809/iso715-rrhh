@@ -38,7 +38,7 @@ const createExperienciaLaboral = async (
     );
     return res.status(201).json({ data: experienciaLaboralCreated });
   } catch (err) {
-    console.log("error - createExperienciaLaboral");
+    console.error("error - createExperienciaLaboral");
     next(err);
   }
 };
@@ -83,7 +83,7 @@ const getAllExperienciasLaborales = async (
       .exec();
     return res.status(200).json({ data: experienciasLaborales });
   } catch (err) {
-    console.log("getAllExperienciasLaborales");
+    console.error("getAllExperienciasLaborales");
     next(err);
   }
 };
@@ -105,7 +105,7 @@ const getExperienciaLaboral = async (
 
     return res.status(200).json({ data: experienciaLaboral });
   } catch (err) {
-    console.log("error - getExperienciaLaboral");
+    console.error("error - getExperienciaLaboral");
     next(err);
   }
 };
@@ -138,7 +138,7 @@ const updateExperienciaLaboral = async (
     });
     return res.status(200).json({ data: experienciaLaboralUpdated });
   } catch (err) {
-    console.log("error - updateExperienciaLaboral");
+    console.error("error - updateExperienciaLaboral");
     next(err);
   }
 };
@@ -162,7 +162,7 @@ const deleteExperienciaLaboral = async (
       .status(200)
       .json({ message: "Experiencia Laboral eliminada exitosamente." });
   } catch (err) {
-    console.log("error - deleteExperienciaLaboral");
+    console.error("error - deleteExperienciaLaboral");
     next(err);
   }
 };

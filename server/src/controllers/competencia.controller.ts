@@ -27,7 +27,7 @@ const createCompetencia = async (
     const competenciaCreated = await Competencia.create(competenciaInput);
     return res.status(201).json({ data: competenciaCreated });
   } catch (err) {
-    console.log("error - createCompetencia");
+    console.error("error - createCompetencia");
     next(err);
   }
 };
@@ -54,7 +54,7 @@ const getAllCompetencias = async (
 
     return res.status(200).json({ data: competencias });
   } catch (err) {
-    console.log("error - getAllCompetencias");
+    console.error("error - getAllCompetencias");
     next(err);
   }
 };
@@ -74,7 +74,7 @@ const getCompetencia = async (
     }
     return res.status(200).json({ data: competencia });
   } catch (err) {
-    console.log("error - getCompetencia");
+    console.error("error - getCompetencia");
     next(err);
   }
 };
@@ -107,7 +107,7 @@ const updateCompetencia = async (
     const competenciaUpdated = await Competencia.findOne({ idsec: id });
     return res.status(200).json({ data: competenciaUpdated });
   } catch (err) {
-    console.log("error - updateCompetencia");
+    console.error("error - updateCompetencia");
     next(err);
   }
 };
@@ -131,7 +131,7 @@ const deleteCompetencia = async (
       .status(200)
       .json({ message: "Competencia eliminada exitosamente." });
   } catch (err) {
-    console.log("error - deleteCompetencia");
+    console.error("error - deleteCompetencia");
     next(err);
   }
 };

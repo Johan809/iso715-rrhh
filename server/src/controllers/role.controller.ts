@@ -20,7 +20,7 @@ const createRole = async (req: Request, res: Response, next: NextFunction) => {
     const RoleCreated = await Role.create(RoleInput);
     return res.status(201).json({ data: RoleCreated });
   } catch (err) {
-    console.log("error - createRole");
+    console.error("error - createRole");
     next(err);
   }
 };
@@ -43,7 +43,7 @@ const getAllRole = async (req: Request, res: Response, next: NextFunction) => {
     const roles = await Role.find(filter).sort("-createdAt").exec();
     return res.status(200).json({ data: roles });
   } catch (err) {
-    console.log("error - getAllRoles");
+    console.error("error - getAllRoles");
     next(err);
   }
 };
@@ -59,7 +59,7 @@ const getRole = async (req: Request, res: Response, next: NextFunction) => {
     }
     return res.status(200).json({ data: role });
   } catch (err) {
-    console.log("error - getRole");
+    console.error("error - getRole");
     next(err);
   }
 };
@@ -85,7 +85,7 @@ const updateRole = async (req: Request, res: Response, next: NextFunction) => {
     const roleUpdated = await Role.findOne({ idsec: id });
     return res.status(200).json({ data: roleUpdated });
   } catch (err) {
-    console.log("error - updateRole");
+    console.error("error - updateRole");
     next(err);
   }
 };
@@ -103,7 +103,7 @@ const deleteRole = async (req: Request, res: Response, next: NextFunction) => {
     await Role.findOneAndDelete({ idsec: id });
     return res.status(200).json({ message: "Rol eliminado exitosamente." });
   } catch (err) {
-    console.log("error - deleteRole");
+    console.error("error - deleteRole");
     next(err);
   }
 };

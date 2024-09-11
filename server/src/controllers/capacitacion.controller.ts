@@ -42,7 +42,7 @@ const createCapacitacion = async (
     const capacitacionCreated = await Capacitacion.create(capacitacionInput);
     return res.status(201).json({ data: capacitacionCreated });
   } catch (err) {
-    console.log("error - createCapacitacion");
+    console.error("error - createCapacitacion");
     next(err);
   }
 };
@@ -87,7 +87,7 @@ const getAllCapacitaciones = async (
       .exec();
     return res.status(200).json({ data: capacitaciones });
   } catch (err) {
-    console.log("error - getAllCapacitaciones");
+    console.error("error - getAllCapacitaciones");
     next(err);
   }
 };
@@ -105,7 +105,7 @@ const getCapacitacion = async (
     }
     return res.status(200).json({ data: capacitacion });
   } catch (err) {
-    console.log("error - getCapacitacion");
+    console.error("error - getCapacitacion");
     next(err);
   }
 };
@@ -153,7 +153,7 @@ const updateCapacitacion = async (
     const capacitacionUpdated = await Capacitacion.findOne({ idsec: id });
     return res.status(200).json({ data: capacitacionUpdated });
   } catch (err) {
-    console.log("error - updateCapacitacion");
+    console.error("error - updateCapacitacion");
     next(err);
   }
 };

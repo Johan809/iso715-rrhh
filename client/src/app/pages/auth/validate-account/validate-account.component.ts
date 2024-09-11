@@ -10,7 +10,6 @@ import { NgClass, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
-import { environment } from '@env/environment';
 import { AppService } from '@services/app.service';
 import { StoreService } from '@services/store.service';
 
@@ -40,11 +39,6 @@ export class ValidateAccountComponent implements OnInit {
     // NOTE Get token from URL
     this.activatedRoute.queryParams.subscribe((params: Params) => {
       this.tokenFromUrl = params['token'];
-      if (!environment.production)
-        console.log(
-          'ValidateAccountComponent : ngOnInit -> Token : ',
-          this.tokenFromUrl
-        );
     });
   }
 

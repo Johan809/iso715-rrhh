@@ -70,7 +70,7 @@ const createCandidato = async (
     const candidatoCreated = await Candidato.create(candidatoInput);
     return res.status(201).json({ data: candidatoCreated });
   } catch (err) {
-    console.log("error - createCandidato");
+    console.error("error - createCandidato");
     next(err);
   }
 };
@@ -125,7 +125,7 @@ const getAllCandidatos = async (
 
     return res.status(200).json({ data: candidatos });
   } catch (err) {
-    console.log("error - getAllCandidatos", err);
+    console.error("error - getAllCandidatos", err);
     next(err);
   }
 };
@@ -148,7 +148,7 @@ const getCandidato = async (
     }
     return res.status(200).json({ data: candidato });
   } catch (err) {
-    console.log("error - getCandidato");
+    console.error("error - getCandidato");
     next(err);
   }
 };
@@ -225,7 +225,7 @@ const updateCandidato = async (
 
     return res.status(200).json({ data: candidatoUpdated });
   } catch (err) {
-    console.log("error - updateCandidato", err);
+    console.error("error - updateCandidato", err);
     next(err);
   }
 };
@@ -249,7 +249,7 @@ const deleteCandidato = async (
       .status(200)
       .json({ message: "Candidato eliminado exitosamente." });
   } catch (err) {
-    console.log("error - deleteCandidato");
+    console.error("error - deleteCandidato");
     next(err);
   }
 };
