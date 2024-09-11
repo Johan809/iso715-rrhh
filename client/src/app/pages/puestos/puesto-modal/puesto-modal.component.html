@@ -1,1 +1,110 @@
-<p>puesto-modal works!</p>
+<div class="modal-header">
+  <h4 class="modal-title">{{ modalTitle }}</h4>
+  <button
+    type="button"
+    class="btn-close text-dark d-flex"
+    aria-label="Close"
+    (click)="activeModal.dismiss()"
+  >
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+
+<div class="modal-body">
+  <app-progress-bar *ngIf="storeService.isLoading()" />
+
+  <section class="position-relative" [class.blockUI]="storeService.isLoading()">
+    <div class="mb-2">
+      <label for="txtNombre" class="form-label">Nombre</label>
+      <input
+        type="text"
+        class="form-control"
+        id="txtNombre"
+        [(ngModel)]="puesto.nombre"
+      />
+    </div>
+
+    <div class="mb-2">
+      <label for="txtDescripcion" class="form-label">Descripción</label>
+      <input
+        type="text"
+        class="form-control"
+        id="txtDescripcion"
+        [(ngModel)]="puesto.descripcion"
+      />
+    </div>
+
+    <div class="mb-2">
+      <label for="ddlNivelRiesgo" class="form-label">Nivel de Riesgo</label>
+      <select
+        id="ddlNivelRiesgo"
+        class="form-select"
+        [(ngModel)]="puesto.nivelRiesgo"
+      >
+        <option value="" selected disabled>
+          Seleccione el nivel de riesgo
+        </option>
+        <option *ngFor="let riesgo of RiesgoList" [value]="riesgo.value">
+          {{ riesgo.label }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Salario Mínimo -->
+    <div class="mb-2">
+      <label for="txtSalarioMinimo" class="form-label">Salario Mínimo</label>
+      <input
+        type="number"
+        class="form-control"
+        id="txtSalarioMinimo"
+        [(ngModel)]="puesto.nivelMinimoSalario"
+        placeholder="Ingrese el salario mínimo"
+      />
+    </div>
+
+    <!-- Salario Máximo -->
+    <div class="mb-2">
+      <label for="txtSalarioMaximo" class="form-label">Salario Máximo</label>
+      <input
+        type="number"
+        class="form-control"
+        id="txtSalarioMaximo"
+        [(ngModel)]="puesto.nivelMaximoSalario"
+        placeholder="Ingrese el salario máximo"
+      />
+    </div>
+
+    <!-- Idioma -->
+    <div class="mb-2">
+      <label for="ddlIdioma" class="form-label">Idioma</label>
+      <select id="ddlIdioma" class="form-select" [(ngModel)]="puesto.idioma">
+        <option value="" selected disabled>Seleccione un idioma</option>
+        <option *ngFor="let idioma of IdiomasList" [value]="idioma.value">
+          {{ idioma.label }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Estado del Puesto -->
+    <div class="mb-2">
+      <label for="ddlEstado" class="form-label">Estado</label>
+      <select id="ddlEstado" class="form-select" [(ngModel)]="puesto.estado">
+        <option value="" selected disabled>Seleccione el estado</option>
+        <option *ngFor="let estado of EstadosList" [value]="estado.value">
+          {{ estado.label }}
+        </option>
+      </select>
+    </div>
+  </section>
+</div>
+
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-success w-100"
+    (click)="onGrabarClick($event)"
+    [disabled]="this.storeService.isLoading()"
+  >
+    Grabar
+  </button>
+</div>

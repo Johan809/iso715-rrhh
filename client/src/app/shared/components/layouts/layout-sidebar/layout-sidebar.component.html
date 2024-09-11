@@ -60,6 +60,17 @@
         Capacitaciones
       </a>
     </li>
+    <li>
+      <a
+        class="nav-link text-white cursor-pointer"
+        [routerLink]="['/puestos']"
+        [routerLinkActive]="['active']"
+        [class.hidden]="(userInfo?.role ?? ROLES.NOT_LOGGED) < ROLES.RRHH"
+      >
+        <i class="fa-solid fa-briefcase"></i>
+        Puestos
+      </a>
+    </li>
   </ul>
 
   <hr />

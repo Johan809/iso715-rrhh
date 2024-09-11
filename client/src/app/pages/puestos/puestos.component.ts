@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -21,7 +21,7 @@ import { PuestoModalComponent } from './puesto-modal/puesto-modal.component';
   imports: [
     NgIf,
     NgFor,
-    DatePipe,
+    CurrencyPipe,
     FormsModule,
     PageLayoutComponent,
     ProgressBarComponent,
@@ -32,7 +32,12 @@ export class PuestosComponent implements OnInit {
   protected where = new Puesto.Where();
   protected puestos: Puesto[] = [];
   public RiesgoList: LabelValuePair[] = [
-    { value: '', label: 'Todos', ...Puesto.NivelRiesgoList },
+    { value: '', label: 'Todos' },
+    ...Puesto.NivelRiesgoList,
+  ];
+  public EstadosList: LabelValuePair[] = [
+    { value: '', label: 'Todos' },
+    ...Puesto.EstadosList,
   ];
 
   constructor(
@@ -59,6 +64,16 @@ export class PuestosComponent implements OnInit {
 
   public onBuscar() {
     this.buscar();
+  }
+
+  public getNivelRiesgoLabel(nivelRiesgo: string | undefined): string {
+    const nivel = Puesto.NivelRiesgoList.find((n) => n.value === nivelRiesgo);
+    return nivel ? nivel.label : 'Desconocido';
+  }
+
+  public getEstadoLabel(estado: string): string {
+    const estadoItem = Puesto.EstadosList.find((e) => e.value === estado);
+    return estadoItem ? estadoItem.label : 'Desconocido';
   }
 
   public onCrear() {

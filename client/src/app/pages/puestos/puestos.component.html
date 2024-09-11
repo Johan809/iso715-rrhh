@@ -8,7 +8,106 @@
         <hr />
       </div>
 
-      <!-- to-do: me quede aqui -->
+      <div id="filters-form">
+        <div class="row mb-3">
+          <div class="col">
+            <label for="txtNombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtNombre"
+              [(ngModel)]="where.nombre"
+              placeholder="Nombre del puesto"
+            />
+          </div>
+
+          <div class="col">
+            <label for="ddlNivelRiesgo" class="form-label"
+              >Nivel de Riesgo</label
+            >
+            <select
+              id="ddlNivelRiesgo"
+              class="form-select"
+              [(ngModel)]="where.nivelRiesgo"
+              aria-label="Seleccione el nivel de riesgo"
+            >
+              <option *ngFor="let nivel of RiesgoList" [value]="nivel.value">
+                {{ nivel.label }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col">
+            <label for="ddlEstado" class="form-label">Estado</label>
+            <select
+              id="ddlEstado"
+              class="form-select"
+              [(ngModel)]="where.estado"
+              aria-label="Seleccione el estado"
+            >
+              <option *ngFor="let estado of EstadosList" [value]="estado.value">
+                {{ estado.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex">
+          <button class="btn btn-secondary me-2" (click)="onBuscar()">
+            <i class="fa-solid fa-magnifying-glass"></i> Buscar
+          </button>
+
+          <button class="btn btn-success" (click)="onCrear()">
+            <i class="fa-solid fa-plus"></i> Crear Nuevo
+          </button>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3" *ngIf="puestos.length > 0">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Nivel de Riesgo</th>
+              <th>Salario Mínimo</th>
+              <th>Salario Máximo</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let puesto of puestos">
+              <td>{{ puesto.nombre }}</td>
+              <td>{{ puesto.descripcion }}</td>
+              <td>{{ getNivelRiesgoLabel(puesto.nivelRiesgo) }}</td>
+              <td>{{ puesto.nivelMinimoSalario | currency }}</td>
+              <td>{{ puesto.nivelMaximoSalario | currency }}</td>
+              <td>{{ getEstadoLabel(puesto.estado) }}</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary"
+                  (click)="onEdit(puesto.idsec)"
+                >
+                  <i class="fa-solid fa-pen-to-square"></i>
+                  Editar
+                </button>
+                <button
+                  class="btn btn-sm btn-danger"
+                  (click)="onDelete(puesto.idsec)"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="puestos.length === 0" class="alert alert-info mt-3">
+        No se encontraron puestos.
+      </div>
     </ng-container>
   </div>
 </app-page-layout>

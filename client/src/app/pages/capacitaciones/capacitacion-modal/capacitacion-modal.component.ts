@@ -52,7 +52,6 @@ export class CapacitacionModalComponent implements OnInit {
   private async cargar() {
     this.storeService.isLoading.set(true);
     this.capacitacion = await this.capacitacionService.getOne(this.IdSec);
-    console.log('capacitacion', this.capacitacion);
     this.capacitacion.fechaDesde = this.convertDate(
       <string>this.capacitacion.fechaDesde
     );
