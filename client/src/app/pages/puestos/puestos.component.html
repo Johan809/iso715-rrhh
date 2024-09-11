@@ -63,7 +63,11 @@
         </div>
       </div>
 
-      <div class="table-responsive mt-3" *ngIf="puestos.length > 0">
+      <div
+        id="tabla-list"
+        class="table-responsive mt-3"
+        *ngIf="puestos.length > 0"
+      >
         <table class="table table-bordered table-striped">
           <thead>
             <tr>
@@ -88,16 +92,16 @@
                 <button
                   class="btn btn-sm btn-primary"
                   (click)="onEdit(puesto.idsec)"
+                  title="Editar"
                 >
                   <i class="fa-solid fa-pen-to-square"></i>
-                  Editar
                 </button>
                 <button
-                  class="btn btn-sm btn-danger"
+                  class="btn btn-sm btn-danger ml-1"
                   (click)="onDelete(puesto.idsec)"
+                  title="Eliminar"
                 >
                   <i class="fa-solid fa-trash"></i>
-                  Eliminar
                 </button>
               </td>
             </tr>
