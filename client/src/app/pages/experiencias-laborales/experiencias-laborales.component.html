@@ -9,6 +9,91 @@
       </div>
 
       <div id="filters-form">
+        <div class="row mb-3">
+          <div class="col">
+            <label for="txtEmpresa" class="form-label">Empresa</label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtEmpresa"
+              [(ngModel)]="where.empresa"
+              placeholder="Nombre de la empresa"
+            />
+          </div>
+
+          <div class="col">
+            <label for="txtPuestoOcupado" class="form-label">
+              Puesto Ocupado
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtPuestoOcupado"
+              [(ngModel)]="where.puestoOcupado"
+              placeholder="Puesto ocupado"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <label for="txtFechaDesde" class="form-label">Desde</label>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="yyyy-mm-dd"
+                id="txtFechaDesde"
+                name="fechaDesde"
+                [(ngModel)]="where.fechaDesde"
+                ngbDatepicker
+                #fDesde="ngbDatepicker"
+              />
+              <button
+                class="btn btn-outline-secondary"
+                (click)="fDesde.toggle()"
+                type="button"
+              >
+                <i class="fa-solid fa-calendar-days"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="col">
+            <label for="txtFechaHasta" class="form-label">Hasta</label>
+            <div class="input-group">
+              <input
+                class="form-control"
+                placeholder="yyyy-mm-dd"
+                id="txtFechaHasta"
+                name="fechaHasta"
+                [(ngModel)]="where.fechaHasta"
+                ngbDatepicker
+                #fHasta="ngbDatepicker"
+              />
+              <button
+                class="btn btn-outline-secondary"
+                (click)="fHasta.toggle()"
+                type="button"
+              >
+                <i class="fa-solid fa-calendar-days"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <label for="txtSalario" class="form-label">Salario</label>
+            <input
+              type="number"
+              class="form-control"
+              id="txtSalario"
+              [(ngModel)]="where.salario"
+              placeholder="Ingrese el salario"
+            />
+          </div>
+        </div>
+
         <button class="btn btn-secondary" (click)="onBuscar()">
           <i class="fa-solid fa-magnifying-glass"></i> Buscar
         </button>
@@ -23,10 +108,50 @@
         id="tabla-list"
         class="table-responsive mt-3"
         *ngIf="experiencias.length > 0"
-      ></div>
+      >
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Empresa</th>
+              <th>Puesto Ocupado</th>
+              <th>Fecha Desde</th>
+              <th>Fecha Hasta</th>
+              <th>Salario</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let experiencia of experiencias">
+              <td>{{ experiencia.empresa }}</td>
+              <td>{{ experiencia.puestoOcupado }}</td>
+              <td>
+                {{ toDate(experiencia.fechaDesde) | date : "dd/MM/yyyy" }}
+              </td>
+              <td>
+                {{ toDate(experiencia.fechaHasta) | date : "dd/MM/yyyy" }}
+              </td>
+              <td>{{ experiencia.salario | currency }}</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary"
+                  (click)="onEdit(experiencia.idsec)"
+                >
+                  <i class="fa-solid fa-pen-to-square"></i> Editar
+                </button>
+                <button
+                  class="btn btn-sm btn-danger mx-2"
+                  (click)="onDelete(experiencia.idsec)"
+                >
+                  <i class="fa-solid fa-trash"></i> Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
       <div *ngIf="experiencias.length === 0" class="alert alert-info mt-3">
-        No se encontraron capacitaciones.
+        No se encontraron experiencias.
       </div>
     </ng-container>
   </div>

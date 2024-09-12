@@ -1,4 +1,4 @@
-import { DatePipe, NgFor, NgIf } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -25,6 +25,7 @@ import { ExperienciaLaboralModalComponent } from './experiencia-laboral-modal/ex
     NgFor,
     DatePipe,
     FormsModule,
+    CurrencyPipe,
     PageLayoutComponent,
     ProgressBarComponent,
     NgbDatepickerModule,

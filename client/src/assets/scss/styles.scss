@@ -95,3 +95,29 @@
 .hidden {
   display: none;
 }
+
+/* Estilo general para el contenedor con scroll */
+div#tabla-list {
+  overflow-y: auto;
+}
+
+/* Para pantallas grandes (desktops y laptops) */
+@media (min-width: 1200px) {
+  div#tabla-list {
+    max-height: 70vh; /* Aumentamos el máximo para pantallas grandes */
+  }
+}
+
+/* Para pantallas medianas (tablets, laptops pequeñas) */
+@media (min-width: 768px) and (max-width: 1199px) {
+  div#tabla-list {
+    max-height: 60vh; /* Valor intermedio para pantallas medianas */
+  }
+}
+
+/* Para pantallas pequeñas (móviles y tablets pequeñas) */
+@media (max-width: 767px) {
+  div#tabla-list {
+    max-height: 50vh; /* Menor altura en pantallas pequeñas */
+  }
+}

@@ -1,1 +1,110 @@
-<p>experiencia-laboral-modal works!</p>
+<div class="modal-header">
+  <h4 class="modal-title">{{ modalTitle }}</h4>
+  <button
+    type="button"
+    class="btn-close text-dark d-flex"
+    aria-label="Close"
+    (click)="activeModal.dismiss()"
+  >
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+
+<div class="modal-body">
+  <app-progress-bar *ngIf="storeService.isLoading()" />
+
+  <section class="position-relative" [class.blockUI]="storeService.isLoading()">
+    <!-- Empresa -->
+    <div class="mb-2">
+      <label for="txtEmpresa" class="form-label">Empresa</label>
+      <input
+        type="text"
+        class="form-control"
+        id="txtEmpresa"
+        [(ngModel)]="experiencia.empresa"
+        placeholder="Nombre de la empresa"
+      />
+    </div>
+
+    <!-- Puesto Ocupado -->
+    <div class="mb-2">
+      <label for="txtPuestoOcupado" class="form-label">Puesto Ocupado</label>
+      <input
+        type="text"
+        class="form-control"
+        id="txtPuestoOcupado"
+        [(ngModel)]="experiencia.puestoOcupado"
+        placeholder="Puesto ocupado"
+      />
+    </div>
+
+    <!-- Rango de fechas -->
+    <div class="row mb-2">
+      <label class="form-label">Duración</label>
+      <div class="col">
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="Desde"
+            id="txtFechaDesde"
+            name="fechaDesde"
+            [(ngModel)]="experiencia.fechaDesde"
+            ngbDatepicker
+            #fDesde="ngbDatepicker"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            (click)="fDesde.toggle()"
+            type="button"
+          >
+            <i class="fa-solid fa-calendar-days"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="Hasta"
+            id="txtFechaHasta"
+            name="fechaHasta"
+            [(ngModel)]="experiencia.fechaHasta"
+            ngbDatepicker
+            #fHasta="ngbDatepicker"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            (click)="fHasta.toggle()"
+            type="button"
+          >
+            <i class="fa-solid fa-calendar-days"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Salario -->
+    <div class="mb-2">
+      <label for="txtSalario" class="form-label">Salario</label>
+      <input
+        type="number"
+        class="form-control"
+        id="txtSalario"
+        [(ngModel)]="experiencia.salario"
+        placeholder="Salario percibido"
+      />
+    </div>
+  </section>
+</div>
+
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-success w-100"
+    (click)="onGrabarClick($event)"
+    [disabled]="this.storeService.isLoading()"
+  >
+    Grabar
+  </button>
+</div>
