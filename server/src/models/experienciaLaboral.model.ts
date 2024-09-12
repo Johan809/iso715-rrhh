@@ -8,6 +8,7 @@ type ExperienciaLaboralDocument = Document & {
   fechaDesde: Date;
   fechaHasta: Date;
   salario: number;
+  user_name: string;
 };
 
 type ExperienciaLaboralInput = {
@@ -16,6 +17,7 @@ type ExperienciaLaboralInput = {
   fechaDesde: ExperienciaLaboralDocument["fechaDesde"];
   fechaHasta: ExperienciaLaboralDocument["fechaHasta"];
   salario: ExperienciaLaboralDocument["salario"];
+  user_name: ExperienciaLaboralDocument["user_name"];
 };
 
 const experienciaLaboralSchema = new Schema(
@@ -41,6 +43,9 @@ const experienciaLaboralSchema = new Schema(
     },
     salario: {
       type: Schema.Types.Number,
+    },
+    user_name: {
+      type: Schema.Types.String,
     },
   },
   {

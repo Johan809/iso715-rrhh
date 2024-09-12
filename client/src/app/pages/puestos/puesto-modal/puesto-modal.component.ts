@@ -59,6 +59,9 @@ export class PuestoModalComponent implements OnInit {
   private async cargar() {
     this.storeService.isLoading.set(true);
     this.puesto = await this.puestoService.getOne(this.IdSec);
+    if (typeof this.puesto.idioma == 'object') {
+      this.puesto.idioma = this.puesto.idioma.idsec;
+    }
     this.storeService.isLoading.set(false);
   }
 

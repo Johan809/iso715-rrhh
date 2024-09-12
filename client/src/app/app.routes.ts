@@ -51,6 +51,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { requiredLevel: RoleLevel.RRHH },
   },
+  {
+    path: 'experiencias',
+    loadComponent: () =>
+      import(
+        './pages/experiencias-laborales/experiencias-laborales.component'
+      ).then((m) => m.ExperienciasLaboralesComponent),
+    canActivate: [AuthGuard],
+    data: { requiredLevel: RoleLevel.USER },
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: '**',

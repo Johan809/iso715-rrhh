@@ -1,7 +1,9 @@
+import { ESTADOS_DEFECTO } from 'src/app/lib/constants';
+
 export class Idioma {
   public idsec: number;
   public nombre: string | undefined;
-  public estado: string = 'A';
+  public estado: string = ESTADOS_DEFECTO.ACTIVO;
   public createdAt: Date | string | undefined;
   public updatedAt: Date | string | undefined;
   public _id: string | undefined;
@@ -19,10 +21,10 @@ export class Idioma {
 
   public get estadoDesc(): string {
     switch (this.estado) {
-      case 'A':
-        return 'Activa';
-      case 'I':
-        return 'Inactiva';
+      case ESTADOS_DEFECTO.ACTIVO:
+        return ESTADOS_DEFECTO.ACTIVO_LABEL;
+      case ESTADOS_DEFECTO.INACTIVO:
+        return ESTADOS_DEFECTO.INACTIVO_LABEL;
       default:
         return '';
     }

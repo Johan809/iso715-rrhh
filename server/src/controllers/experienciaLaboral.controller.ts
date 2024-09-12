@@ -10,8 +10,14 @@ const createExperienciaLaboral = async (
   next: NextFunction
 ) => {
   try {
-    const { empresa, puestoOcupado, fechaDesde, fechaHasta, salario } =
-      req.body;
+    const {
+      empresa,
+      puestoOcupado,
+      fechaDesde,
+      fechaHasta,
+      salario,
+      user_name,
+    } = req.body;
 
     if (
       !empresa ||
@@ -31,6 +37,7 @@ const createExperienciaLaboral = async (
       fechaDesde,
       fechaHasta,
       salario,
+      user_name,
     };
 
     const experienciaLaboralCreated = await ExperienciaLaboral.create(
@@ -56,6 +63,7 @@ const getAllExperienciasLaborales = async (
       fechaHasta,
       salarioMin,
       salarioMax,
+      user_name,
     } = req.query;
 
     const query: any = {};
@@ -70,6 +78,9 @@ const getAllExperienciasLaborales = async (
     }
     if (fechaHasta) {
       query.fechaHasta = { $lte: new Date(fechaHasta as string) };
+    }
+    if (user_name) {
+      query.user_name = user_name;
     }
 
     if (salarioMin || salarioMax) {
@@ -117,8 +128,14 @@ const updateExperienciaLaboral = async (
 ) => {
   try {
     const { id } = req.params;
-    const { empresa, puestoOcupado, fechaDesde, fechaHasta, salario } =
-      req.body;
+    const {
+      empresa,
+      puestoOcupado,
+      fechaDesde,
+      fechaHasta,
+      salario,
+      user_name,
+    } = req.body;
 
     const experienciaLaboral = await ExperienciaLaboral.findOne({ idsec: id });
 
@@ -130,7 +147,7 @@ const updateExperienciaLaboral = async (
 
     await ExperienciaLaboral.updateOne(
       { _id: experienciaLaboral._id },
-      { empresa, puestoOcupado, fechaDesde, fechaHasta, salario }
+      { empresa, puestoOcupado, fechaDesde, fechaHasta, salario, user_name }
     );
 
     const experienciaLaboralUpdated = await ExperienciaLaboral.findOne({

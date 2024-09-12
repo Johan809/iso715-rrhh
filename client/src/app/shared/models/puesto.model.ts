@@ -1,12 +1,6 @@
 import { LabelValuePair } from 'src/app/lib/types';
 import { Idioma } from './idioma.model';
-
-const PUESTO_ESTADOS = {
-  ACTIVO: 'A',
-  ACTIVO_LABEL: 'Activo',
-  INACTIVO: 'I',
-  INACTIVO_LABEL: 'Inactivo',
-};
+import { ESTADOS_DEFECTO } from 'src/app/lib/constants';
 
 const NIVEL_RIESGO = {
   ALTO: 'ALTO',
@@ -29,13 +23,16 @@ export class Puesto {
     this.idsec = 0;
     this.nombre = '';
     this.descripcion = '';
-    this.estado = PUESTO_ESTADOS.ACTIVO;
+    this.estado = ESTADOS_DEFECTO.ACTIVO;
   }
 
   static get EstadosList(): LabelValuePair[] {
     return [
-      { label: PUESTO_ESTADOS.ACTIVO_LABEL, value: PUESTO_ESTADOS.ACTIVO },
-      { label: PUESTO_ESTADOS.INACTIVO_LABEL, value: PUESTO_ESTADOS.INACTIVO },
+      { label: ESTADOS_DEFECTO.ACTIVO_LABEL, value: ESTADOS_DEFECTO.ACTIVO },
+      {
+        label: ESTADOS_DEFECTO.INACTIVO_LABEL,
+        value: ESTADOS_DEFECTO.INACTIVO,
+      },
     ];
   }
 

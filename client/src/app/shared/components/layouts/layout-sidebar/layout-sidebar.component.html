@@ -71,6 +71,17 @@
         Puestos
       </a>
     </li>
+    <li>
+      <a
+        class="nav-link text-white cursor-pointer"
+        [routerLink]="['/experiencias']"
+        [routerLinkActive]="['active']"
+        [class.hidden]="(userInfo?.role ?? ROLES.NOT_LOGGED) < ROLES.USER"
+      >
+        <i class="fa-solid fa-book-bookmark"></i>
+        Experiencias Laborales
+      </a>
+    </li>
   </ul>
 
   <hr />

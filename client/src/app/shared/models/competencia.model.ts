@@ -1,7 +1,9 @@
+import { ESTADOS_DEFECTO } from 'src/app/lib/constants';
+
 export class Competencia {
   public idsec: number;
   public descripcion: string | undefined;
-  public estado: string = 'A';
+  public estado: string = ESTADOS_DEFECTO.ACTIVO;
   public createdAt: Date | string | undefined;
   public updatedAt: Date | string | undefined;
   public _id: string | undefined;

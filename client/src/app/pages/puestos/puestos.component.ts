@@ -39,6 +39,12 @@ export class PuestosComponent implements OnInit {
     { value: '', label: 'Todos' },
     ...Puesto.EstadosList,
   ];
+  private modalOptions = {
+    animation: true,
+    centered: true,
+    keyboard: true,
+    size: 'lg',
+  };
 
   constructor(
     public storeService: StoreService,
@@ -77,21 +83,19 @@ export class PuestosComponent implements OnInit {
   }
 
   public onCrear() {
-    const modalRef = this.modalService.open(PuestoModalComponent, {
-      animation: true,
-      centered: true,
-      keyboard: true,
-    });
+    const modalRef = this.modalService.open(
+      PuestoModalComponent,
+      this.modalOptions
+    );
 
     modalRef.result.then(() => this.buscar()).catch((er) => {});
   }
 
   public onEdit(id: number) {
-    const modalRef = this.modalService.open(PuestoModalComponent, {
-      animation: true,
-      centered: true,
-      keyboard: true,
-    });
+    const modalRef = this.modalService.open(
+      PuestoModalComponent,
+      this.modalOptions
+    );
 
     modalRef.componentInstance.IdSec = id;
     modalRef.result.then(() => this.buscar()).catch(() => {});

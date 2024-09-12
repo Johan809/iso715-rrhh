@@ -1,0 +1,33 @@
+<app-page-layout>
+  <div class="container my-3">
+    <app-progress-bar *ngIf="storeService.isLoading()" />
+
+    <ng-container *ngIf="!storeService.isLoading()">
+      <div class="text-center">
+        <h1>Experiencia Laboral</h1>
+        <hr />
+      </div>
+
+      <div id="filters-form">
+        <button class="btn btn-secondary" (click)="onBuscar()">
+          <i class="fa-solid fa-magnifying-glass"></i> Buscar
+        </button>
+
+        <button class="btn btn-success mx-3" (click)="onCrear()">
+          <i class="fa-solid fa-plus"></i>
+          Crear Nuevo
+        </button>
+      </div>
+
+      <div
+        id="tabla-list"
+        class="table-responsive mt-3"
+        *ngIf="experiencias.length > 0"
+      ></div>
+
+      <div *ngIf="experiencias.length === 0" class="alert alert-info mt-3">
+        No se encontraron capacitaciones.
+      </div>
+    </ng-container>
+  </div>
+</app-page-layout>

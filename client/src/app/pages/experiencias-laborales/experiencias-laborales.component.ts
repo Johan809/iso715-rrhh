@@ -9,17 +9,17 @@ import { RoleLevel } from '@enums/role-level.enum';
 import { FormConfirmComponent } from '@forms/form-confirm/form-confirm.component';
 import { StorageHelper } from '@helpers/storage.helper';
 import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
-import { Capacitacion } from '@models/capacitacion.model';
-import { CapacitacionService } from '@services/capacitacion.service';
+import { ExperienciaLaboral } from '@models/experiencia-laboral.model';
+import { ExperienciaLaboralService } from '@services/experienciaLaboral.service';
 import { StoreService } from '@services/store.service';
 import { DateObject, UserInfo } from 'src/app/lib/types';
-import { CapacitacionModalComponent } from './capacitacion-modal/capacitacion-modal.component';
+import { ExperienciaLaboralModalComponent } from './experiencia-laboral-modal/experiencia-laboral-modal.component';
 
 @Component({
   standalone: true,
-  selector: 'app-capacitaciones',
-  templateUrl: './capacitaciones.component.html',
-  styleUrl: './capacitaciones.component.scss',
+  selector: 'app-experiencias-laborales',
+  templateUrl: './experiencias-laborales.component.html',
+  styleUrl: './experiencias-laborales.component.scss',
   imports: [
     NgIf,
     NgFor,
@@ -30,17 +30,16 @@ import { CapacitacionModalComponent } from './capacitacion-modal/capacitacion-mo
     NgbDatepickerModule,
   ],
 })
-export class CapacitacionesComponent implements OnInit {
-  protected where = new Capacitacion.Where();
-  protected capacitaciones: Capacitacion[] = [];
+export class ExperienciasLaboralesComponent implements OnInit {
+  protected where = new ExperienciaLaboral.Where();
+  protected experiencias: ExperienciaLaboral[] = [];
   private userInfo: UserInfo | null = null;
-  public NivelList = [{ value: '', label: 'Todos' }, ...Capacitacion.NIVELES];
 
   constructor(
     public storeService: StoreService,
-    private capacitacionService: CapacitacionService,
     private modalService: NgbModal,
-    private toast: ToastManager
+    private toast: ToastManager,
+    private experienciaService: ExperienciaLaboralService
   ) {}
 
   ngOnInit(): void {
@@ -53,11 +52,12 @@ export class CapacitacionesComponent implements OnInit {
     if (this.userInfo && this.userInfo.role === RoleLevel.USER) {
       this.where.user_name = this.userInfo.username;
     }
+
     this.where.initDates();
-    this.capacitacionService
+    this.experienciaService
       .getAll(this.where)
       .then((data) => {
-        this.capacitaciones = data;
+        this.experiencias = data;
       })
       .catch((err) => console.error(err))
       .finally(() => this.storeService.isLoading.set(false));
@@ -65,11 +65,6 @@ export class CapacitacionesComponent implements OnInit {
 
   public onBuscar() {
     this.buscar();
-  }
-
-  public getNivelLabel(value: string | undefined): string {
-    const nivel = this.NivelList.find((n) => n.value === value);
-    return nivel ? nivel.label : 'Desconocido';
   }
 
   public toDate(value: Date | string | DateObject | undefined): Date | null {
@@ -85,7 +80,7 @@ export class CapacitacionesComponent implements OnInit {
   }
 
   public onCrear() {
-    const modalRef = this.modalService.open(CapacitacionModalComponent, {
+    const modalRef = this.modalService.open(ExperienciaLaboralModalComponent, {
       animation: true,
       centered: true,
       keyboard: true,
@@ -99,7 +94,7 @@ export class CapacitacionesComponent implements OnInit {
   }
 
   public onEdit(id: number) {
-    const modalRef = this.modalService.open(CapacitacionModalComponent, {
+    const modalRef = this.modalService.open(ExperienciaLaboralModalComponent, {
       animation: true,
       centered: true,
       keyboard: true,
@@ -123,12 +118,12 @@ export class CapacitacionesComponent implements OnInit {
     modalRef.result
       .then((action: boolean) => {
         if (action) {
-          this.capacitacionService
+          this.experienciaService
             .delete(id)
             .then((res) => {
               if (res)
                 this.toast.quickShow(
-                  `Capacitación Id: ${id} eliminado`,
+                  `Experiencia Laboral Id: ${id} eliminada`,
                   'info'
                 );
             })

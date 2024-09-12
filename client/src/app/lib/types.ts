@@ -27,3 +27,12 @@ export type LabelValuePair = {
   label: string;
   value: string | number;
 };
+
+export type ExperienciaLaboralWhere = {
+  empresa?: string;
+  puestoOcupado?: string;
+  fechaDesde?: Date | DateObject | string;
+  fechaHasta?: Date | DateObject | string;
+  salario?: number;
+  user_name?: string;
+};
