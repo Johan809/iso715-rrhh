@@ -9,6 +9,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { IdiomaService } from '@services/idioma.service';
 import { PuestoService } from '@services/puesto.service';
 import { StoreService } from '@services/store.service';
+import { ObjectHelper } from 'src/app/lib/object.helper';
 import { LabelValuePair } from 'src/app/lib/types';
 
 @Component({
@@ -58,7 +59,8 @@ export class PuestoModalComponent implements OnInit {
 
   private async cargar() {
     this.storeService.isLoading.set(true);
-    this.puesto = await this.puestoService.getOne(this.IdSec);
+    const data = await this.puestoService.getOne(this.IdSec);
+    this.puesto = ObjectHelper.CopyObject(new Puesto(), data);
     if (typeof this.puesto.idioma == 'object') {
       this.puesto.idioma = this.puesto.idioma.idsec;
     }

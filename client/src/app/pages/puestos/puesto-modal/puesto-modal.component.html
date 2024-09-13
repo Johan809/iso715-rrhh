@@ -19,8 +19,9 @@
         <label for="txtNombre" class="form-label">Nombre</label>
         <input
           type="text"
-          class="form-control"
+          class="form-control required-input"
           id="txtNombre"
+          required
           [(ngModel)]="puesto.nombre"
         />
       </div>
@@ -29,7 +30,7 @@
         <label for="ddlNivelRiesgo" class="form-label">Nivel de Riesgo</label>
         <select
           id="ddlNivelRiesgo"
-          class="form-select"
+          class="form-select required-input"
           [(ngModel)]="puesto.nivelRiesgo"
         >
           <option value="" selected disabled>
@@ -58,7 +59,7 @@
         <label for="txtSalarioMinimo" class="form-label">Salario Mínimo</label>
         <input
           type="number"
-          class="form-control"
+          class="form-control required-input"
           id="txtSalarioMinimo"
           [(ngModel)]="puesto.nivelMinimoSalario"
           placeholder="Ingrese el salario mínimo"
@@ -69,7 +70,7 @@
         <label for="txtSalarioMaximo" class="form-label">Salario Máximo</label>
         <input
           type="number"
-          class="form-control"
+          class="form-control required-input"
           id="txtSalarioMaximo"
           [(ngModel)]="puesto.nivelMaximoSalario"
           placeholder="Ingrese el salario máximo"

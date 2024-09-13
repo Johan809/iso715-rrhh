@@ -11,6 +11,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { ExperienciaLaboralService } from '@services/experienciaLaboral.service';
 import { StoreService } from '@services/store.service';
+import { ObjectHelper } from 'src/app/lib/object.helper';
 import { DateObject } from 'src/app/lib/types';
 
 @Component({
@@ -50,7 +51,14 @@ export class ExperienciaLaboralModalComponent implements OnInit {
 
   private async cargar() {
     this.storeService.isLoading.set(true);
-    this.experiencia = await this.experienciaService.getOne(this.IdSec);
+    const data = await this.experienciaService.getOne(this.IdSec);
+    this.experiencia = ObjectHelper.CopyObject(new ExperienciaLaboral(), data);
+    this.experiencia.fechaDesde = this.convertDateObject(
+      <string>this.experiencia.fechaDesde
+    );
+    this.experiencia.fechaHasta = this.convertDateObject(
+      <string>this.experiencia.fechaHasta
+    );
     this.storeService.isLoading.set(false);
   }
 
@@ -58,6 +66,7 @@ export class ExperienciaLaboralModalComponent implements OnInit {
     try {
       this.storeService.isLoading.set(true);
       this.experiencia.user_name = StorageHelper.getUserInfo()?.username;
+      this.experiencia.initDates();
 
       if (this.IdSec === 0) {
         await this.experienciaService.create(this.experiencia);
@@ -82,6 +91,20 @@ export class ExperienciaLaboralModalComponent implements OnInit {
     }
   }
 
+  private convertDateObject(fecha: string): DateObject | string {
+    if (fecha) {
+      let str = fecha
+        .split('T')[0]
+        .split('-')
+        .map((x) => Number.parseInt(x));
+      return <DateObject>{
+        year: str[0],
+        month: str[1],
+        day: str[2],
+      };
+    } else return '';
+  }
+
   private validate(): boolean {
     let warningMsg = [];
 
@@ -95,10 +118,30 @@ export class ExperienciaLaboralModalComponent implements OnInit {
       warningMsg.push('El campo fecha hasta es requerido');
 
     if (this.experiencia.fechaDesde && this.experiencia.fechaHasta) {
-      this.experiencia.initDates();
-      if (this.experiencia.fechaDesde > this.experiencia.fechaHasta) {
+      const desdeTemp = <DateObject>this.experiencia.fechaDesde;
+      const fDesde = new Date(
+        desdeTemp.year,
+        desdeTemp.month - 1,
+        desdeTemp.day
+      );
+
+      const hastaTemp = <DateObject>this.experiencia.fechaHasta;
+      const fHasta = new Date(
+        hastaTemp.year,
+        hastaTemp.month - 1,
+        hastaTemp.day
+      );
+      if (fDesde > fHasta) {
         warningMsg.push('El rango de fechas seleccionadas no es válido');
       }
+    }
+
+    if (
+      !this.experiencia.salario ||
+      isNaN(this.experiencia.salario) ||
+      this.experiencia.salario <= 0
+    ) {
+      warningMsg.push('Debe ingresar un salario válido.');
     }
 
     if (warningMsg.length > 0) {

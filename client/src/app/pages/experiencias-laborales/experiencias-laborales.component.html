@@ -81,19 +81,6 @@
           </div>
         </div>
 
-        <div class="row mb-3">
-          <div class="col">
-            <label for="txtSalario" class="form-label">Salario</label>
-            <input
-              type="number"
-              class="form-control"
-              id="txtSalario"
-              [(ngModel)]="where.salario"
-              placeholder="Ingrese el salario"
-            />
-          </div>
-        </div>
-
         <button class="btn btn-secondary" (click)="onBuscar()">
           <i class="fa-solid fa-magnifying-glass"></i> Buscar
         </button>
@@ -114,8 +101,8 @@
             <tr>
               <th>Empresa</th>
               <th>Puesto Ocupado</th>
-              <th>Fecha Desde</th>
-              <th>Fecha Hasta</th>
+              <th>Desde</th>
+              <th>Hasta</th>
               <th>Salario</th>
               <th>Acciones</th>
             </tr>

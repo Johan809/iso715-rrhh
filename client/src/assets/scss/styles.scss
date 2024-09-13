@@ -121,3 +121,29 @@ div#tabla-list {
     max-height: 50vh; /* Menor altura en pantallas pequeñas */
   }
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+// Variables para el estilo
+$required-border-color: red;
+$required-border-width: 3px;
+$default-border-width: 1px;
+
+.required-input {
+  border: $default-border-width solid #ccc; // Estilo de borde por defecto
+  border-left: $required-border-width solid $required-border-color; // Borde izquierdo más grueso y rojo
+  padding-left: 10px; // Añadir un pequeño padding para que el contenido no se pegue al borde izquierdo
+
+  // Opcional: Cambiar color de texto si el input está vacío
+  &::placeholder {
+    color: darken($required-border-color, 30%);
+  }
+
+  // Estilo cuando el input está enfocado
+  &:focus {
+    outline: none;
+    border-color: darken($required-border-color, 10%);
+  }
+}

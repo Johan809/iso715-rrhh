@@ -1,5 +1,6 @@
 <div
-  class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark vh-100"
+  id="sidebar"
+  class="d-flex flex-column flex-shrink-0 pt-3 px-3 text-bg-dark"
   style="width: 280px"
 >
   <a
@@ -84,18 +85,19 @@
     </li>
   </ul>
 
-  <hr />
-  <div class="dropdown">
+  <!-- Sección de usuario -->
+  <div class="user-section mt-auto sticky-bottom">
+    <hr />
+
     <a
-      class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+      class="d-flex align-items-center text-white text-decoration-none dropdown-toggle mb-3 cursor-pointer"
       (click)="isMenuCollapsed = !isMenuCollapsed"
       data-bs-toggle="dropdown"
       aria-expanded="false"
     >
       <i class="fa-solid fa-user"></i>
-      <strong class="mx-2">{{ this.userInfo?.username }}</strong>
+      <strong class="mx-2">{{ userInfo?.username }}</strong>
     </a>
-
     <div
       class="collapse navbar-collapse"
       [ngbCollapse]="isMenuCollapsed"
@@ -108,12 +110,13 @@
             [routerLink]="['/home']"
             [routerLinkActive]="['active']"
           >
-            {{ "HOME" | translate }}
+            <i class="fa-solid fa-users"></i>
+            Usuarios
           </a>
         </li>
-
         <li class="nav-item">
           <a class="nav-link cursor-pointer" (click)="onClickLogout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
             {{ "LOGOUT" | translate }}
           </a>
         </li>

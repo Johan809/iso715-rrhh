@@ -3,7 +3,83 @@
     <app-progress-bar *ngIf="storeService.isLoading()"></app-progress-bar>
 
     <ng-container *ngIf="!storeService.isLoading()">
-      <div class="text-center">Let's start the project!</div>
+      <div class="container my-4">
+        <!--userInfo?.role === ROLES.USER &&-->
+        <div *ngIf="puestos.length > 0">
+          <div class="row">
+            <div class="col-12 text-center">
+              <h2>Puestos Disponibles</h2>
+              <hr />
+            </div>
+          </div>
+
+          <div class="row">
+            <div
+              class="col-lg-3 col-md-4 col-sm-6 mb-4"
+              *ngFor="let puesto of paginatedPuestos"
+            >
+              <div
+                class="card h-100"
+                [ngClass]="getCardBorderClass(puesto.nivelRiesgo)"
+              >
+                <div class="card-header">
+                  <h5 class="card-title mb-0">{{ puesto.nombre }}</h5>
+                </div>
+
+                <div class="card-body">
+                  <p class="card-text fst-italic">{{ puesto.descripcion }}</p>
+                  <p class="card-text">
+                    <strong>Nivel de Riesgo:</strong>
+                    {{ getNivelRiesgoLabel(puesto.nivelRiesgo) }}
+                  </p>
+                </div>
+
+                <div class="card-footer text-muted">
+                  <small>
+                    <strong>Salario Mínimo:</strong>
+                    {{ puesto.nivelMinimoSalario | currency }}<br />
+                    <strong>Salario Máximo:</strong>
+                    {{ puesto.nivelMaximoSalario | currency }}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controles de paginación -->
+          <nav>
+            <ul class="pagination justify-content-center">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <button class="page-link" (click)="changePage(currentPage - 1)">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+              </li>
+              <li
+                class="page-item"
+                *ngFor="let page of [].constructor(totalPages); let i = index"
+                [class.active]="isActivePage(i + 1)"
+              >
+                <button class="page-link" (click)="changePage(i + 1)">
+                  {{ i + 1 }}
+                </button>
+              </li>
+              <li
+                class="page-item"
+                [class.disabled]="currentPage === totalPages"
+              >
+                <button class="page-link" (click)="changePage(currentPage + 1)">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <!--userInfo?.role === ROLES.USER &&-->
+        <div *ngIf="puestos.length === 0" class="alert alert-info text-center">
+          No hay puestos activos disponibles.
+        </div>
+      </div>
     </ng-container>
   </div>
 </app-page-layout>
