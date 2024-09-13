@@ -36,3 +36,13 @@ export type ExperienciaLaboralWhere = {
   salario?: number;
   user_name?: string;
 };
+
+export type CandidatoWhere = {
+  id?: number;
+  nombre?: string;
+  puestoIdSec?: number;
+  departamento?: string;
+  salarioMin?: number;
+  salarioMax?: number;
+  user_name?: string;
+};

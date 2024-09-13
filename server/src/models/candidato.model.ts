@@ -14,13 +14,14 @@ type CandidatoDocument = Document & {
   idsec: number;
   cedula: string;
   nombre: string;
-  puesto: Schema.Types.ObjectId; // Referencia al esquema Puesto
+  puesto: Schema.Types.ObjectId;
   departamento: string;
   salarioAspira: number;
-  competencias: Schema.Types.ObjectId[]; // Referencias a Competencias
-  capacitaciones: Schema.Types.ObjectId[]; // Referencias a Capacitación
-  experienciaLaboral: Schema.Types.ObjectId[]; // Referencias a ExperienciaLaboral
+  competencias: Schema.Types.ObjectId[];
+  capacitaciones: Schema.Types.ObjectId[];
+  experienciaLaboral: Schema.Types.ObjectId[];
   recomendadoPor: string;
+  user_name: string;
 };
 
 type CandidatoInput = {
@@ -33,6 +34,7 @@ type CandidatoInput = {
   capacitaciones: CandidatoDocument["capacitaciones"];
   experienciaLaboral: CandidatoDocument["experienciaLaboral"];
   recomendadoPor: CandidatoDocument["recomendadoPor"];
+  user_name: CandidatoDocument["user_name"];
 };
 
 const candidatoSchema = new Schema<CandidatoDocument>(
@@ -71,7 +73,7 @@ const candidatoSchema = new Schema<CandidatoDocument>(
     capacitaciones: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Capacitación",
+        ref: "Capacitacion",
       },
     ],
     experienciaLaboral: [
@@ -81,6 +83,9 @@ const candidatoSchema = new Schema<CandidatoDocument>(
       },
     ],
     recomendadoPor: {
+      type: Schema.Types.String,
+    },
+    user_name: {
       type: Schema.Types.String,
     },
   },

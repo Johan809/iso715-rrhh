@@ -21,6 +21,7 @@ const createCandidato = async (
       capacitacionIdSecList,
       experienciaLaboralIdSecList,
       recomendadoPor,
+      user_name,
     } = req.body;
 
     if (
@@ -65,6 +66,7 @@ const createCandidato = async (
       capacitaciones: capacitacionesIds,
       experienciaLaboral: experenciasIds,
       recomendadoPor,
+      user_name,
     };
 
     const candidatoCreated = await Candidato.create(candidatoInput);
@@ -88,7 +90,7 @@ const getAllCandidatos = async (
       departamento,
       salarioMin,
       salarioMax,
-      estado,
+      user_name,
     } = req.query;
 
     const filter: any = {};
@@ -102,7 +104,7 @@ const getAllCandidatos = async (
       if (salarioMin) filter.salarioAspira.$gte = salarioMin;
       if (salarioMax) filter.salarioAspira.$lte = salarioMax;
     }
-    if (estado) filter.estado = estado;
+    if (user_name) filter.user_name = user_name;
 
     if (puestoIdSec) {
       const puesto = await Puesto.findOne({ idsec: puestoIdSec });
