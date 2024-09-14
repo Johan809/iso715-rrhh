@@ -72,7 +72,7 @@ const getAllUsuarios = async (
   next: NextFunction
 ) => {
   try {
-    const { nombre, email, estado, role } = req.query;
+    const { nombre, email, estado, roleIdSec } = req.query;
 
     const filter: any = {};
     if (nombre) {
@@ -84,8 +84,9 @@ const getAllUsuarios = async (
     if (estado) {
       filter.estado = estado;
     }
-    if (role) {
-      filter.role = role;
+    if (roleIdSec) {
+      const role = await Role.findOne({ idsec: roleIdSec });
+      filter.role = role?._id;
     }
 
     const usuarios = await Usuario.find(filter)
@@ -168,6 +169,46 @@ const updateUsuario = async (
   }
 };
 
+const updatePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+    const { oldPassword, newPassword } = req.body;
+
+    // Buscar el usuario
+    const usuario = await Usuario.findOne({ idsec: id });
+    if (!usuario) {
+      return res
+        .status(404)
+        .json({ message: `Usuario con Id: ${id} no fue encontrado.` });
+    }
+
+    // Comparar la contraseña antigua usando el método comparePwd
+    const isPwdValid = await usuario.comparePwd(oldPassword);
+    if (!isPwdValid) {
+      return res
+        .status(400)
+        .json({ message: "La contraseña antigua no es correcta." });
+    }
+
+    // Encriptar la nueva contraseña
+    const hashedPwd = await Usuario.hashPwd(newPassword);
+
+    // Actualizar la contraseña del usuario
+    await Usuario.updateOne({ _id: usuario._id }, { password: hashedPwd });
+
+    return res
+      .status(200)
+      .json({ message: "Contraseña actualizada con éxito." });
+  } catch (err) {
+    console.error("Error - updatePassword:", err);
+    next(err);
+  }
+};
+
 const deleteUsuario = async (
   req: Request,
   res: Response,
@@ -195,5 +236,6 @@ export {
   getAllUsuarios,
   getUsuario,
   updateUsuario,
+  updatePassword,
   deleteUsuario,
 };

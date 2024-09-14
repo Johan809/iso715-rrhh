@@ -12,7 +12,7 @@ import { NIVEL_ROLES } from "../lib/constants";
 const puestoRouter = () => {
   const router = Router();
 
-  router.use(authMiddleware(NIVEL_ROLES.RECURSOS));
+  router.use(authMiddleware(NIVEL_ROLES.USUARIO));
   router.post("/puestos", createPuesto);
   router.get("/puestos", getAllPuestos);
   router.get("/puestos/:id", getPuesto);

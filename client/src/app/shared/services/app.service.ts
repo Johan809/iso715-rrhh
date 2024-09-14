@@ -24,6 +24,15 @@ export class AppService extends AbstractService {
     if (!response) return false;
 
     const authResponse = new AuthResponse(response);
+    if (!authResponse.data.estado) {
+      this.toastManager.quickShow(
+        'Este usuario no se encuentra activo',
+        'danger',
+        true
+      );
+      return false;
+    }
+
     StorageHelper.setToken(authResponse);
     this.initAuthHeader();
     return true;

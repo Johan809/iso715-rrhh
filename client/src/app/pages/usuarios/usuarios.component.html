@@ -1,0 +1,108 @@
+<app-page-layout>
+  <div class="container my-3">
+    <app-progress-bar *ngIf="storeService.isLoading()" />
+
+    <ng-container *ngIf="!storeService.isLoading()">
+      <div class="text-center">
+        <h1>Usuarios</h1>
+        <hr />
+      </div>
+
+      <div id="filters-form">
+        <div class="row mb-3">
+          <div class="col">
+            <label for="txtNombreFiltro" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtNombreFiltro"
+              [(ngModel)]="where.nombre"
+              placeholder="Nombre del usuario"
+            />
+          </div>
+
+          <div class="col">
+            <label for="txtEmailFiltro" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="txtEmailFiltro"
+              [(ngModel)]="where.email"
+              placeholder="Correo electrónico"
+            />
+          </div>
+
+          <div class="col">
+            <label for="ddlEstado" class="form-label">Estado</label>
+            <select
+              id="ddlEstado"
+              class="form-select"
+              [(ngModel)]="where.estado"
+              aria-label="Seleccione el estado"
+            >
+              <option *ngFor="let estado of EstadosList" [value]="estado.value">
+                {{ estado.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex">
+          <button class="btn btn-secondary me-2" (click)="onBuscar()">
+            <i class="fa-solid fa-magnifying-glass"></i> Buscar
+          </button>
+
+          <button class="btn btn-success" (click)="onCrear()">
+            <i class="fa-solid fa-plus"></i> Crear Nuevo
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="tabla-list"
+        class="table-responsive mt-3"
+        *ngIf="usuarios.length > 0"
+      >
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuarios">
+              <td>{{ usuario.nombre }}</td>
+              <td>{{ usuario.email }}</td>
+              <td>{{ getRoleNombre(usuario.role) }}</td>
+              <td>{{ getEstadoLabel(usuario.estado) }}</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary"
+                  (click)="onEdit(usuario.idsec)"
+                  title="Editar"
+                >
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button
+                  class="btn btn-sm btn-danger mx-2"
+                  (click)="onDelete(usuario.idsec)"
+                  title="Desactivar"
+                >
+                  <i class="fa-solid fa-ban"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="usuarios.length === 0" class="alert alert-info mt-3">
+        No se encontraron usuarios.
+      </div>
+    </ng-container>
+  </div>
+</app-page-layout>

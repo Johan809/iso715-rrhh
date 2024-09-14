@@ -8,4 +8,6 @@ export enum Endpoint {
   CAPACITACION = 'capacitaciones',
   PUESTO = 'puestos',
   EXPERIENCIA_LABORAL = 'experiencias-laborales',
+  CANDIDATO = 'candidatos',
+  USUARIO = 'usuarios',
 }

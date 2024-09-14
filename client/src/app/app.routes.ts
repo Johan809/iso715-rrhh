@@ -60,6 +60,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { requiredLevel: RoleLevel.USER },
   },
+  {
+    path: 'usuarios',
+    loadComponent: () =>
+      import('./pages/usuarios/usuarios.component').then(
+        (m) => m.UsuariosComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { requiredLevel: RoleLevel.ADMIN },
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: '**',

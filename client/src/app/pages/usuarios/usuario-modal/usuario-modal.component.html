@@ -1,0 +1,129 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ modalTitle }}</h4>
+  <button
+    type="button"
+    class="btn-close text-dark d-flex"
+    aria-label="Close"
+    (click)="activeModal.dismiss()"
+  >
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+
+<div class="modal-body">
+  <app-progress-bar *ngIf="storeService.isLoading()" />
+
+  <!-- Formulario principal de usuario -->
+  <section
+    class="position-relative"
+    [class.blockUI]="storeService.isLoading() || isChangingPassword"
+  >
+    <div class="row mb-2">
+      <div class="col">
+        <label for="txtNombre" class="form-label">Nombre</label>
+        <input
+          type="text"
+          class="form-control required-input"
+          id="txtNombre"
+          required
+          [(ngModel)]="usuario.nombre"
+        />
+      </div>
+
+      <div class="col">
+        <label for="txtEmail" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control required-input"
+          id="txtEmail"
+          required
+          [(ngModel)]="usuario.email"
+        />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col">
+        <label for="ddlRoles" class="form-label">Rol</label>
+        <select
+          id="ddlRoles"
+          class="form-select required-input"
+          [(ngModel)]="usuario.role"
+        >
+          <option value="" selected disabled>Seleccione un rol</option>
+          <option *ngFor="let rol of RolesList" [value]="rol.value">
+            {{ rol.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col">
+        <label for="ddlEstado" class="form-label">Estado</label>
+        <select
+          id="ddlEstado"
+          class="form-select required-input"
+          [(ngModel)]="usuario.estado"
+        >
+          <option value="" selected disabled>Seleccione el estado</option>
+          <option *ngFor="let estado of EstadosList" [value]="estado.value">
+            {{ estado.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- Botón para cambiar la contraseña si estamos editando (IdSec > 0) -->
+  <div *ngIf="IdSec > 0">
+    <button
+      class="btn btn-secondary w-100 my-2"
+      (click)="isChangingPassword = !isChangingPassword"
+    >
+      Cambiar Contraseña
+    </button>
+
+    <!-- Formulario para cambiar la contraseña -->
+    <section *ngIf="isChangingPassword" class="border p-3">
+      <div class="mb-2">
+        <label for="txtOldPassword" class="form-label">Contraseña Actual</label>
+        <input
+          type="password"
+          class="form-control"
+          id="txtOldPassword"
+          [(ngModel)]="oldPassword"
+          placeholder="Ingrese la contraseña actual"
+        />
+      </div>
+
+      <div class="mb-2">
+        <label for="txtNewPassword" class="form-label">Nueva Contraseña</label>
+        <input
+          type="password"
+          class="form-control"
+          id="txtNewPassword"
+          [(ngModel)]="newPassword"
+          placeholder="Ingrese la nueva contraseña"
+        />
+      </div>
+
+      <button
+        class="btn btn-primary w-100"
+        (click)="changePassword()"
+        [disabled]="storeService.isLoading()"
+      >
+        Actualizar Contraseña
+      </button>
+    </section>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-success w-100"
+    (click)="onGrabarClick($event)"
+    [disabled]="storeService.isLoading() || isChangingPassword"
+  >
+    Grabar
+  </button>
+</div>

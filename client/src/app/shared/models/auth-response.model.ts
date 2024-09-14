@@ -4,6 +4,7 @@ export class AuthResponse {
     username: string;
     email: string;
     role: number;
+    estado: boolean;
   };
 
   constructor(obj: Object | any) {

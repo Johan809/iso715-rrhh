@@ -12,7 +12,7 @@ import { NIVEL_ROLES } from "../lib/constants";
 const capacitacionRouter = () => {
   const router = Router();
 
-  router.use(authMiddleware(NIVEL_ROLES.RECURSOS));
+  router.use(authMiddleware(NIVEL_ROLES.USUARIO));
   router.post("/capacitaciones", createCapacitacion);
   router.get("/capacitaciones", getAllCapacitaciones);
   router.get("/capacitaciones/:id", getCapacitacion);

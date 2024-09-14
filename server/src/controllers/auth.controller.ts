@@ -88,6 +88,7 @@ const register = async (req: Request, res: Response) => {
         username: user.nombre,
         email: user.email,
         role: (<RoleDocument>user.role).nivel,
+        estado: user.estado,
       },
     });
   } catch (err) {
@@ -139,6 +140,7 @@ const login = async (req: Request, res: Response) => {
         username: user?.nombre,
         email: user?.email,
         role: (<RoleDocument>user?.role).nivel,
+        estado: user.estado,
       },
     });
   } catch (err) {

@@ -1,3 +1,5 @@
+import { RoleLevel } from '@enums/role-level.enum';
+
 export type UserInfo = {
   username: string;
   email: string;
@@ -45,4 +47,17 @@ export type CandidatoWhere = {
   salarioMin?: number;
   salarioMax?: number;
   user_name?: string;
+};
+
+export type RoleType = {
+  idsec: number;
+  nombre: string;
+  nivel: RoleLevel;
+};
+
+export type UsuarioWhere = {
+  nombre?: string;
+  email?: string;
+  estado?: boolean;
+  role?: number;
 };

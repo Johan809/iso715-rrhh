@@ -33,10 +33,10 @@ app.get("/", (req, res) => {
 app.use("/api", authRouter());
 app.use("/api", candidatoRouter());
 app.use("/api", experienciaLaboralRouter());
-app.use("/api", competenciaRouter());
-app.use("/api", idiomaRouter());
 app.use("/api", capacitacionRouter());
 app.use("/api", puestoRouter());
+app.use("/api", competenciaRouter());
+app.use("/api", idiomaRouter());
 app.use("/api", empleadoRouter());
 app.use("/api", roleRouter());
 app.use("/api", usuarioRouter());

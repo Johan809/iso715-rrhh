@@ -18,7 +18,7 @@
       <label for="txtDescripcion" class="form-label">Descripción</label>
       <input
         type="text"
-        class="form-control"
+        class="form-control required-input"
         id="txtDescripcion"
         [(ngModel)]="capacitacion.descripcion"
       />
@@ -29,7 +29,7 @@
       <select
         name="nivel"
         id="ddlNiveles"
-        class="form-select"
+        class="form-select required-input"
         aria-label="Listado de Niveles"
         [(ngModel)]="capacitacion.nivel"
       >
@@ -92,7 +92,7 @@
       <label for="txtInstitucion" class="form-label">Institución</label>
       <input
         type="text"
-        class="form-control"
+        class="form-control required-input"
         id="txtInstitucion"
         [(ngModel)]="capacitacion.institucion"
       />

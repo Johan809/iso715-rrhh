@@ -71,10 +71,10 @@ export abstract class AbstractService {
         this.storeService.isLoading.set(false);
         if (error.code === 'ERR_CANCELED') return Promise.resolve(error);
         if (error.response?.data) {
-          this.toastManager.quickShow(
-            (<any>error.response?.data)['message'] ?? 'Ha ocurrido un error',
-            <number>error?.status >= 500 ? 'danger' : 'warning'
-          );
+          const message =
+            (<any>error.response?.data)['message'] ?? 'Ha ocurrido un error';
+          const type = <number>error?.status >= 500 ? 'danger' : 'warning';
+          this.toastManager.quickShow(message, type);
         } else {
           this.toastManager.quickShow(error.message);
         }

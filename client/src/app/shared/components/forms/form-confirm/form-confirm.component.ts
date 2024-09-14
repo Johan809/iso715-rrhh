@@ -19,6 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class FormConfirmComponent implements OnInit {
   @Input() data: any;
+  @Input() message?: string;
 
   constructor(protected activeModal: NgbActiveModal) {}
 

@@ -4,6 +4,7 @@ import {
   deleteUsuario,
   getAllUsuarios,
   getUsuario,
+  updatePassword,
   updateUsuario,
 } from "../controllers/usuario.controller";
 import { authMiddleware } from "../lib/middleware/auth";
@@ -17,6 +18,7 @@ const usuarioRoute = () => {
   router.get("/usuarios", getAllUsuarios);
   router.get("/usuarios/:id", getUsuario);
   router.put("/usuarios/:id", updateUsuario);
+  router.patch("/usuarios/:id/password", updatePassword);
   router.delete("/usuarios/:id", deleteUsuario);
 
   return router;
