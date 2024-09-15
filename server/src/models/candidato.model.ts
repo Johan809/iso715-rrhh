@@ -5,9 +5,11 @@ const CANDIDATO_ESTADOS = {
   ACTIVO: "A",
   ACTIVO_LABEL: "Activo",
   INACTIVO: "I",
-  INACTIVO_LABEL: "Inactivo",
+  INACTIVO_LABEL: "Cancelado",
   CONTRATADO: "C",
   CONTRATADO_LABEL: "Contratado",
+  RECHAZADO: "R",
+  RECHAZADO_LABEL: "Rechazado",
 };
 
 type CandidatoDocument = Document & {
@@ -22,6 +24,7 @@ type CandidatoDocument = Document & {
   experienciaLaboral: Schema.Types.ObjectId[];
   recomendadoPor: string;
   user_name: string;
+  estado: string;
 };
 
 type CandidatoInput = {
@@ -35,6 +38,7 @@ type CandidatoInput = {
   experienciaLaboral: CandidatoDocument["experienciaLaboral"];
   recomendadoPor: CandidatoDocument["recomendadoPor"];
   user_name: CandidatoDocument["user_name"];
+  estado: CandidatoDocument["estado"];
 };
 
 const candidatoSchema = new Schema<CandidatoDocument>(
@@ -87,6 +91,11 @@ const candidatoSchema = new Schema<CandidatoDocument>(
     },
     user_name: {
       type: Schema.Types.String,
+    },
+    estado: {
+      type: Schema.Types.String,
+      required: true,
+      enum: CANDIDATO_ESTADOS,
     },
   },
   {

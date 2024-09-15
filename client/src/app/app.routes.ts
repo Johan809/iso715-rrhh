@@ -61,6 +61,15 @@ export const routes: Routes = [
     data: { requiredLevel: RoleLevel.USER },
   },
   {
+    path: 'candidatos',
+    loadComponent: () =>
+      import('./pages/candidatos/candidatos.component').then(
+        (m) => m.CandidatosComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { requiredLevel: RoleLevel.USER },
+  },
+  {
     path: 'usuarios',
     loadComponent: () =>
       import('./pages/usuarios/usuarios.component').then(

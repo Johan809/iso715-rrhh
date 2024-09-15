@@ -22,6 +22,7 @@ const createCandidato = async (
       experienciaLaboralIdSecList,
       recomendadoPor,
       user_name,
+      estado,
     } = req.body;
 
     if (
@@ -67,6 +68,7 @@ const createCandidato = async (
       experienciaLaboral: experenciasIds,
       recomendadoPor,
       user_name,
+      estado,
     };
 
     const candidatoCreated = await Candidato.create(candidatoInput);
@@ -86,17 +88,20 @@ const getAllCandidatos = async (
     const {
       id,
       nombre,
+      cedula,
       puestoIdSec,
       departamento,
       salarioMin,
       salarioMax,
       user_name,
+      estado,
     } = req.query;
 
     const filter: any = {};
 
     if (id) filter.idsec = id;
     if (nombre) filter.nombre = new RegExp(<string>nombre, "i");
+    if (cedula) filter.cedula = new RegExp(<string>cedula, "i");
     if (departamento)
       filter.departamento = new RegExp(<string>departamento, "i");
     if (salarioMin || salarioMax) {
@@ -105,6 +110,7 @@ const getAllCandidatos = async (
       if (salarioMax) filter.salarioAspira.$lte = salarioMax;
     }
     if (user_name) filter.user_name = user_name;
+    if (estado) filter.estado = estado;
 
     if (puestoIdSec) {
       const puesto = await Puesto.findOne({ idsec: puestoIdSec });
@@ -172,6 +178,7 @@ const updateCandidato = async (
       capacitacionIdSecList,
       experienciaLaboralIdSecList,
       recomendadoPor,
+      estado,
     } = req.body;
 
     const candidato = await Candidato.findOne({ idsec: id });
@@ -216,6 +223,7 @@ const updateCandidato = async (
       capacitaciones: capacitacionIds,
       experienciaLaboral: experienciaLaboralIds,
       recomendadoPor,
+      estado,
     };
 
     await Candidato.updateOne({ idsec: id }, updatedData);

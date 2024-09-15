@@ -75,6 +75,21 @@
     <li>
       <a
         class="nav-link text-white cursor-pointer"
+        [routerLink]="['/candidatos']"
+        [routerLinkActive]="['active']"
+        [class.hidden]="(userInfo?.role ?? ROLES.NOT_LOGGED) < ROLES.USER"
+      >
+        <i class="fa-solid fa-building-user"></i>
+        {{
+          (userInfo?.role ?? ROLES.NOT_LOGGED) === ROLES.USER
+            ? "Postulaciones"
+            : "Candidatos"
+        }}
+      </a>
+    </li>
+    <li>
+      <a
+        class="nav-link text-white cursor-pointer"
         [routerLink]="['/experiencias']"
         [routerLinkActive]="['active']"
         [class.hidden]="(userInfo?.role ?? ROLES.NOT_LOGGED) < ROLES.USER"

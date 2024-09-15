@@ -19,7 +19,7 @@
               *ngFor="let puesto of paginatedPuestos"
             >
               <div
-                class="card h-100"
+                class="card h-100 cursor-pointer"
                 [ngClass]="getCardBorderClass(puesto.nivelRiesgo)"
               >
                 <div class="card-header">
@@ -48,7 +48,7 @@
 
           <!-- Controles de paginación -->
           <nav>
-            <ul class="pagination justify-content-center">
+            <ul class="pagination justify-content-center mt-3">
               <li class="page-item" [class.disabled]="currentPage === 1">
                 <button class="page-link" (click)="changePage(currentPage - 1)">
                   <i class="fa-solid fa-chevron-left"></i>

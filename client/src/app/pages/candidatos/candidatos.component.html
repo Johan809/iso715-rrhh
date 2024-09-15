@@ -1,0 +1,160 @@
+<app-page-layout>
+  <div class="container my-3">
+    <app-progress-bar *ngIf="storeService.isLoading()" />
+
+    <ng-container *ngIf="!storeService.isLoading()">
+      <div class="text-center">
+        <h1>{{ titulo }}</h1>
+        <hr />
+      </div>
+
+      <!-- Filtros -->
+      <div id="filters-form">
+        <div class="row mb-3">
+          <div class="col">
+            <label for="txtNombre" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtNombre"
+              [(ngModel)]="where.nombre"
+              placeholder="Nombre del candidato"
+            />
+          </div>
+
+          <!-- Filtro Cédula -->
+          <div class="col">
+            <label for="txtCedula" class="form-label">Cédula</label>
+            <input
+              type="number"
+              class="form-control"
+              id="txtCedula"
+              pattern="^[0-9\-]*$"
+              title="Solo números y guiones"
+              [(ngModel)]="where.cedula"
+              placeholder="000-0000000-0"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <!-- Filtro Departamento -->
+          <div class="col">
+            <label for="txtDepartamento" class="form-label">Departamento</label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtDepartamento"
+              [(ngModel)]="where.departamento"
+              placeholder="Departamento"
+            />
+          </div>
+
+          <div class="col">
+            <label for="ddlEstado" class="form-label">Estado</label>
+            <select
+              id="ddlEstado"
+              class="form-select"
+              [(ngModel)]="where.estado"
+              aria-label="Seleccione el estado"
+            >
+              <option *ngFor="let estado of EstadosList" [value]="estado.value">
+                {{ estado.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col customAutocomplete">
+            <label for="lkPuesto" class="form-label">Puesto</label>
+            <ng-autocomplete
+              [data]="puestos"
+              searchKeyword="nombre"
+              placeholder="Selecciona un Puesto"
+              (selected)="selectEvent($event)"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate"
+            ></ng-autocomplete>
+            <ng-template #itemTemplate let-item>
+              <a [innerHTML]="item.nombre"></a>
+            </ng-template>
+
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="d-flex">
+          <button class="btn btn-secondary me-2" (click)="onBuscar()">
+            <i class="fa-solid fa-magnifying-glass"></i> Buscar
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabla de Candidatos / Postulaciones -->
+      <div
+        id="tabla-list"
+        class="table-responsive mt-3"
+        *ngIf="candidatos.length > 0"
+      >
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Cédula</th>
+              <th>Nombre</th>
+              <th>Puesto</th>
+              <th>Departamento</th>
+              <th>Salario Aspirado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let candidato of candidatos">
+              <td>{{ candidato.cedula }}</td>
+              <td>{{ candidato.nombre }}</td>
+              <td>{{ getPuestoNombre(candidato.puesto) }}</td>
+              <td>{{ candidato.departamento }}</td>
+              <td>{{ candidato.salarioAspira | currency }}</td>
+              <td>
+                <!-- Acciones para Candidato (Nivel 1) -->
+                <ng-container *ngIf="userRole === 1">
+                  <button
+                    class="btn btn-sm btn-primary"
+                    (click)="onEdit(candidato.idsec)"
+                    title="Editar"
+                  >
+                    <i class="fa-solid fa-pen-to-square"></i> Editar
+                  </button>
+                  <button
+                    class="btn btn-sm btn-danger ms-2"
+                    (click)="onCancelar(candidato.idsec)"
+                    title="Cancelar"
+                  >
+                    <i class="fa-solid fa-ban"></i> Cancelar
+                  </button>
+                </ng-container>
+
+                <!-- Acciones para Recursos Humanos (Nivel 2 o 3) -->
+                <ng-container *ngIf="userRole > 1">
+                  <button
+                    class="btn btn-sm btn-info"
+                    (click)="onVer(candidato.idsec)"
+                    title="Ver"
+                  >
+                    <i class="fa-solid fa-eye"></i> Ver
+                  </button>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="candidatos.length === 0" class="alert alert-info mt-3">
+        No se encontraron registros.
+      </div>
+    </ng-container>
+  </div>
+</app-page-layout>

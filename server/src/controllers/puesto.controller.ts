@@ -92,7 +92,7 @@ const getAllPuestos = async (
 
     const puestos = await Puesto.find(filter)
       .populate("idioma")
-      .sort("-createdAt")
+      .sort("-idsec")
       .exec();
     return res.status(200).json({ data: puestos });
   } catch (err) {

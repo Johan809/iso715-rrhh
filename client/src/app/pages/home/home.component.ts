@@ -2,8 +2,6 @@
 import { CommonModule, CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
-import { StoreService } from '@services/store.service';
-
 // Components
 import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
 import { RoleLevel } from '@enums/role-level.enum';
@@ -11,8 +9,9 @@ import { StorageHelper } from '@helpers/storage.helper';
 import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
 import { Puesto } from '@models/puesto.model';
 import { PuestoService } from '@services/puesto.service';
-import { UserInfo } from 'src/app/lib/types';
+import { StoreService } from '@services/store.service';
 import { ObjectHelper } from 'src/app/lib/object.helper';
+import { UserInfo } from 'src/app/lib/types';
 
 @Component({
   selector: 'app-home',
@@ -103,10 +102,8 @@ export class HomeComponent implements OnInit {
   }
 
   private updatePaginatedPuestos(): void {
-    // Calcular el total de páginas
     this.totalPages = Math.ceil(this.puestos.length / this.itemsPerPage);
 
-    // Filtrar los puestos según la página actual
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     this.paginatedPuestos = this.puestos.slice(startIndex, endIndex);

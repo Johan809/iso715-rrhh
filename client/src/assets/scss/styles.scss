@@ -147,3 +147,11 @@ $default-border-width: 1px;
     border-color: darken($required-border-color, 10%);
   }
 }
+
+.autocomplete-container {
+  box-shadow: none !important;
+  & input {
+    border: 1px solid #dee2e6 !important;
+    border-radius: 0.375rem;
+  }
+}
