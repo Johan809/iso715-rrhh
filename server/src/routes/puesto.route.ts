@@ -6,13 +6,10 @@ import {
   getPuesto,
   updatePuesto,
 } from "../controllers/puesto.controller";
-import { authMiddleware } from "../lib/middleware/auth";
-import { NIVEL_ROLES } from "../lib/constants";
 
 const puestoRouter = () => {
   const router = Router();
 
-  router.use(authMiddleware(NIVEL_ROLES.USUARIO));
   router.post("/puestos", createPuesto);
   router.get("/puestos", getAllPuestos);
   router.get("/puestos/:id", getPuesto);

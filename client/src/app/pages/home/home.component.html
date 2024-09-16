@@ -3,8 +3,14 @@
     <app-progress-bar *ngIf="storeService.isLoading()" />
 
     <ng-container *ngIf="!storeService.isLoading()">
+      <!--
+        to-do: cuando este listo el dashboard, poner a funcionar esta condicion
+        *ngIf="
+          (userInfo?.role ?? ROLES.NOT_LOGGED) <= ROLES.USER;
+          else dashboard_admin
+        "
+      -->
       <div class="container my-4">
-        <!--userInfo?.role === ROLES.USER &&-->
         <div *ngIf="puestos.length > 0">
           <div class="row">
             <div class="col-12 text-center">
@@ -13,7 +19,7 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row mt-3">
             <div
               class="col-lg-3 col-md-4 col-sm-6 mb-4"
               *ngFor="let puesto of paginatedPuestos"
@@ -23,6 +29,7 @@
                 [ngClass]="getCardBorderClass(puesto.nivelRiesgo)"
                 (click)="onPuestoClick(puesto.idsec)"
                 title="Postularse a este puesto"
+                style="min-height: 16rem"
               >
                 <div class="card-header">
                   <h5 class="card-title mb-0">{{ puesto.nombre }}</h5>
@@ -77,11 +84,12 @@
           </nav>
         </div>
 
-        <!--userInfo?.role === ROLES.USER &&-->
         <div *ngIf="puestos.length === 0" class="alert alert-info text-center">
           No hay puestos activos disponibles.
         </div>
       </div>
+
+      <ng-template #dashboard_admin></ng-template>
     </ng-container>
   </div>
 </app-page-layout>

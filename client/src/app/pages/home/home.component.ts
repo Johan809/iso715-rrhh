@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 // Components
 import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
+import { ToastManager } from '@blocks/toast/toast.manager';
 import { RoleLevel } from '@enums/role-level.enum';
 import { StorageHelper } from '@helpers/storage.helper';
 import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
@@ -45,6 +46,7 @@ export class HomeComponent implements OnInit {
   constructor(
     public storeService: StoreService,
     private puestoService: PuestoService,
+    private toast: ToastManager,
     private router: Router
   ) {
     this.storeService.isLoading.set(false);
@@ -112,8 +114,18 @@ export class HomeComponent implements OnInit {
   }
 
   public onPuestoClick(idsec: number) {
-    this.router.navigate(['/postulacion'], {
-      queryParams: { PuestoId: idsec },
-    });
+    const role = this.userInfo?.role ?? RoleLevel.NOT_LOGGED;
+    if (role >= RoleLevel.USER) {
+      this.router.navigate(['/postulacion'], {
+        queryParams: { PuestoId: idsec },
+      });
+    } else {
+      this.toast.quickShow(
+        'Para poder visualizar este puesto, por favor inicia sesión.',
+        'info',
+        true
+      );
+      this.router.navigate(['/auth/login']);
+    }
   }
 }

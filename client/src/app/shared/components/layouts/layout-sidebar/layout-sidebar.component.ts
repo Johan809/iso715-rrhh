@@ -18,6 +18,7 @@ import { AppService } from '@services/app.service';
 import { UserInfo } from 'src/app/lib/types';
 import { ToastManager } from '@blocks/toast/toast.manager';
 import { RoleLevel } from '@enums/role-level.enum';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-layout-sidebar',
@@ -25,6 +26,7 @@ import { RoleLevel } from '@enums/role-level.enum';
   styleUrl: './layout-sidebar.component.scss',
   standalone: true,
   imports: [
+    NgIf,
     RouterLink,
     NgbCollapse,
     RouterLinkActive,
@@ -56,11 +58,10 @@ export class LayoutSidebarComponent implements OnInit {
     this.userInfo = StorageHelper.getUserInfo();
     if (!this.userInfo) {
       this.toastManager.quickShow(
-        '¡No hay una sesión iniciada!',
-        'warning',
+        '¡Inicie sesión para utilizar el sistema al máximo!',
+        'info',
         true
       );
-      this.router.navigate(['/auth/login']);
     }
   }
 
