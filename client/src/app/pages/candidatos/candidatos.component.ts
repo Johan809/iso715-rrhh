@@ -68,7 +68,6 @@ export class CandidatosComponent implements OnInit {
   private setupScreen(): void {
     if (this.userRole === RoleLevel.USER) {
       this.titulo = 'Postulaciones';
-      // Filtrar por el usuario
       this.where.user_name = this.userInfo?.username;
     } else {
       this.titulo = 'Candidatos';

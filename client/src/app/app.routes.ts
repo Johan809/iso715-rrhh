@@ -70,6 +70,15 @@ export const routes: Routes = [
     data: { requiredLevel: RoleLevel.USER },
   },
   {
+    path: 'postulacion',
+    loadComponent: () =>
+      import('./pages/postulacion/postulacion.component').then(
+        (m) => m.PostulacionComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { requiredLevel: RoleLevel.USER },
+  },
+  {
     path: 'usuarios',
     loadComponent: () =>
       import('./pages/usuarios/usuarios.component').then(

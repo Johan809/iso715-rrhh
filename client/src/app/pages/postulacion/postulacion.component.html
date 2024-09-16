@@ -1,0 +1,9 @@
+<app-page-layout>
+  <div class="container my-3">
+    <app-progress-bar *ngIf="storeService.isLoading()" />
+
+    <ng-container *ngIf="!storeService.isLoading()">
+      <p>postulacion works!</p>
+    </ng-container>
+  </div>
+</app-page-layout>

@@ -1,6 +1,6 @@
 <app-page-layout>
   <div class="container my-3">
-    <app-progress-bar *ngIf="storeService.isLoading()"></app-progress-bar>
+    <app-progress-bar *ngIf="storeService.isLoading()" />
 
     <ng-container *ngIf="!storeService.isLoading()">
       <div class="container my-4">
@@ -21,6 +21,8 @@
               <div
                 class="card h-100 cursor-pointer"
                 [ngClass]="getCardBorderClass(puesto.nivelRiesgo)"
+                (click)="onPuestoClick(puesto.idsec)"
+                title="Postularse a este puesto"
               >
                 <div class="card-header">
                   <h5 class="card-title mb-0">{{ puesto.nombre }}</h5>

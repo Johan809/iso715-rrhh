@@ -1,6 +1,7 @@
 // Angular modules
 import { CommonModule, CurrencyPipe, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 // Components
 import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
@@ -43,7 +44,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public storeService: StoreService,
-    private puestoService: PuestoService
+    private puestoService: PuestoService,
+    private router: Router
   ) {
     this.storeService.isLoading.set(false);
     this.userInfo = StorageHelper.getUserInfo();
@@ -107,5 +109,11 @@ export class HomeComponent implements OnInit {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     this.paginatedPuestos = this.puestos.slice(startIndex, endIndex);
+  }
+
+  public onPuestoClick(idsec: number) {
+    this.router.navigate(['/postulacion'], {
+      queryParams: { PuestoId: idsec },
+    });
   }
 }
