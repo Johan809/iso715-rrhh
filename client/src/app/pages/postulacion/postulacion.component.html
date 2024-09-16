@@ -3,7 +3,95 @@
     <app-progress-bar *ngIf="storeService.isLoading()" />
 
     <ng-container *ngIf="!storeService.isLoading()">
-      <p>postulacion works!</p>
+      <h1 class="text-center">Formulario de Postulación</h1>
+      <hr />
+
+      <!-- Formulario de Postulación -->
+      <form (ngSubmit)="onSubmit()">
+        <div class="row mb-3">
+          <!-- Campo Nombre -->
+          <div class="col">
+            <label for="nombre" class="form-label">Nombre Completo</label>
+            <input
+              type="text"
+              class="form-control required-input"
+              id="nombre"
+              required
+              [(ngModel)]="candidato.nombre"
+              name="nombre"
+              placeholder="Ingrese su nombre completo"
+            />
+          </div>
+
+          <!-- Campo Cédula -->
+          <div class="col">
+            <label for="cedula" class="form-label">Cédula</label>
+            <input
+              type="text"
+              class="form-control required-input"
+              id="cedula"
+              required
+              [(ngModel)]="candidato.cedula"
+              name="cedula"
+              placeholder="000-0000000-0"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <!-- Campo Departamento -->
+          <div class="col">
+            <label for="departamento" class="form-label">Departamento</label>
+            <input
+              type="text"
+              class="form-control required-input"
+              id="departamento"
+              required
+              [(ngModel)]="candidato.departamento"
+              name="departamento"
+              placeholder="Ingrese el departamento"
+            />
+          </div>
+
+          <!-- Campo Salario Aspirado -->
+          <div class="col">
+            <label for="salarioAspira" class="form-label">
+              Salario Aspirado
+            </label>
+            <input
+              type="number"
+              class="form-control"
+              id="salarioAspira"
+              required
+              [(ngModel)]="candidato.salarioAspira"
+              name="salarioAspira"
+              placeholder="Ingrese el salario aspirado"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <!-- Campo Recomendado Por -->
+          <div class="col">
+            <label for="recomendadoPor" class="form-label">
+              Recomendado Por
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              id="recomendadoPor"
+              [(ngModel)]="candidato.recomendadoPor"
+              name="recomendadoPor"
+              placeholder="Recomendado por (Opcional)"
+            />
+          </div>
+        </div>
+
+        <!-- Botón Enviar -->
+        <button type="submit" class="btn btn-primary w-100">
+          Enviar Postulación
+        </button>
+      </form>
     </ng-container>
   </div>
 </app-page-layout>
