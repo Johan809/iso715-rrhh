@@ -17,7 +17,7 @@ const NIVEL_LIST = {
 
 export class Capacitacion {
   public idsec: number;
-  public descripcion?: string;
+  public descripcion: string = '';
   public nivel?: string;
   public fechaDesde?: Date | DateObject | string;
   public fechaHasta?: Date | DateObject | string;

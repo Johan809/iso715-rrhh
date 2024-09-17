@@ -1,19 +1,27 @@
-import { NgFor, NgIf } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
 import { ToastManager } from '@blocks/toast/toast.manager';
+import { StorageHelper } from '@helpers/storage.helper';
 import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
 import { Candidato } from '@models/candidato.model';
 import { Puesto } from '@models/puesto.model';
 import { CandidatoService } from '@services/candidato.service';
+import { CapacitacionService } from '@services/capacitacion.service';
+import { CompetenciaService } from '@services/competencia.service';
+import { ExperienciaLaboralService } from '@services/experienciaLaboral.service';
 import { PuestoService } from '@services/puesto.service';
 import { StoreService } from '@services/store.service';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
+import {
+  IDropdownSettings,
+  NgMultiSelectDropDownModule,
+} from 'ng-multiselect-dropdown';
 import { ESTADOS_DEFECTO } from 'src/app/lib/constants';
 import { ObjectHelper } from 'src/app/lib/object.helper';
-import { LabelValuePair } from 'src/app/lib/types';
+import { LabelValuePair, UserInfo } from 'src/app/lib/types';
 
 @Component({
   standalone: true,
@@ -27,18 +35,30 @@ import { LabelValuePair } from 'src/app/lib/types';
     ProgressBarComponent,
     PageLayoutComponent,
     AutocompleteLibModule,
+    NgMultiSelectDropDownModule,
+    CommonModule,
   ],
 })
 export class PostulacionComponent implements OnInit {
   protected IdSec: number = 0;
-  public candidato: Candidato;
+  protected userInfo: UserInfo | null;
+  public candidato: Candidato = new Candidato();
   private PuestoIdSec: number = 0;
-  protected puesto: Puesto;
+  protected puesto: Puesto = new Puesto();
   protected puestoList: Puesto[] = [];
   public EstadosList: LabelValuePair[] = [...Candidato.ESTADOS_LIST];
-
-  @ViewChild('puestoAutoComplete')
-  autoCompletePuesto: any;
+  public competencias: LabelValuePair[] = [];
+  public capacitaciones: LabelValuePair[] = [];
+  public experiencias: LabelValuePair[] = [];
+  protected dropdownSettings: IDropdownSettings = {
+    singleSelection: false,
+    idField: 'value',
+    textField: 'label',
+    selectAllText: 'Seleccionar todos',
+    unSelectAllText: 'Deseleccionar todos',
+    itemsShowLimit: 5,
+    allowSearchFilter: true,
+  };
 
   //to-do: aqui tenemos que cargar el puesto y las demas entidades,
   //tambien se debe tener en cuenta si es editando o creando,
@@ -50,25 +70,33 @@ export class PostulacionComponent implements OnInit {
     private toast: ToastManager,
     private candidatoService: CandidatoService,
     private puestoService: PuestoService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private competenciaService: CompetenciaService,
+    private capacitacionService: CapacitacionService,
+    private experienciaService: ExperienciaLaboralService,
+    private changeDetector: ChangeDetectorRef
   ) {
     this.storeService.isLoading.set(false);
-    this.candidato = new Candidato();
-    this.puesto = new Puesto();
-    console.log(this.candidato);
+    this.userInfo = StorageHelper.getUserInfo();
   }
 
   ngOnInit(): void {
-    this.route.queryParamMap.subscribe((params) => {
-      const idsec = params.get('Id');
-      const puestoIdSec = params.get('PuestoId');
-      if (idsec) this.IdSec = Number.parseInt(idsec);
-      if (puestoIdSec) this.PuestoIdSec = Number.parseInt(puestoIdSec);
-    });
-    if (this.IdSec) {
-      this.cargarCandidato();
+    try {
+      this.storeService.isLoading.set(true);
+      this.route.queryParamMap.subscribe((params) => {
+        const idsec = params.get('Id');
+        const puestoIdSec = params.get('PuestoId');
+        if (idsec) this.IdSec = Number.parseInt(idsec);
+        if (puestoIdSec) this.PuestoIdSec = Number.parseInt(puestoIdSec);
+      });
+      if (this.IdSec) {
+        this.cargarCandidato();
+      }
+      this.buscarPuestos();
+      this.llenarDDL();
+    } finally {
+      this.storeService.isLoading.set(false);
     }
-    this.buscarPuestos();
   }
 
   private buscarPuestos() {
@@ -85,9 +113,48 @@ export class PostulacionComponent implements OnInit {
             this.puestoList.find((p) => p.idsec == this.PuestoIdSec) ??
             new Puesto();
           this.candidato.puesto = this.puesto.idsec;
+          this.changeDetector.detectChanges();
         }
       })
       .catch((err) => console.error('buscarPuestos', err));
+  }
+
+  private async llenarDDL() {
+    if (this.userInfo) {
+      try {
+        // Obtener las competencias
+        const competenciasData = await this.competenciaService.getAll({
+          estado: ESTADOS_DEFECTO.ACTIVO,
+        });
+        this.competencias = competenciasData.map((x) => ({
+          label: x.descripcion ?? '',
+          value: x.idsec,
+        }));
+
+        // Obtener las capacitaciones
+        const capacitacionesData = await this.capacitacionService.getAll({
+          user_name: this.userInfo.username,
+        });
+        this.capacitaciones = capacitacionesData.map((x) => ({
+          label: x.descripcion,
+          value: x.idsec,
+        }));
+
+        // Obtener las experiencias laborales
+        const experienciasData = await this.experienciaService.getAll({
+          user_name: this.userInfo.username,
+        });
+        this.experiencias = experienciasData.map((x) => ({
+          label: x.puestoOcupado ?? '',
+          value: x.idsec,
+        }));
+
+        // Forzar detección de cambios después de que todas las promesas hayan terminado
+        //this.changeDetector.detectChanges();
+      } catch (err) {
+        console.error('Error al llenar datos: ', err);
+      }
+    }
   }
 
   public selectPuestoEvent(p: Puesto) {
@@ -195,5 +262,12 @@ export class PostulacionComponent implements OnInit {
     }
 
     return warningMsg.length === 0;
+  }
+
+  public onMultiSelect(item: any) {
+    console.log('onMultiSelect', item);
+  }
+  public onMultiSelectAll(items: any[]) {
+    console.log('onMultiSelectAll', items);
   }
 }

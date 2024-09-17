@@ -80,7 +80,7 @@ const getAllExperienciasLaborales = async (
       query.fechaHasta = { $lte: new Date(fechaHasta as string) };
     }
     if (user_name) {
-      query.user_name = user_name;
+      query.user_name = { $regex: user_name, $options: "i" };
     }
 
     if (salarioMin || salarioMax) {

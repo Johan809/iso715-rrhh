@@ -48,6 +48,7 @@
               [data]="puestoList"
               [initialValue]="puesto.nombre"
               searchKeyword="nombre"
+              name="puesto"
               placeholder="Selecciona un Puesto"
               (selected)="selectPuestoEvent($event)"
               [itemTemplate]="itemTemplate"
@@ -61,7 +62,9 @@
               <div [innerHTML]="notFound"></div>
             </ng-template>
           </div>
+        </div>
 
+        <div class="row mb-3">
           <!-- Campo Departamento -->
           <div class="col">
             <label for="departamento" class="form-label">Departamento</label>
@@ -75,9 +78,7 @@
               placeholder="Ingrese el departamento"
             />
           </div>
-        </div>
 
-        <div class="row mb-3">
           <!-- Campo Salario Aspirado -->
           <div class="col">
             <label for="salarioAspira" class="form-label">
@@ -93,7 +94,70 @@
               placeholder="Ingrese el salario aspirado"
             />
           </div>
+        </div>
 
+        <!-- row de los multiselect -->
+        <div class="row mb-3">
+          <!-- competencias -->
+          <div class="col">
+            <label for="mlkCompetencia" class="form-label">Competencias</label>
+            <ng-multiselect-dropdown
+              id="mlkCompetencia"
+              class="multilookup-custom"
+              placeholder="Selecciona múltiples..."
+              searchPlaceholderText="Buscar..."
+              [settings]="dropdownSettings"
+              [data]="competencias"
+              [(ngModel)]="candidato.competencias"
+              (onSelect)="onMultiSelect($event)"
+              (onSelectAll)="onMultiSelectAll($event)"
+              [ngModelOptions]="{ standalone: true }"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+
+          <!-- capacitaciones -->
+          <div class="col">
+            <label for="mlkCapacitacion" class="form-label">
+              Capacitaciones
+            </label>
+            <ng-multiselect-dropdown
+              id="mlkCapacitacion"
+              class="multilookup-custom"
+              placeholder="Selecciona múltiples..."
+              searchPlaceholderText="Buscar..."
+              [settings]="dropdownSettings"
+              [data]="capacitaciones"
+              [(ngModel)]="candidato.capacitaciones"
+              (onSelect)="onMultiSelect($event)"
+              (onSelectAll)="onMultiSelectAll($event)"
+              [ngModelOptions]="{ standalone: true }"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+
+          <!-- experiencias -->
+          <div class="col">
+            <label for="mlkExperiencia" class="form-label">
+              Experiencias Laborales
+            </label>
+            <ng-multiselect-dropdown
+              id="mlkExperiencia"
+              class="multilookup-custom"
+              placeholder="Selecciona múltiples..."
+              searchPlaceholderText="Buscar..."
+              [settings]="dropdownSettings"
+              [data]="experiencias"
+              [(ngModel)]="candidato.experienciaLaboral"
+              (onSelect)="onMultiSelect($event)"
+              (onSelectAll)="onMultiSelectAll($event)"
+              [ngModelOptions]="{ standalone: true }"
+            >
+            </ng-multiselect-dropdown>
+          </div>
+        </div>
+
+        <div class="row mb-3">
           <!-- Campo Recomendado Por -->
           <div class="col">
             <label for="recomendadoPor" class="form-label">
@@ -108,15 +172,12 @@
               placeholder="Recomendado por (Opcional)"
             />
           </div>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col"></div>
 
           <div class="col">
             <label for="ddlEstado" class="form-label">Estado</label>
             <select
               id="ddlEstado"
+              name="estado"
               class="form-select"
               [(ngModel)]="candidato.estado"
               [disabled]="IdSec == 0"
