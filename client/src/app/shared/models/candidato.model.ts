@@ -41,6 +41,7 @@ export class Candidato {
     this.experienciaLaboral = [];
     this.recomendadoPor = '';
     this.user_name = '';
+    this.estado = ESTADOS.ACTIVO;
   }
 
   static get ESTADOS_LIST(): LabelValuePair[] {
