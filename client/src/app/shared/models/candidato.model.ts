@@ -124,5 +124,9 @@ export class Candidato {
     salarioMax?: number;
     user_name?: string;
     estado?: string;
+
+    _puestoNombre: string = '';
+    _competenciaNombre: string = '';
+    _capacitacionNombre: string = '';
   };
 }

@@ -252,6 +252,7 @@ export class PostulacionComponent implements OnInit {
         new Puesto(),
         <Puesto>this.candidato.puesto
       );
+      this.candidato.puesto = this.puesto.idsec;
       this.EsModoVer = this.candidato.user_name !== this.userInfo?.username;
     } catch (err) {
       this.toast.quickShow('Error al cargar Candidato', 'danger', true);
@@ -373,6 +374,9 @@ export class PostulacionComponent implements OnInit {
         try {
           if (action) {
             this.candidato.estado = Candidato.ESTADOS.INACTIVO;
+            this.candidato.assignCompetencias();
+            this.candidato.assignExperiencias();
+            this.candidato.assignCapacitaciones();
             await this.candidatoService.update(this.IdSec, this.candidato);
             this.toast.quickShow(
               `Postulación Id: ${this.IdSec} cancelada`,
@@ -388,8 +392,49 @@ export class PostulacionComponent implements OnInit {
   }
 
   protected async onRevisionAccion(accion: boolean) {
-    console.log('onRevisionAccion', accion);
+    if (accion) {
+      this.contratarCandidato();
+    } else {
+      this.rechazarCandidato();
+    }
+  }
+
+  private contratarCandidato() {
     //to-do: terminar esto;
+  }
+
+  private rechazarCandidato() {
+    const modalRef = this.modalService.open(FormConfirmComponent, {
+      animation: true,
+      centered: true,
+      keyboard: true,
+    });
+
+    modalRef.componentInstance.message =
+      '¿Está seguro que desea rechazar a este candidato?';
+    modalRef.result
+      .then(async (val: boolean) => {
+        try {
+          if (val) {
+            this.candidato.estado = Candidato.ESTADOS.RECHAZADO;
+            this.candidato.assignCompetencias();
+            this.candidato.assignExperiencias();
+            this.candidato.assignCapacitaciones();
+            await this.candidatoService.update(this.IdSec, this.candidato);
+            this.toast.quickShow(
+              `Candidato Id: ${this.IdSec} rechazado`,
+              'info'
+            );
+            setTimeout(() => {
+              this.router.navigate(['/candidatos']);
+            }, 3000);
+          }
+        } catch (er) {
+          console.error(er);
+          this.toast.quickShow('error al rechazar Candidato', 'danger', true);
+        }
+      })
+      .catch(() => {});
   }
 
   public onMultiSelect(e: any, entidad: string) {

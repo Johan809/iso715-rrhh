@@ -202,6 +202,7 @@
               type="button"
               class="btn btn-warning w-100"
               (click)="onCancelar()"
+              [disabled]="candidato.estado == 'R'"
             >
               <i class="fa-solid fa-xmark"></i>
               Cancelar
@@ -209,7 +210,11 @@
           </div>
 
           <div class="col">
-            <button type="submit" class="btn btn-success w-100">
+            <button
+              type="submit"
+              class="btn btn-success w-100"
+              [disabled]="candidato.estado == 'R'"
+            >
               <i class="fa-solid fa-floppy-disk"></i>
               Enviar
             </button>
@@ -222,6 +227,7 @@
                 type="button"
                 class="btn btn-danger w-100"
                 (click)="onRevisionAccion(false)"
+                [disabled]="candidato.estado == 'R'"
               >
                 <i class="fa-solid fa-user-xmark"></i>
                 Rechazar
@@ -232,7 +238,8 @@
               <button
                 type="button"
                 class="btn btn-primary w-100"
-                (click)="onRevisionAccion(false)"
+                (click)="onRevisionAccion(true)"
+                [disabled]="candidato.estado == 'R'"
               >
                 <i class="fa-solid fa-user-check"></i>
                 Contratar

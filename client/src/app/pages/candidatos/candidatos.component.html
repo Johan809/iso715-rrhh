@@ -36,9 +36,7 @@
               placeholder="000-0000000-0"
             />
           </div>
-        </div>
 
-        <div class="row mb-3">
           <!-- Filtro Departamento -->
           <div class="col">
             <label for="txtDepartamento" class="form-label">Departamento</label>
@@ -50,7 +48,33 @@
               placeholder="Departamento"
             />
           </div>
+        </div>
 
+        <div class="row mb-3">
+          <!-- Filtro puesto -->
+          <div class="col customAutocomplete">
+            <label for="lkPuesto" class="form-label">Puesto</label>
+            <ng-autocomplete
+              id="lkPuesto"
+              [data]="puestos"
+              searchKeyword="nombre"
+              placeholder="Selecciona un Puesto"
+              [initialValue]="where._puestoNombre"
+              (selected)="selectEvent($event)"
+              (inputCleared)="clearPuesto()"
+              [itemTemplate]="itemTemplate"
+              [notFoundTemplate]="notFoundTemplate"
+            ></ng-autocomplete>
+            <ng-template #itemTemplate let-item>
+              <a [innerHTML]="item.nombre"></a>
+            </ng-template>
+
+            <ng-template #notFoundTemplate let-notFound>
+              <div innerHTML="No hay puestos disponibles"></div>
+            </ng-template>
+          </div>
+
+          <!-- Filtro Estado -->
           <div class="col">
             <label for="ddlEstado" class="form-label">Estado</label>
             <select
@@ -67,28 +91,6 @@
         </div>
 
         <div class="row mb-3">
-          <div class="col customAutocomplete">
-            <label for="lkPuesto" class="form-label">Puesto</label>
-            <ng-autocomplete
-              id="lkPuesto"
-              [data]="puestos"
-              searchKeyword="nombre"
-              placeholder="Selecciona un Puesto"
-              (selected)="selectEvent($event)"
-              [itemTemplate]="itemTemplate"
-              [notFoundTemplate]="notFoundTemplate"
-            ></ng-autocomplete>
-            <ng-template #itemTemplate let-item>
-              <a [innerHTML]="item.nombre"></a>
-            </ng-template>
-
-            <ng-template #notFoundTemplate let-notFound>
-              <div innerHTML="No hay puestos disponibles"></div>
-            </ng-template>
-          </div>
-        </div>
-
-        <div class="row mb-3">
           <div class="col">
             <label for="lkCompetencia" class="form-label">Competencia</label>
             <ng-autocomplete
@@ -96,7 +98,9 @@
               [data]="competencias"
               searchKeyword="descripcion"
               placeholder="Selecciona una Competencia"
+              [initialValue]="where._competenciaNombre"
               (selected)="selectCompetenciaEvent($event)"
+              (inputCleared)="clearCompetencia()"
               [itemTemplate]="itemTemplate2"
               [notFoundTemplate]="notFoundTemplate2"
             ></ng-autocomplete>
@@ -116,7 +120,9 @@
               [data]="capacitaciones"
               searchKeyword="descripcion"
               placeholder="Selecciona una Capacitación"
+              [initialValue]="where._capacitacionNombre"
               (selected)="selectCapacitacionEvent($event)"
+              (inputCleared)="clearCapacitacion()"
               [itemTemplate]="itemTemplate3"
               [notFoundTemplate]="notFoundTemplate3"
             ></ng-autocomplete>
@@ -156,6 +162,7 @@
               <th>Puesto</th>
               <th>Departamento</th>
               <th>Salario Aspirado</th>
+              <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -166,6 +173,7 @@
               <td>{{ getPuestoNombre(candidato.puesto) }}</td>
               <td>{{ candidato.departamento }}</td>
               <td>{{ candidato.salarioAspira | currency }}</td>
+              <td>{{ getEstadoNombre(candidato.estado) }}</td>
               <td>
                 <!-- Acciones para Candidato (Nivel 1) -->
                 <ng-container *ngIf="userRole === 1">

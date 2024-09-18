@@ -1,5 +1,5 @@
 import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
@@ -62,7 +62,8 @@ export class CandidatosComponent implements OnInit {
     private puestoService: PuestoService,
     private competenciaService: CompetenciaService,
     private capacitacionService: CapacitacionService,
-    private router: Router
+    private router: Router,
+    private changeDetector: ChangeDetectorRef
   ) {
     this.userInfo = StorageHelper.getUserInfo();
     this.userRole = this.userInfo?.role || RoleLevel.USER;
@@ -84,7 +85,6 @@ export class CandidatosComponent implements OnInit {
   }
 
   private buscar(): void {
-    //to-do: esto no filtra bien, revisar;
     this.candidatos = [];
     this.storeService.isLoading.set(true);
     this.candidatoService
@@ -118,6 +118,21 @@ export class CandidatosComponent implements OnInit {
 
   public getPuestoNombre(puesto: Puesto | number | undefined): string {
     return (<Puesto>puesto).nombre;
+  }
+
+  public getEstadoNombre(estado: string): string {
+    switch (estado) {
+      case Candidato.ESTADOS.ACTIVO:
+        return Candidato.ESTADOS.ACTIVO_LABEL;
+      case Candidato.ESTADOS.CONTRATADO:
+        return Candidato.ESTADOS.CONTRATADO_LABEL;
+      case Candidato.ESTADOS.INACTIVO:
+        return Candidato.ESTADOS.INACTIVO_LABEL;
+      case Candidato.ESTADOS.RECHAZADO:
+        return Candidato.ESTADOS.RECHAZADO_LABEL;
+      default:
+        return '';
+    }
   }
 
   public onBuscar(): void {
@@ -167,15 +182,45 @@ export class CandidatosComponent implements OnInit {
   }
 
   public selectEvent(puesto: Puesto) {
-    if (puesto) this.where.puestoIdSec = puesto.idsec;
+    if (puesto && typeof puesto == 'object') {
+      this.where.puestoIdSec = puesto.idsec;
+      this.where._puestoNombre = puesto.nombre;
+      this.changeDetector.detectChanges();
+    }
+  }
+
+  public clearPuesto() {
+    this.where.puestoIdSec = undefined;
+    this.where._puestoNombre = '';
+    this.changeDetector.detectChanges();
   }
 
   public selectCompetenciaEvent(competencia: Competencia) {
-    if (competencia) this.where.competenciaIdSec = competencia.idsec;
+    if (competencia && typeof competencia == 'object') {
+      this.where.competenciaIdSec = competencia.idsec;
+      this.where._competenciaNombre = competencia.descripcion ?? '';
+      this.changeDetector.detectChanges();
+    }
+  }
+
+  public clearCompetencia() {
+    this.where.competenciaIdSec = undefined;
+    this.where._competenciaNombre = '';
+    this.changeDetector.detectChanges();
   }
 
   public selectCapacitacionEvent(capacitacion: Capacitacion) {
-    if (capacitacion) this.where.capacitacionIdSec = capacitacion.idsec;
+    if (capacitacion && typeof capacitacion == 'object') {
+      this.where.capacitacionIdSec = capacitacion.idsec;
+      this.where._capacitacionNombre = capacitacion.descripcion;
+      this.changeDetector.detectChanges();
+    }
+  }
+
+  public clearCapacitacion() {
+    this.where.capacitacionIdSec = undefined;
+    this.where._capacitacionNombre = '';
+    this.changeDetector.detectChanges();
   }
 
   public onCedulaKeyDown(event: KeyboardEvent) {

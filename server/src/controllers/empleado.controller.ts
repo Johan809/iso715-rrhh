@@ -180,6 +180,7 @@ const createEmpleadoFromCandidato = async (
 ) => {
   try {
     const { id } = req.params;
+    const { fechaIngreso, departamento, salario } = req.body;
 
     const candidato: CandidatoDocument | null = await Candidato.findOne({
       idsec: id,
@@ -194,10 +195,10 @@ const createEmpleadoFromCandidato = async (
     const empleadoInput: EmpleadoInput = {
       cedula: candidato.cedula,
       nombre: candidato.nombre,
-      fechaIngreso: new Date(),
-      departamento: candidato.departamento,
+      fechaIngreso: fechaIngreso ?? new Date(),
+      departamento: departamento ?? candidato.departamento,
       puesto: candidato.puesto,
-      salarioMensual: candidato.salarioAspira,
+      salarioMensual: salario ?? candidato.salarioAspira,
       estado: EMPLEADO_ESTADOS.ACTIVO,
     };
 

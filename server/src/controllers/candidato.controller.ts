@@ -133,11 +133,9 @@ const getAllCandidatos = async (
       if (capacitacion) {
         filter.capacitaciones = { $in: [capacitacion._id] };
       } else {
-        return res
-          .status(404)
-          .json({
-            message: `Capacitación con idsec ${capacitacionIdSec} no encontrada`,
-          });
+        return res.status(404).json({
+          message: `Capacitación con idsec ${capacitacionIdSec} no encontrada`,
+        });
       }
     }
 
@@ -149,11 +147,9 @@ const getAllCandidatos = async (
       if (competencia) {
         filter.competencias = { $in: [competencia._id] };
       } else {
-        return res
-          .status(404)
-          .json({
-            message: `Competencia con idsec ${competenciaIdSec} no encontrada`,
-          });
+        return res.status(404).json({
+          message: `Competencia con idsec ${competenciaIdSec} no encontrada`,
+        });
       }
     }
 
