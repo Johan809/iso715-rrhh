@@ -22,12 +22,16 @@ export class Candidato {
   puesto?: Puesto | number;
   departamento?: string;
   salarioAspira?: number;
-  competencias?: Competencia[] | number[];
-  capacitaciones?: Capacitacion[] | number[];
-  experienciaLaboral?: ExperienciaLaboral[] | number[];
+  competencias: Competencia[] | number[];
+  capacitaciones: Capacitacion[] | number[];
+  experienciaLaboral: ExperienciaLaboral[] | number[];
   recomendadoPor?: string;
   user_name?: string;
   estado: string = ESTADOS.ACTIVO;
+
+  _competenciaList: LabelValuePair[] = [];
+  _capacitacionList: LabelValuePair[] = [];
+  _experienciaList: LabelValuePair[] = [];
 
   constructor() {
     this.idsec = 0;
@@ -57,11 +61,64 @@ export class Candidato {
     return ESTADOS;
   }
 
+  public assignCompetencias(): void {
+    this.competencias = this._competenciaList.map(
+      (competencia) => competencia.value as number
+    );
+  }
+
+  public assignCapacitaciones(): void {
+    this.capacitaciones = this._capacitacionList.map(
+      (capacitacion) => capacitacion.value as number
+    );
+  }
+
+  public assignExperiencias(): void {
+    this.experienciaLaboral = this._experienciaList.map(
+      (experiencia) => experiencia.value as number
+    );
+  }
+
+  public fillCompetenciaList(): void {
+    if (Array.isArray(this.competencias)) {
+      this._competenciaList = (this.competencias as Competencia[]).map(
+        (competencia) => ({
+          label: competencia.descripcion ?? '',
+          value: competencia.idsec,
+        })
+      );
+    }
+  }
+
+  public fillCapacitacionList(): void {
+    if (Array.isArray(this.capacitaciones)) {
+      this._capacitacionList = (this.capacitaciones as Capacitacion[]).map(
+        (capacitacion) => ({
+          label: capacitacion.descripcion ?? '',
+          value: capacitacion.idsec,
+        })
+      );
+    }
+  }
+
+  public fillExperienciaList(): void {
+    if (Array.isArray(this.experienciaLaboral)) {
+      this._experienciaList = (
+        this.experienciaLaboral as ExperienciaLaboral[]
+      ).map((experiencia) => ({
+        label: experiencia.puestoOcupado ?? '',
+        value: experiencia.idsec,
+      }));
+    }
+  }
+
   static Where = class {
     id?: number;
     nombre?: string;
     cedula?: string;
     puestoIdSec?: number;
+    competenciaIdSec?: number;
+    capacitacionIdSec?: number;
     departamento?: string;
     salarioMin?: number;
     salarioMax?: number;

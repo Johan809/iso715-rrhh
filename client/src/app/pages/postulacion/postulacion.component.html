@@ -7,7 +7,7 @@
       <hr />
 
       <!-- Formulario de Postulación -->
-      <form (ngSubmit)="onSubmit()">
+      <form (ngSubmit)="onSubmit()" class="mt-4">
         <div class="row mb-3">
           <!-- Campo Cédula -->
           <div class="col">
@@ -16,11 +16,13 @@
               type="text"
               class="form-control required-input"
               id="cedula"
+              title="Ingrese solo los números"
               required
               [(ngModel)]="candidato.cedula"
               (keydown)="onCedulaKeyDown($event)"
               name="cedula"
               placeholder="000-0000000-0"
+              [disabled]="EsModoVer"
             />
           </div>
 
@@ -35,6 +37,7 @@
               [(ngModel)]="candidato.nombre"
               name="nombre"
               placeholder="Ingrese su nombre completo"
+              [disabled]="EsModoVer"
             />
           </div>
         </div>
@@ -53,6 +56,7 @@
               (selected)="selectPuestoEvent($event)"
               [itemTemplate]="itemTemplate"
               [notFoundTemplate]="notFoundTemplate"
+              [disabled]="PuestoIdSec !== 0 || IdSec > 0 || EsModoVer"
             ></ng-autocomplete>
             <ng-template #itemTemplate let-item>
               <a [innerHTML]="item.nombre"></a>
@@ -76,6 +80,7 @@
               [(ngModel)]="candidato.departamento"
               name="departamento"
               placeholder="Ingrese el departamento"
+              [disabled]="EsModoVer"
             />
           </div>
 
@@ -92,6 +97,8 @@
               [(ngModel)]="candidato.salarioAspira"
               name="salarioAspira"
               placeholder="Ingrese el salario aspirado"
+              [title]="getPlaceholderSalario()"
+              [disabled]="EsModoVer"
             />
           </div>
         </div>
@@ -108,10 +115,9 @@
               searchPlaceholderText="Buscar..."
               [settings]="dropdownSettings"
               [data]="competencias"
-              [(ngModel)]="candidato.competencias"
-              (onSelect)="onMultiSelect($event)"
-              (onSelectAll)="onMultiSelectAll($event)"
+              [(ngModel)]="candidato._competenciaList"
               [ngModelOptions]="{ standalone: true }"
+              [disabled]="EsModoVer"
             >
             </ng-multiselect-dropdown>
           </div>
@@ -128,10 +134,9 @@
               searchPlaceholderText="Buscar..."
               [settings]="dropdownSettings"
               [data]="capacitaciones"
-              [(ngModel)]="candidato.capacitaciones"
-              (onSelect)="onMultiSelect($event)"
-              (onSelectAll)="onMultiSelectAll($event)"
+              [(ngModel)]="candidato._capacitacionList"
               [ngModelOptions]="{ standalone: true }"
+              [disabled]="EsModoVer"
             >
             </ng-multiselect-dropdown>
           </div>
@@ -148,10 +153,9 @@
               searchPlaceholderText="Buscar..."
               [settings]="dropdownSettings"
               [data]="experiencias"
-              [(ngModel)]="candidato.experienciaLaboral"
-              (onSelect)="onMultiSelect($event)"
-              (onSelectAll)="onMultiSelectAll($event)"
+              [(ngModel)]="candidato._experienciaList"
               [ngModelOptions]="{ standalone: true }"
+              [disabled]="EsModoVer"
             >
             </ng-multiselect-dropdown>
           </div>
@@ -170,6 +174,7 @@
               [(ngModel)]="candidato.recomendadoPor"
               name="recomendadoPor"
               placeholder="Recomendado por (Opcional)"
+              [disabled]="EsModoVer"
             />
           </div>
 
@@ -180,7 +185,7 @@
               name="estado"
               class="form-select"
               [(ngModel)]="candidato.estado"
-              [disabled]="IdSec == 0"
+              [disabled]="true"
             >
               <option value="" disabled>Seleccione el estado</option>
               <option *ngFor="let estado of EstadosList" [value]="estado.value">
@@ -190,10 +195,51 @@
           </div>
         </div>
 
-        <!-- Botón Enviar -->
-        <button type="submit" class="btn btn-primary w-100">
-          Enviar Postulación
-        </button>
+        <!-- Botones -->
+        <div class="row mt-4" *ngIf="!EsModoVer; else botonesRecursosHumanos">
+          <div class="col" *ngIf="IdSec > 0">
+            <button
+              type="button"
+              class="btn btn-warning w-100"
+              (click)="onCancelar()"
+            >
+              <i class="fa-solid fa-xmark"></i>
+              Cancelar
+            </button>
+          </div>
+
+          <div class="col">
+            <button type="submit" class="btn btn-success w-100">
+              <i class="fa-solid fa-floppy-disk"></i>
+              Enviar
+            </button>
+          </div>
+        </div>
+        <ng-template #botonesRecursosHumanos>
+          <div class="row mt-4">
+            <div class="col">
+              <button
+                type="button"
+                class="btn btn-danger w-100"
+                (click)="onRevisionAccion(false)"
+              >
+                <i class="fa-solid fa-user-xmark"></i>
+                Rechazar
+              </button>
+            </div>
+
+            <div class="col">
+              <button
+                type="button"
+                class="btn btn-primary w-100"
+                (click)="onRevisionAccion(false)"
+              >
+                <i class="fa-solid fa-user-check"></i>
+                Contratar
+              </button>
+            </div>
+          </div>
+        </ng-template>
       </form>
     </ng-container>
   </div>

@@ -26,12 +26,13 @@
           <div class="col">
             <label for="txtCedula" class="form-label">Cédula</label>
             <input
-              type="number"
+              type="text"
               class="form-control"
               id="txtCedula"
               pattern="^[0-9\-]*$"
-              title="Solo números y guiones"
+              title="Ingrese solo los números"
               [(ngModel)]="where.cedula"
+              (keydown)="onCedulaKeyDown($event)"
               placeholder="000-0000000-0"
             />
           </div>
@@ -69,6 +70,7 @@
           <div class="col customAutocomplete">
             <label for="lkPuesto" class="form-label">Puesto</label>
             <ng-autocomplete
+              id="lkPuesto"
               [data]="puestos"
               searchKeyword="nombre"
               placeholder="Selecciona un Puesto"
@@ -86,9 +88,56 @@
           </div>
         </div>
 
+        <div class="row mb-3">
+          <div class="col">
+            <label for="lkCompetencia" class="form-label">Competencia</label>
+            <ng-autocomplete
+              id="lkCompetencia"
+              [data]="competencias"
+              searchKeyword="descripcion"
+              placeholder="Selecciona una Competencia"
+              (selected)="selectCompetenciaEvent($event)"
+              [itemTemplate]="itemTemplate2"
+              [notFoundTemplate]="notFoundTemplate2"
+            ></ng-autocomplete>
+            <ng-template #itemTemplate2 let-item2>
+              <a [innerHTML]="item2.descripcion"></a>
+            </ng-template>
+
+            <ng-template #notFoundTemplate2 let-notFound>
+              <div innerHTML="No hay competencias disponibles"></div>
+            </ng-template>
+          </div>
+
+          <div class="col">
+            <label for="lkCapacitacion" class="form-label">Capacitación</label>
+            <ng-autocomplete
+              id="lkCapacitacion"
+              [data]="capacitaciones"
+              searchKeyword="descripcion"
+              placeholder="Selecciona una Capacitación"
+              (selected)="selectCapacitacionEvent($event)"
+              [itemTemplate]="itemTemplate3"
+              [notFoundTemplate]="notFoundTemplate3"
+            ></ng-autocomplete>
+            <ng-template #itemTemplate3 let-item3>
+              <a [innerHTML]="item3.descripcion"></a>
+            </ng-template>
+
+            <ng-template #notFoundTemplate3 let-notFound>
+              <div innerHTML="No hay capacitaciones disponibles"></div>
+            </ng-template>
+          </div>
+        </div>
+
         <div class="d-flex">
-          <button class="btn btn-secondary me-2" (click)="onBuscar()">
+          <button class="btn btn-secondary" (click)="onBuscar()">
             <i class="fa-solid fa-magnifying-glass"></i> Buscar
+          </button>
+
+          <button class="btn btn-success mx-3" (click)="onCrear()">
+            <i class="fa-solid fa-plus"></i>
+            Crear Nuevo
           </button>
         </div>
       </div>

@@ -46,6 +46,7 @@ export class CandidatoService extends AbstractService {
       experienciaLaboralIdSecList: <number[]>candidato.experienciaLaboral,
       recomendadoPor: candidato.recomendadoPor,
       user_name: candidato.user_name,
+      estado: candidato.estado,
     });
     return <Candidato>response.data['data'];
   }
@@ -62,6 +63,7 @@ export class CandidatoService extends AbstractService {
       capacitacionIdSecList: <number[]>candidato.capacitaciones,
       experienciaLaboralIdSecList: <number[]>candidato.experienciaLaboral,
       recomendadoPor: candidato.recomendadoPor,
+      estado: candidato.estado,
     });
     return <Candidato>response.data['data'];
   }

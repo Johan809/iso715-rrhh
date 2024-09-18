@@ -18,6 +18,11 @@ import { StorageHelper } from '@helpers/storage.helper';
 import { ObjectHelper } from 'src/app/lib/object.helper';
 import { Puesto } from '@models/puesto.model';
 import { PuestoService } from '@services/puesto.service';
+import { Competencia } from '@models/competencia.model';
+import { Capacitacion } from '@models/capacitacion.model';
+import { CompetenciaService } from '@services/competencia.service';
+import { CapacitacionService } from '@services/capacitacion.service';
+import { ESTADOS_DEFECTO } from 'src/app/lib/constants';
 
 @Component({
   standalone: true,
@@ -38,6 +43,8 @@ export class CandidatosComponent implements OnInit {
   protected where = new Candidato.Where();
   protected candidatos: Candidato[] = [];
   protected puestos: Puesto[] = [];
+  protected competencias: Competencia[] = [];
+  protected capacitaciones: Capacitacion[] = [];
   protected titulo: string = 'Candidatos';
   public EstadosList: LabelValuePair[] = [
     { label: 'Todos', value: '' },
@@ -53,6 +60,8 @@ export class CandidatosComponent implements OnInit {
     private toast: ToastManager,
     private candidatoService: CandidatoService,
     private puestoService: PuestoService,
+    private competenciaService: CompetenciaService,
+    private capacitacionService: CapacitacionService,
     private router: Router
   ) {
     this.userInfo = StorageHelper.getUserInfo();
@@ -62,7 +71,7 @@ export class CandidatosComponent implements OnInit {
   ngOnInit(): void {
     this.setupScreen();
     this.buscar();
-    this.buscarPuestos();
+    this.buscarEntidades();
   }
 
   private setupScreen(): void {
@@ -75,6 +84,8 @@ export class CandidatosComponent implements OnInit {
   }
 
   private buscar(): void {
+    //to-do: esto no filtra bien, revisar;
+    this.candidatos = [];
     this.storeService.isLoading.set(true);
     this.candidatoService
       .getAll(this.where)
@@ -88,11 +99,21 @@ export class CandidatosComponent implements OnInit {
       .finally(() => this.storeService.isLoading.set(false));
   }
 
-  private buscarPuestos(): void {
+  private buscarEntidades(): void {
     this.puestoService
-      .getAll({ estado: 'A' })
+      .getAll({ estado: ESTADOS_DEFECTO.ACTIVO })
       .then((data) => (this.puestos = data))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error('puesto', err));
+
+    this.competenciaService
+      .getAll({ estado: ESTADOS_DEFECTO.ACTIVO })
+      .then((data) => (this.competencias = data))
+      .catch((err) => console.error('competencia', err));
+
+    this.capacitacionService
+      .getAll({})
+      .then((data) => (this.capacitaciones = data))
+      .catch((err) => console.error('capacitacion', err));
   }
 
   public getPuestoNombre(puesto: Puesto | number | undefined): string {
@@ -105,6 +126,10 @@ export class CandidatosComponent implements OnInit {
 
   public onEdit(id: number): void {
     this.router.navigate([`/postulacion`], { queryParams: { Id: id } });
+  }
+
+  public onCrear(): void {
+    this.router.navigate([`/postulacion`]);
   }
 
   public onVer(id: number): void {
@@ -142,8 +167,57 @@ export class CandidatosComponent implements OnInit {
   }
 
   public selectEvent(puesto: Puesto) {
-    if (puesto) {
-      this.where.puestoIdSec = puesto.idsec;
+    if (puesto) this.where.puestoIdSec = puesto.idsec;
+  }
+
+  public selectCompetenciaEvent(competencia: Competencia) {
+    if (competencia) this.where.competenciaIdSec = competencia.idsec;
+  }
+
+  public selectCapacitacionEvent(capacitacion: Capacitacion) {
+    if (capacitacion) this.where.capacitacionIdSec = capacitacion.idsec;
+  }
+
+  public onCedulaKeyDown(event: KeyboardEvent) {
+    const controlKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+    ];
+    if (controlKeys.includes(event.key)) {
+      return;
     }
+
+    const isNumber = /^[0-9]$/.test(event.key);
+    if (!isNumber) {
+      event.preventDefault();
+      return;
+    }
+
+    let rawValue = this.where.cedula?.replace(/\D+/g, '') ?? '';
+
+    rawValue += event.key;
+
+    if (rawValue.length > 11) {
+      event.preventDefault();
+      return;
+    }
+
+    let formattedCedula = rawValue;
+    if (rawValue.length > 3) {
+      formattedCedula = `${rawValue.slice(0, 3)}-${rawValue.slice(3)}`;
+    }
+    if (rawValue.length > 10) {
+      formattedCedula = `${rawValue.slice(0, 3)}-${rawValue.slice(
+        3,
+        10
+      )}-${rawValue.slice(10)}`;
+    }
+
+    this.where.cedula = formattedCedula;
+
+    event.preventDefault();
   }
 }

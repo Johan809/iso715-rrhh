@@ -1,27 +1,30 @@
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
-import { ToastManager } from '@blocks/toast/toast.manager';
-import { StorageHelper } from '@helpers/storage.helper';
-import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
-import { Candidato } from '@models/candidato.model';
-import { Puesto } from '@models/puesto.model';
-import { CandidatoService } from '@services/candidato.service';
-import { CapacitacionService } from '@services/capacitacion.service';
-import { CompetenciaService } from '@services/competencia.service';
-import { ExperienciaLaboralService } from '@services/experienciaLaboral.service';
-import { PuestoService } from '@services/puesto.service';
-import { StoreService } from '@services/store.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   IDropdownSettings,
   NgMultiSelectDropDownModule,
 } from 'ng-multiselect-dropdown';
+
+import { Puesto } from '@models/puesto.model';
+import { Candidato } from '@models/candidato.model';
+import { StoreService } from '@services/store.service';
 import { ESTADOS_DEFECTO } from 'src/app/lib/constants';
+import { StorageHelper } from '@helpers/storage.helper';
 import { ObjectHelper } from 'src/app/lib/object.helper';
+import { PuestoService } from '@services/puesto.service';
+import { ToastManager } from '@blocks/toast/toast.manager';
 import { LabelValuePair, UserInfo } from 'src/app/lib/types';
+import { CandidatoService } from '@services/candidato.service';
+import { CompetenciaService } from '@services/competencia.service';
+import { CapacitacionService } from '@services/capacitacion.service';
+import { ExperienciaLaboralService } from '@services/experienciaLaboral.service';
+import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
+import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
+import { FormConfirmComponent } from '@forms/form-confirm/form-confirm.component';
 
 @Component({
   standalone: true,
@@ -41,16 +44,18 @@ import { LabelValuePair, UserInfo } from 'src/app/lib/types';
 })
 export class PostulacionComponent implements OnInit {
   protected IdSec: number = 0;
-  protected userInfo: UserInfo | null;
+  protected EsModoVer: boolean = false;
+  private userInfo: UserInfo | null;
   public candidato: Candidato = new Candidato();
-  private PuestoIdSec: number = 0;
+  protected PuestoIdSec: number = 0;
   protected puesto: Puesto = new Puesto();
   protected puestoList: Puesto[] = [];
-  public EstadosList: LabelValuePair[] = [...Candidato.ESTADOS_LIST];
   public competencias: LabelValuePair[] = [];
   public capacitaciones: LabelValuePair[] = [];
   public experiencias: LabelValuePair[] = [];
-  protected dropdownSettings: IDropdownSettings = {
+
+  public readonly EstadosList: LabelValuePair[] = [...Candidato.ESTADOS_LIST];
+  protected readonly dropdownSettings: IDropdownSettings = {
     singleSelection: false,
     idField: 'value',
     textField: 'label',
@@ -59,6 +64,11 @@ export class PostulacionComponent implements OnInit {
     itemsShowLimit: 5,
     allowSearchFilter: true,
   };
+  protected readonly ENTIDAD_IDENTIFICADOR = {
+    COMPETENCIA: 'C',
+    CAPACITACION: 'A',
+    EXPERIENCIA: 'E',
+  };
 
   //to-do: aqui tenemos que cargar el puesto y las demas entidades,
   //tambien se debe tener en cuenta si es editando o creando,
@@ -66,15 +76,17 @@ export class PostulacionComponent implements OnInit {
   //y la vista que sea read-only
 
   constructor(
-    protected storeService: StoreService,
     private toast: ToastManager,
-    private candidatoService: CandidatoService,
+    protected storeService: StoreService,
     private puestoService: PuestoService,
-    private route: ActivatedRoute,
+    private candidatoService: CandidatoService,
     private competenciaService: CompetenciaService,
     private capacitacionService: CapacitacionService,
     private experienciaService: ExperienciaLaboralService,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private activeRoute: ActivatedRoute,
+    private modalService: NgbModal,
+    private router: Router
   ) {
     this.storeService.isLoading.set(false);
     this.userInfo = StorageHelper.getUserInfo();
@@ -83,7 +95,7 @@ export class PostulacionComponent implements OnInit {
   ngOnInit(): void {
     try {
       this.storeService.isLoading.set(true);
-      this.route.queryParamMap.subscribe((params) => {
+      this.activeRoute.queryParamMap.subscribe((params) => {
         const idsec = params.get('Id');
         const puestoIdSec = params.get('PuestoId');
         if (idsec) this.IdSec = Number.parseInt(idsec);
@@ -109,11 +121,12 @@ export class PostulacionComponent implements OnInit {
           this.puestoList.push(data);
         });
         if (this.PuestoIdSec) {
-          this.puesto =
-            this.puestoList.find((p) => p.idsec == this.PuestoIdSec) ??
-            new Puesto();
-          this.candidato.puesto = this.puesto.idsec;
-          this.changeDetector.detectChanges();
+          let temp = this.puestoList.find((p) => p.idsec == this.PuestoIdSec);
+          if (temp) {
+            this.puesto = temp;
+            this.candidato.puesto = this.puesto.idsec;
+            this.changeDetector.detectChanges();
+          }
         }
       })
       .catch((err) => console.error('buscarPuestos', err));
@@ -148,9 +161,6 @@ export class PostulacionComponent implements OnInit {
           label: x.puestoOcupado ?? '',
           value: x.idsec,
         }));
-
-        // Forzar detección de cambios después de que todas las promesas hayan terminado
-        //this.changeDetector.detectChanges();
       } catch (err) {
         console.error('Error al llenar datos: ', err);
       }
@@ -158,12 +168,25 @@ export class PostulacionComponent implements OnInit {
   }
 
   public selectPuestoEvent(p: Puesto) {
-    this.puesto = p;
-    this.candidato.puesto = this.puesto.idsec;
+    if (p && typeof p == 'object') {
+      this.puesto = p;
+      this.candidato.puesto = this.puesto.idsec;
+    }
   }
 
-  public getPuestoNombre(p: Puesto) {
-    return this.puesto.nombre;
+  public getPlaceholderSalario(): string {
+    const salarioMinimo = this.puesto ? this.puesto.nivelMinimoSalario ?? 0 : 0;
+    const salarioMaximo = this.puesto ? this.puesto.nivelMaximoSalario ?? 0 : 0;
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'DOP',
+    });
+
+    return this.puesto
+      ? `Entre ${formatter.format(salarioMinimo)} y ${formatter.format(
+          salarioMaximo
+        )}`
+      : 'Ingrese el salario aspirado';
   }
 
   public onCedulaKeyDown(event: KeyboardEvent) {
@@ -217,26 +240,65 @@ export class PostulacionComponent implements OnInit {
     event.preventDefault();
   }
 
-  private cargarCandidato() {
-    //to-do:cargar el candidato por idsec;
+  private async cargarCandidato() {
+    try {
+      this.storeService.isLoading.set(true);
+      const res = await this.candidatoService.getOne(this.IdSec);
+      this.candidato = ObjectHelper.CopyObject(new Candidato(), res);
+      this.candidato.fillCompetenciaList();
+      this.candidato.fillExperienciaList();
+      this.candidato.fillCapacitacionList();
+      this.puesto = ObjectHelper.CopyObject(
+        new Puesto(),
+        <Puesto>this.candidato.puesto
+      );
+      this.EsModoVer = this.candidato.user_name !== this.userInfo?.username;
+    } catch (err) {
+      this.toast.quickShow('Error al cargar Candidato', 'danger', true);
+    } finally {
+      this.storeService.isLoading.set(false);
+    }
   }
 
   // Método para guardar la postulación
   public async onSubmit(): Promise<void> {
     try {
       this.storeService.isLoading.set(true);
+      if (!this.validate()) return;
+      this.candidato.assignCompetencias();
+      this.candidato.assignExperiencias();
+      this.candidato.assignCapacitaciones();
 
-      if (this.validate()) {
+      if (this.IdSec === 0) {
+        this.candidato.user_name = this.userInfo?.username;
         await this.candidatoService.create(this.candidato);
-        this.toast.quickShow('Postulación creada con éxito.', 'success', true);
+        this.toast.quickShow(
+          'Postulación creada con éxito. Redirigiendo...',
+          'success',
+          true
+        );
+        setTimeout(() => {
+          this.router.navigate(['/candidatos']);
+        }, 3000);
+      } else {
+        await this.candidatoService.update(this.IdSec, this.candidato);
+        this.toast.quickShow(
+          'Postulación actualizada con éxito. Redirigiendo...',
+          'success',
+          true
+        );
+        setTimeout(() => {
+          this.router.navigate(['/candidatos']);
+        }, 3000);
       }
-      this.storeService.isLoading.set(false);
     } catch (err) {
       this.toast.quickShow(
         'Ha ocurrido un error al crear la postulación.',
         'danger',
         true
       );
+      this.storeService.isLoading.set(false);
+    } finally {
       this.storeService.isLoading.set(false);
     }
   }
@@ -245,29 +307,185 @@ export class PostulacionComponent implements OnInit {
   private validate(): boolean {
     let warningMsg: string[] = [];
 
-    if (!this.candidato.nombre)
+    // Validar nombre
+    if (!this.candidato.nombre) {
       warningMsg.push('El campo nombre es requerido.');
-    if (!this.candidato.cedula)
-      warningMsg.push('El campo cédula es requerido.');
-    if (!this.candidato.departamento)
-      warningMsg.push('El campo departamento es requerido.');
-    if (!this.candidato.salarioAspira || this.candidato.salarioAspira <= 0) {
-      warningMsg.push('El salario aspirado debe ser mayor a 0.');
     }
 
+    // Validar cedula
+    const cedulaRegex = /^\d{3}-\d{7}-\d{1}$/; // Formato: 000-0000000-0
+    if (!this.candidato.cedula) {
+      warningMsg.push('El campo cédula es requerido.');
+    } else if (!cedulaRegex.test(this.candidato.cedula)) {
+      warningMsg.push('La cédula no tiene un formato válido.');
+    }
+
+    // Validar puesto
+    if (!this.candidato.puesto) {
+      warningMsg.push('El campo puesto es requerido.');
+    } else if (!this.puesto || !this.puesto.idsec) {
+      warningMsg.push('El puesto seleccionado no es válido.');
+    }
+
+    // Validar departamento
+    if (!this.candidato.departamento) {
+      warningMsg.push('El campo departamento es requerido.');
+    }
+
+    // Validar salario
+    if (!this.candidato.salarioAspira || this.candidato.salarioAspira <= 0) {
+      warningMsg.push('El salario aspirado debe ser mayor a 0.');
+    } else if (this.puesto) {
+      // Asegurarse que el salario esté dentro del rango permitido según el puesto seleccionado
+      if (this.puesto.nivelMinimoSalario && this.puesto.nivelMaximoSalario) {
+        if (
+          this.candidato.salarioAspira < this.puesto.nivelMinimoSalario ||
+          this.candidato.salarioAspira > this.puesto.nivelMaximoSalario
+        ) {
+          warningMsg.push(
+            `El salario aspirado debe estar entre ${this.puesto.nivelMinimoSalario} y ${this.puesto.nivelMaximoSalario}.`
+          );
+        }
+      }
+    }
+
+    // Mostrar los mensajes de advertencia si existen
     if (warningMsg.length > 0) {
-      warningMsg.forEach((msg: string) =>
-        this.toast.quickShow(msg, 'warning', true)
-      );
+      warningMsg.forEach((msg: string) => {
+        this.toast.quickShow(msg, 'warning', true);
+      });
     }
 
     return warningMsg.length === 0;
   }
 
-  public onMultiSelect(item: any) {
-    console.log('onMultiSelect', item);
+  protected onCancelar() {
+    const modalRef = this.modalService.open(FormConfirmComponent, {
+      animation: true,
+      centered: true,
+      keyboard: true,
+    });
+
+    modalRef.componentInstance.message =
+      '¿Está seguro que desea cancelar esta postulación?';
+    modalRef.result
+      .then(async (action: boolean) => {
+        try {
+          if (action) {
+            this.candidato.estado = Candidato.ESTADOS.INACTIVO;
+            await this.candidatoService.update(this.IdSec, this.candidato);
+            this.toast.quickShow(
+              `Postulación Id: ${this.IdSec} cancelada`,
+              'info'
+            );
+          }
+        } catch (er) {
+          console.error(er);
+          this.toast.quickShow('error al cancelar Postulación', 'danger', true);
+        }
+      })
+      .catch(() => {});
   }
-  public onMultiSelectAll(items: any[]) {
-    console.log('onMultiSelectAll', items);
+
+  protected async onRevisionAccion(accion: boolean) {
+    console.log('onRevisionAccion', accion);
+    //to-do: terminar esto;
+  }
+
+  public onMultiSelect(e: any, entidad: string) {
+    const item = <LabelValuePair>e;
+    if (!item || !item.value) {
+      return;
+    }
+
+    switch (entidad) {
+      case this.ENTIDAD_IDENTIFICADOR.COMPETENCIA:
+        if (!this.candidato.competencias) this.candidato.competencias = [];
+        (<number[]>this.candidato.competencias).push(<number>item.value);
+        break;
+      case this.ENTIDAD_IDENTIFICADOR.CAPACITACION:
+        if (!this.candidato.capacitaciones) this.candidato.capacitaciones = [];
+        (<number[]>this.candidato.capacitaciones).push(<number>item.value);
+        break;
+      case this.ENTIDAD_IDENTIFICADOR.EXPERIENCIA:
+        if (!this.candidato.experienciaLaboral)
+          this.candidato.experienciaLaboral = [];
+        (<number[]>this.candidato.experienciaLaboral).push(<number>item.value);
+        break;
+    }
+  }
+
+  public onMultiDeSelect(e: any, entidad: string) {
+    const item = <LabelValuePair>e;
+    if (!item || !item.value) {
+      return;
+    }
+
+    switch (entidad) {
+      case this.ENTIDAD_IDENTIFICADOR.COMPETENCIA:
+        if (this.candidato.competencias) {
+          this.candidato.competencias = (<number[]>(
+            this.candidato.competencias
+          )).filter((id: number) => id !== <number>item.value);
+        }
+        break;
+      case this.ENTIDAD_IDENTIFICADOR.CAPACITACION:
+        if (this.candidato.capacitaciones) {
+          this.candidato.capacitaciones = (<number[]>(
+            this.candidato.capacitaciones
+          )).filter((id: number) => id !== item.value);
+        }
+        break;
+      case this.ENTIDAD_IDENTIFICADOR.EXPERIENCIA:
+        if (this.candidato.experienciaLaboral) {
+          this.candidato.experienciaLaboral = (<number[]>(
+            this.candidato.experienciaLaboral
+          )).filter((id: number) => id !== item.value);
+        }
+        break;
+    }
+  }
+
+  public onMultiSelectAll(e: any[], entidad: string) {
+    const items = <LabelValuePair[]>e;
+
+    switch (entidad) {
+      case this.ENTIDAD_IDENTIFICADOR.COMPETENCIA:
+        if (!this.candidato.competencias) {
+          this.candidato.competencias = [];
+        }
+        this.candidato.competencias = items.map((item) => <number>item.value);
+        break;
+
+      case this.ENTIDAD_IDENTIFICADOR.CAPACITACION:
+        if (!this.candidato.capacitaciones) {
+          this.candidato.capacitaciones = [];
+        }
+        this.candidato.capacitaciones = items.map((item) => <number>item.value);
+        break;
+
+      case this.ENTIDAD_IDENTIFICADOR.EXPERIENCIA:
+        if (!this.candidato.experienciaLaboral) {
+          this.candidato.experienciaLaboral = [];
+        }
+        this.candidato.experienciaLaboral = items.map(
+          (item) => <number>item.value
+        );
+        break;
+    }
+  }
+
+  public onMultiDeSelectAll(entidad: string) {
+    switch (entidad) {
+      case this.ENTIDAD_IDENTIFICADOR.COMPETENCIA:
+        this.candidato.competencias = [];
+        break;
+      case this.ENTIDAD_IDENTIFICADOR.CAPACITACION:
+        this.candidato.capacitaciones = [];
+        break;
+      case this.ENTIDAD_IDENTIFICADOR.EXPERIENCIA:
+        this.candidato.experienciaLaboral = [];
+        break;
+    }
   }
 }

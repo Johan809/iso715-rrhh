@@ -90,6 +90,8 @@ const getAllCandidatos = async (
       nombre,
       cedula,
       puestoIdSec,
+      capacitacionIdSec,
+      competenciaIdSec,
       departamento,
       salarioMin,
       salarioMax,
@@ -120,6 +122,38 @@ const getAllCandidatos = async (
         return res
           .status(404)
           .json({ message: `Puesto con idsec ${puestoIdSec} no encontrado` });
+      }
+    }
+
+    // Filtrar por capacitacionIdSec
+    if (capacitacionIdSec) {
+      const capacitacion = await Capacitacion.findOne({
+        idsec: capacitacionIdSec,
+      });
+      if (capacitacion) {
+        filter.capacitaciones = { $in: [capacitacion._id] };
+      } else {
+        return res
+          .status(404)
+          .json({
+            message: `Capacitación con idsec ${capacitacionIdSec} no encontrada`,
+          });
+      }
+    }
+
+    // Filtrar por competenciaIdSec
+    if (competenciaIdSec) {
+      const competencia = await Competencia.findOne({
+        idsec: competenciaIdSec,
+      });
+      if (competencia) {
+        filter.competencias = { $in: [competencia._id] };
+      } else {
+        return res
+          .status(404)
+          .json({
+            message: `Competencia con idsec ${competenciaIdSec} no encontrada`,
+          });
       }
     }
 
