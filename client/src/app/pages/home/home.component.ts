@@ -9,6 +9,8 @@ import { ToastManager } from '@blocks/toast/toast.manager';
 import { RoleLevel } from '@enums/role-level.enum';
 import { StorageHelper } from '@helpers/storage.helper';
 import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
+import { Capacitacion } from '@models/capacitacion.model';
+import { Empleado } from '@models/empleado.model';
 import { Puesto } from '@models/puesto.model';
 import { PuestoService } from '@services/puesto.service';
 import { StoreService } from '@services/store.service';
@@ -21,12 +23,12 @@ import { UserInfo } from 'src/app/lib/types';
   styleUrls: ['./home.component.scss'],
   standalone: true,
   imports: [
-    PageLayoutComponent,
     NgIf,
     NgFor,
-    ProgressBarComponent,
-    CurrencyPipe,
     CommonModule,
+    CurrencyPipe,
+    PageLayoutComponent,
+    ProgressBarComponent,
   ],
 })
 export class HomeComponent implements OnInit {
@@ -54,11 +56,16 @@ export class HomeComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.getPuestosActivos();
-
     if (this.userInfo?.role === RoleLevel.USER) {
+      this.getPuestosActivos();
+    } else if (
+      (this.userInfo?.role ?? RoleLevel.NOT_LOGGED) >= RoleLevel.RRHH
+    ) {
+      this.loadDashboardData();
     }
   }
+
+  private loadDashboardData() {}
 
   public getNivelRiesgoLabel(nivelRiesgo: string | undefined): string {
     const nivel = Puesto.NivelRiesgoList.find((n) => n.value === nivelRiesgo);
