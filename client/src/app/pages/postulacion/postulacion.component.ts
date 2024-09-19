@@ -304,41 +304,35 @@ export class PostulacionComponent implements OnInit {
     }
   }
 
-  // Método de validación
   private validate(): boolean {
-    //to-do: algoritmo para validar cédula dominicana
     let warningMsg: string[] = [];
 
-    // Validar nombre
     if (!this.candidato.nombre) {
       warningMsg.push('El campo nombre es requerido.');
     }
 
-    // Validar cedula
-    const cedulaRegex = /^\d{3}-\d{7}-\d{1}$/; // Formato: 000-0000000-0
+    const cedulaRegex = /^\d{3}-\d{7}-\d{1}$/;
     if (!this.candidato.cedula) {
       warningMsg.push('El campo cédula es requerido.');
     } else if (!cedulaRegex.test(this.candidato.cedula)) {
       warningMsg.push('La cédula no tiene un formato válido.');
+    } else if (!this.validarCedula(this.candidato.cedula)) {
+      warningMsg.push('La cédula ingresada no es válida.');
     }
 
-    // Validar puesto
     if (!this.candidato.puesto) {
       warningMsg.push('El campo puesto es requerido.');
     } else if (!this.puesto || !this.puesto.idsec) {
       warningMsg.push('El puesto seleccionado no es válido.');
     }
 
-    // Validar departamento
     if (!this.candidato.departamento) {
       warningMsg.push('El campo departamento es requerido.');
     }
 
-    // Validar salario
     if (!this.candidato.salarioAspira || this.candidato.salarioAspira <= 0) {
       warningMsg.push('El salario aspirado debe ser mayor a 0.');
     } else if (this.puesto) {
-      // Asegurarse que el salario esté dentro del rango permitido según el puesto seleccionado
       if (this.puesto.nivelMinimoSalario && this.puesto.nivelMaximoSalario) {
         if (
           this.candidato.salarioAspira < this.puesto.nivelMinimoSalario ||
@@ -351,7 +345,6 @@ export class PostulacionComponent implements OnInit {
       }
     }
 
-    // Mostrar los mensajes de advertencia si existen
     if (warningMsg.length > 0) {
       warningMsg.forEach((msg: string) => {
         this.toast.quickShow(msg, 'warning', true);
@@ -359,6 +352,28 @@ export class PostulacionComponent implements OnInit {
     }
 
     return warningMsg.length === 0;
+  }
+
+  private validarCedula(cedula: string): boolean {
+    cedula = cedula.replace(/-/g, '');
+    if (cedula.length !== 11) {
+      return false;
+    }
+
+    const digits = cedula.split('').map(Number);
+    const weights = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2];
+    let sum = 0;
+
+    for (let i = 0; i < 10; i++) {
+      let product = digits[i] * weights[i];
+      if (product >= 10) {
+        product = Math.floor(product / 10) + (product % 10);
+      }
+      sum += product;
+    }
+
+    const checksumDigit = (10 - (sum % 10)) % 10;
+    return checksumDigit === digits[10];
   }
 
   protected onCancelar() {
