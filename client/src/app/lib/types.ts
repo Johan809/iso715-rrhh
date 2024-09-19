@@ -75,4 +75,6 @@ export type EmpleadoWhere = {
   puestoIdSec?: number;
   departamento?: string;
   estado?: string;
+  fechaInicio?: Date;
+  fechaFin?: Date;
 };

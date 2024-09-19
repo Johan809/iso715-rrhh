@@ -4,7 +4,11 @@ import {
   EMPLEADO_ESTADOS,
   EmpleadoInput,
 } from "../models/empleado.model";
-import { Candidato, CandidatoDocument } from "../models/candidato.model";
+import {
+  Candidato,
+  CANDIDATO_ESTADOS,
+  CandidatoDocument,
+} from "../models/candidato.model";
 import { Puesto } from "../models/puesto.model";
 
 const createEmpleado = async (
@@ -63,12 +67,20 @@ const getAllEmpleados = async (
   next: NextFunction
 ) => {
   try {
-    const { nombre, puestoIdSec, departamento, estado } = req.query;
+    const { nombre, puestoIdSec, departamento, estado, fechaInicio, fechaFin } =
+      req.query;
 
     const filter: any = {};
     if (nombre) filter.nombre = new RegExp(nombre as string, "i");
     if (departamento) filter.departamento = departamento;
     if (estado) filter.estado = estado;
+
+    if (fechaInicio) {
+      filter.fechaIngreso = { $gte: new Date(fechaInicio as string) };
+    }
+    if (fechaFin) {
+      filter.fechaIngreso = { $lte: new Date(fechaFin as string) };
+    }
 
     if (puestoIdSec) {
       const puesto = await Puesto.findOne({ idsec: puestoIdSec });
@@ -213,7 +225,12 @@ const createEmpleadoFromCandidato = async (
     };
 
     const empleadoCreated = await Empleado.create(empleadoInput);
-    await Candidato.deleteOne({ idsec: id });
+    await Candidato.updateOne(
+      { idsec: id },
+      {
+        estado: CANDIDATO_ESTADOS.CONTRATADO,
+      }
+    );
 
     return res.status(201).json({ data: empleadoCreated });
   } catch (err) {

@@ -17,7 +17,12 @@ import { StorageHelper } from '@helpers/storage.helper';
 import { ObjectHelper } from 'src/app/lib/object.helper';
 import { PuestoService } from '@services/puesto.service';
 import { ToastManager } from '@blocks/toast/toast.manager';
-import { DateObject, LabelValuePair, UserInfo } from 'src/app/lib/types';
+import {
+  DateObject,
+  DatosContratacionType,
+  LabelValuePair,
+  UserInfo,
+} from 'src/app/lib/types';
 import { CandidatoService } from '@services/candidato.service';
 import { CompetenciaService } from '@services/competencia.service';
 import { CapacitacionService } from '@services/capacitacion.service';
@@ -26,6 +31,7 @@ import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component'
 import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
 import { FormConfirmComponent } from '@forms/form-confirm/form-confirm.component';
 import { ConvertirCandidatoModalComponent } from './convertir-candidato-modal/convertir-candidato-modal.component';
+import { EmpleadoService } from '@services/empleado.service';
 
 @Component({
   standalone: true,
@@ -71,15 +77,11 @@ export class PostulacionComponent implements OnInit {
     EXPERIENCIA: 'E',
   };
 
-  //to-do: aqui tenemos que cargar el puesto y las demas entidades,
-  //tambien se debe tener en cuenta si es editando o creando,
-  //manejar los botones de crear/actualizar, aprovar o rechazar,
-  //y la vista que sea read-only
-
   constructor(
     private toast: ToastManager,
     protected storeService: StoreService,
     private puestoService: PuestoService,
+    private empleadoService: EmpleadoService,
     private candidatoService: CandidatoService,
     private competenciaService: CompetenciaService,
     private capacitacionService: CapacitacionService,
@@ -136,7 +138,6 @@ export class PostulacionComponent implements OnInit {
   private async llenarDDL() {
     if (this.userInfo) {
       try {
-        // Obtener las competencias
         const competenciasData = await this.competenciaService.getAll({
           estado: ESTADOS_DEFECTO.ACTIVO,
         });
@@ -145,7 +146,6 @@ export class PostulacionComponent implements OnInit {
           value: x.idsec,
         }));
 
-        // Obtener las capacitaciones
         const capacitacionesData = await this.capacitacionService.getAll({
           user_name: this.userInfo.username,
         });
@@ -154,7 +154,6 @@ export class PostulacionComponent implements OnInit {
           value: x.idsec,
         }));
 
-        // Obtener las experiencias laborales
         const experienciasData = await this.experienciaService.getAll({
           user_name: this.userInfo.username,
         });
@@ -307,6 +306,7 @@ export class PostulacionComponent implements OnInit {
 
   // Método de validación
   private validate(): boolean {
+    //to-do: algoritmo para validar cédula dominicana
     let warningMsg: string[] = [];
 
     // Validar nombre
@@ -413,7 +413,6 @@ export class PostulacionComponent implements OnInit {
       month: fechaHoy.getMonth() + 1,
       day: fechaHoy.getDate(),
     };
-    console.log('fecha', objFechaHoy);
     modalRef.componentInstance.CandidatoId = this.candidato.idsec;
     modalRef.componentInstance.datosContratacion = {
       departamento: this.candidato.departamento,
@@ -422,9 +421,33 @@ export class PostulacionComponent implements OnInit {
       puesto: this.puesto,
     };
     modalRef.result
-      .then((res) => {
-        console.log('modalRef', res);
-        //to-do: completar el proceso de conversion a empleado
+      .then(async (res: DatosContratacionType) => {
+        try {
+          this.storeService.isLoading.set(true);
+          const response = await this.empleadoService.createFromCandidato(
+            this.IdSec,
+            res
+          );
+          if (response) {
+            this.toast.quickShow(
+              `Candidato contratado con éxito. Empleado Id: ${response.idsec}`,
+              'success',
+              true
+            );
+            setTimeout(() => {
+              this.router.navigate(['/empleados']);
+            }, 3000);
+          }
+        } catch (err) {
+          console.error(err);
+          this.toast.quickShow(
+            'Error al convertir Candidato en Empleado',
+            'danger',
+            true
+          );
+        } finally {
+          this.storeService.isLoading.set(false);
+        }
       })
       .catch(() => {});
   }

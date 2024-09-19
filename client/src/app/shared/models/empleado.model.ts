@@ -22,5 +22,7 @@ export class Empleado {
     puestoIdSec?: number;
     departamento?: string;
     estado?: string;
+    fechaInicio?: Date;
+    fechaFin?: Date;
   };
 }

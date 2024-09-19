@@ -77,9 +77,14 @@ export class EmpleadoService extends AbstractService {
     candidatoId: number,
     datosContratacion: DatosContratacionType
   ): Promise<Empleado> {
-    const url = Endpoint.EMPLEADO + `/fromCandidato/${candidatoId}`;
+    const url = Endpoint.EMPLEADO + `/from-candidato/${candidatoId}`;
+    const fechaIngreso = new Date(
+      datosContratacion.fechaIngreso.year,
+      datosContratacion.fechaIngreso.month - 1,
+      datosContratacion.fechaIngreso.day
+    );
     const response = await this.api.post(url, {
-      fechaIngreso: datosContratacion.fechaIngreso,
+      fechaIngreso: fechaIngreso,
       departamento: datosContratacion.departamento,
       salario: datosContratacion.salario,
     });
