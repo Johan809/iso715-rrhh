@@ -63,13 +63,23 @@ const getAllEmpleados = async (
   next: NextFunction
 ) => {
   try {
-    const { nombre, puesto, departamento, estado } = req.query;
+    const { nombre, puestoIdSec, departamento, estado } = req.query;
 
     const filter: any = {};
     if (nombre) filter.nombre = new RegExp(nombre as string, "i");
-    if (puesto) filter.puesto = puesto;
     if (departamento) filter.departamento = departamento;
     if (estado) filter.estado = estado;
+
+    if (puestoIdSec) {
+      const puesto = await Puesto.findOne({ idsec: puestoIdSec });
+      if (puesto) {
+        filter.puesto = puesto._id;
+      } else {
+        return res
+          .status(404)
+          .json({ message: `Puesto con idsec ${puestoIdSec} no encontrado` });
+      }
+    }
 
     const empleados = await Empleado.find(filter)
       .populate("puesto")

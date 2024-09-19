@@ -1,0 +1,72 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ modalTitle }}</h4>
+  <button
+    type="button"
+    class="btn-close text-dark d-flex"
+    aria-label="Close"
+    (click)="activeModal.dismiss()"
+  >
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+
+<div class="modal-body">
+  <app-progress-bar *ngIf="storeService.isLoading()" />
+
+  <section class="position-relative" [class.blockUI]="storeService.isLoading()">
+    <div class="mb-2">
+      <label for="txtDepartamento" class="form-label">Departamento</label>
+      <input
+        type="text"
+        class="form-control required-input"
+        id="txtDepartamento"
+        name="departamento"
+        [(ngModel)]="datosContratacion.departamento"
+      />
+    </div>
+
+    <div class="mb-2">
+      <label for="txtsalario" class="form-label">Salario</label>
+      <input
+        class="form-control required-input"
+        type="number"
+        id="txtsalario"
+        name="salario"
+        [(ngModel)]="datosContratacion.salario"
+      />
+    </div>
+
+    <div class="mb-2">
+      <label for="txtFechaIngreso" class="form-label">Fecha Ingreso</label>
+      <div class="input-group">
+        <input
+          class="form-control"
+          placeholder="Fecha Ingreso"
+          id="txtFechaIngreso"
+          name="fechaIngreso"
+          [(ngModel)]="datosContratacion.fechaIngreso"
+          ngbDatepicker
+          #fIngreso="ngbDatepicker"
+        />
+        <button
+          class="btn btn-outline-secondary"
+          (click)="fIngreso.toggle()"
+          type="button"
+        >
+          <i class="fa-solid fa-calendar-days"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-success w-100"
+    (click)="onGrabarClick($event)"
+    [disabled]="this.storeService.isLoading()"
+  >
+    Contratar
+  </button>
+</div>

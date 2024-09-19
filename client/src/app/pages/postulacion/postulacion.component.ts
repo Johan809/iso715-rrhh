@@ -17,7 +17,7 @@ import { StorageHelper } from '@helpers/storage.helper';
 import { ObjectHelper } from 'src/app/lib/object.helper';
 import { PuestoService } from '@services/puesto.service';
 import { ToastManager } from '@blocks/toast/toast.manager';
-import { LabelValuePair, UserInfo } from 'src/app/lib/types';
+import { DateObject, LabelValuePair, UserInfo } from 'src/app/lib/types';
 import { CandidatoService } from '@services/candidato.service';
 import { CompetenciaService } from '@services/competencia.service';
 import { CapacitacionService } from '@services/capacitacion.service';
@@ -25,6 +25,7 @@ import { ExperienciaLaboralService } from '@services/experienciaLaboral.service'
 import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
 import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
 import { FormConfirmComponent } from '@forms/form-confirm/form-confirm.component';
+import { ConvertirCandidatoModalComponent } from './convertir-candidato-modal/convertir-candidato-modal.component';
 
 @Component({
   standalone: true,
@@ -400,7 +401,32 @@ export class PostulacionComponent implements OnInit {
   }
 
   private contratarCandidato() {
-    //to-do: terminar esto;
+    const modalRef = this.modalService.open(ConvertirCandidatoModalComponent, {
+      animation: true,
+      centered: true,
+      keyboard: true,
+    });
+
+    const fechaHoy = new Date();
+    const objFechaHoy: DateObject = {
+      year: fechaHoy.getFullYear(),
+      month: fechaHoy.getMonth() + 1,
+      day: fechaHoy.getDate(),
+    };
+    console.log('fecha', objFechaHoy);
+    modalRef.componentInstance.CandidatoId = this.candidato.idsec;
+    modalRef.componentInstance.datosContratacion = {
+      departamento: this.candidato.departamento,
+      salario: this.candidato.salarioAspira,
+      fechaIngreso: objFechaHoy,
+      puesto: this.puesto,
+    };
+    modalRef.result
+      .then((res) => {
+        console.log('modalRef', res);
+        //to-do: completar el proceso de conversion a empleado
+      })
+      .catch(() => {});
   }
 
   private rechazarCandidato() {

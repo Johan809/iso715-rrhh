@@ -1,4 +1,5 @@
 import { RoleLevel } from '@enums/role-level.enum';
+import { Puesto } from '@models/puesto.model';
 
 export type UserInfo = {
   username: string;
@@ -60,4 +61,18 @@ export type UsuarioWhere = {
   email?: string;
   estado?: boolean;
   role?: number;
+};
+
+export type DatosContratacionType = {
+  departamento: string;
+  fechaIngreso: DateObject;
+  salario: number;
+  puesto?: Puesto;
+};
+
+export type EmpleadoWhere = {
+  nombre?: string;
+  puestoIdSec?: number;
+  departamento?: string;
+  estado?: string;
 };

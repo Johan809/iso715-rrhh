@@ -10,4 +10,5 @@ export enum Endpoint {
   EXPERIENCIA_LABORAL = 'experiencias-laborales',
   CANDIDATO = 'candidatos',
   USUARIO = 'usuarios',
+  EMPLEADO = 'empleados',
 }
