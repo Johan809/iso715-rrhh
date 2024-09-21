@@ -67,11 +67,19 @@ const getAllEmpleados = async (
   next: NextFunction
 ) => {
   try {
-    const { nombre, puestoIdSec, departamento, estado, fechaInicio, fechaFin } =
-      req.query;
+    const {
+      nombre,
+      cedula,
+      puestoIdSec,
+      departamento,
+      estado,
+      fechaInicio,
+      fechaFin,
+    } = req.query;
 
     const filter: any = {};
     if (nombre) filter.nombre = new RegExp(nombre as string, "i");
+    if (cedula) filter.cedula = new RegExp(<string>cedula, "i");
     if (departamento) filter.departamento = departamento;
     if (estado) filter.estado = estado;
 

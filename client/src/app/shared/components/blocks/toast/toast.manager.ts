@@ -1,7 +1,6 @@
 // Angular modules
 import { Injectable } from '@angular/core';
-
-export type ToastType = 'success' | 'info' | 'warning' | 'danger';
+import { ToastType } from 'src/app/lib/types';
 
 export class Toast {
   public id!: number;
@@ -17,7 +16,7 @@ export class Toast {
     this.body = body;
     this.type = type ?? 'danger';
     this.autoHide = autoHide;
-    this.delay = 10000; // 10 sec
+    this.delay = 5000; // 5 sec
 
     this.headerKey = this.type.toUpperCase();
   }

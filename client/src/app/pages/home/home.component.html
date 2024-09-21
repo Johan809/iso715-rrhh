@@ -3,13 +3,7 @@
     <app-progress-bar *ngIf="storeService.isLoading()" />
 
     <ng-container *ngIf="!storeService.isLoading()">
-      <div
-        class="container my-4"
-        *ngIf="
-          (userInfo?.role ?? ROLES.NOT_LOGGED) <= ROLES.USER;
-          else dashboard_admin
-        "
-      >
+      <div class="container my-4">
         <div *ngIf="puestos.length > 0">
           <div class="row">
             <div class="col-12 text-center">
@@ -87,17 +81,6 @@
           No hay puestos activos disponibles.
         </div>
       </div>
-
-      <ng-template #dashboard_admin>
-        <section class="container my-4">
-          <div class="row mb-4">
-            <div class="col-12 text-center">
-              <h2>Dashboard RRHH</h2>
-              <hr />
-            </div>
-          </div>
-        </section>
-      </ng-template>
     </ng-container>
   </div>
 </app-page-layout>

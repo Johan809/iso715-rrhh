@@ -18,10 +18,8 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    if (userLevel === RoleLevel.NOT_LOGGED)
-      this.router.navigate(['/auth/login']);
-    else this.toast.quickShow('Este usuario no tiene permiso', 'warning', true);
-
+    this.toast.quickShow('Este usuario no tiene permiso', 'warning', true);
+    this.router.navigate(['/home']);
     return false;
   }
 }

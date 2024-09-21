@@ -75,6 +75,8 @@ export type EmpleadoWhere = {
   puestoIdSec?: number;
   departamento?: string;
   estado?: string;
-  fechaInicio?: Date;
-  fechaFin?: Date;
+  fechaInicio?: Date | DateObject;
+  fechaFin?: Date | DateObject;
 };
+
+export type ToastType = 'success' | 'info' | 'warning' | 'danger';

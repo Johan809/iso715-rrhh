@@ -98,6 +98,17 @@
         Experiencias Laborales
       </a>
     </li>
+    <li>
+      <a
+        class="nav-link text-white cursor-pointer"
+        [routerLink]="['/empleados']"
+        [routerLinkActive]="['active']"
+        [class.hidden]="(userInfo?.role ?? ROLES.NOT_LOGGED) < ROLES.RRHH"
+      >
+        <i class="fa-solid fa-users-rectangle"></i>
+        Empleados
+      </a>
+    </li>
   </ul>
 
   <!-- Sección de usuario -->

@@ -4,18 +4,16 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 // Components
-import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
-import { ToastManager } from '@blocks/toast/toast.manager';
-import { RoleLevel } from '@enums/role-level.enum';
-import { StorageHelper } from '@helpers/storage.helper';
-import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
-import { Capacitacion } from '@models/capacitacion.model';
-import { Empleado } from '@models/empleado.model';
-import { Puesto } from '@models/puesto.model';
-import { PuestoService } from '@services/puesto.service';
-import { StoreService } from '@services/store.service';
-import { ObjectHelper } from 'src/app/lib/object.helper';
 import { UserInfo } from 'src/app/lib/types';
+import { Puesto } from '@models/puesto.model';
+import { RoleLevel } from '@enums/role-level.enum';
+import { StoreService } from '@services/store.service';
+import { StorageHelper } from '@helpers/storage.helper';
+import { PuestoService } from '@services/puesto.service';
+import { ObjectHelper } from 'src/app/lib/object.helper';
+import { ToastManager } from '@blocks/toast/toast.manager';
+import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
+import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
 
 @Component({
   selector: 'app-home',
@@ -56,16 +54,8 @@ export class HomeComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    if (this.userInfo?.role === RoleLevel.USER) {
-      this.getPuestosActivos();
-    } else if (
-      (this.userInfo?.role ?? RoleLevel.NOT_LOGGED) >= RoleLevel.RRHH
-    ) {
-      this.loadDashboardData();
-    }
+    this.getPuestosActivos();
   }
-
-  private loadDashboardData() {}
 
   public getNivelRiesgoLabel(nivelRiesgo: string | undefined): string {
     const nivel = Puesto.NivelRiesgoList.find((n) => n.value === nivelRiesgo);
