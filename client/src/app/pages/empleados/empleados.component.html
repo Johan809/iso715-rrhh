@@ -178,7 +178,7 @@
               <td>{{ getPuestoNombre(empleado.puesto) }}</td>
               <td>{{ empleado.departamento }}</td>
               <td>{{ empleado.salarioMensual | currency }}</td>
-              <td>{{ empleado.fechaIngreso | date : "dd/MM/yyyy" }}</td>
+              <td>{{ toDate(empleado.fechaIngreso) | date : "dd/MM/yyyy" }}</td>
               <td>{{ getEstadoNombre(empleado.estado) }}</td>
               <td>
                 <button
@@ -186,14 +186,14 @@
                   (click)="onEdit(empleado.idsec)"
                   title="Editar"
                 >
-                  <i class="fa-solid fa-pen-to-square"></i> Editar
+                  <i class="fa-solid fa-pen-to-square"></i>
                 </button>
                 <button
                   class="btn btn-sm btn-danger ms-2"
                   (click)="onCancelar(empleado.idsec)"
                   title="Inactivar"
                 >
-                  <i class="fa-solid fa-ban"></i> Inactivar
+                  <i class="fa-solid fa-ban"></i>
                 </button>
               </td>
             </tr>

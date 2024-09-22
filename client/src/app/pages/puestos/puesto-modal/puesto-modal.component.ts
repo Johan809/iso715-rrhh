@@ -9,7 +9,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { IdiomaService } from '@services/idioma.service';
 import { PuestoService } from '@services/puesto.service';
 import { StoreService } from '@services/store.service';
-import { ObjectHelper } from 'src/app/lib/object.helper';
+import { ObjectHelper } from 'src/app/lib/helpers';
 import { LabelValuePair } from 'src/app/lib/types';
 
 @Component({

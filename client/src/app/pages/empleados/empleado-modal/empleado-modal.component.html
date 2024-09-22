@@ -1,1 +1,149 @@
-<p>empleado-modal works!</p>
+<div class="modal-header">
+  <h4 class="modal-title">{{ modalTitle }}</h4>
+  <button
+    type="button"
+    class="btn-close text-dark d-flex"
+    aria-label="Close"
+    (click)="activeModal.dismiss()"
+  >
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+
+<div class="modal-body">
+  <app-progress-bar *ngIf="storeService.isLoading()" />
+
+  <section class="position-relative" [class.blockUI]="storeService.isLoading()">
+    <div class="row mb-2">
+      <!-- Nombre -->
+      <div class="col">
+        <label for="txtNombre" class="form-label">Nombre Completo</label>
+        <input
+          type="text"
+          class="form-control required-input"
+          id="txtNombre"
+          required
+          [(ngModel)]="empleado.nombre"
+        />
+      </div>
+
+      <!-- Cédula -->
+      <div class="col">
+        <label for="txtCedula" class="form-label">Cédula</label>
+        <input
+          type="text"
+          class="form-control"
+          id="txtCedula"
+          [(ngModel)]="empleado.cedula"
+          placeholder="000-0000000-0"
+          (keydown)="onCedulaKeyDown($event)"
+        />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <!-- Campo Puesto-->
+      <div class="col">
+        <label for="lkPuesto" class="form-label">Puesto</label>
+        <ng-autocomplete
+          #puestoAutoComplete
+          [data]="puestoList"
+          [initialValue]="puesto.nombre"
+          searchKeyword="nombre"
+          name="puesto"
+          placeholder="Selecciona un Puesto"
+          (selected)="selectPuestoEvent($event)"
+          [itemTemplate]="itemTemplate"
+          [notFoundTemplate]="notFoundTemplate"
+        ></ng-autocomplete>
+        <ng-template #itemTemplate let-item>
+          <a [innerHTML]="item.nombre"></a>
+        </ng-template>
+
+        <ng-template #notFoundTemplate let-notFound>
+          <div [innerHTML]="notFound"></div>
+        </ng-template>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <!-- Departamento -->
+      <div class="col">
+        <label for="txtDepartamento" class="form-label">Departamento</label>
+        <input
+          type="text"
+          class="form-control"
+          id="txtDepartamento"
+          [(ngModel)]="empleado.departamento"
+          placeholder="Ingrese el departamento"
+        />
+      </div>
+
+      <!-- Salario Mensual -->
+      <div class="col">
+        <label for="txtSalario" class="form-label">Salario Mensual</label>
+        <input
+          type="number"
+          class="form-control"
+          id="txtSalario"
+          [(ngModel)]="empleado.salarioMensual"
+          [title]="getPlaceholderSalario()"
+          placeholder="Ingrese el salario mensual"
+        />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <!-- Fecha de Ingreso -->
+      <div class="col">
+        <label for="txtFechaIngreso" class="form-label">Fecha de Ingreso</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="yyyy-mm-dd"
+            id="txtFechaIngreso"
+            name="fechaIngreso"
+            [(ngModel)]="empleado.fechaIngreso"
+            ngbDatepicker
+            #fIngreso="ngbDatepicker"
+          />
+          <button
+            class="btn btn-outline-secondary"
+            (click)="fIngreso.toggle()"
+            type="button"
+          >
+            <i class="fa-solid fa-calendar-days"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Estado -->
+      <div class="col">
+        <label for="ddlEstado" class="form-label">Estado</label>
+        <select
+          id="ddlEstado"
+          name="estado"
+          class="form-select"
+          [(ngModel)]="empleado.estado"
+          [disabled]="IdSec === 0"
+        >
+          <option value="" disabled>Seleccione el estado</option>
+          <option *ngFor="let estado of EstadosList" [value]="estado.value">
+            {{ estado.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-success w-100"
+    (click)="onGrabarClick($event)"
+    [disabled]="this.storeService.isLoading()"
+  >
+    Grabar
+  </button>
+</div>

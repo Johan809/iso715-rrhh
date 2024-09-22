@@ -14,7 +14,7 @@ import { Candidato } from '@models/candidato.model';
 import { StoreService } from '@services/store.service';
 import { ESTADOS_DEFECTO } from 'src/app/lib/constants';
 import { StorageHelper } from '@helpers/storage.helper';
-import { ObjectHelper } from 'src/app/lib/object.helper';
+import { CedulaHelper, ObjectHelper } from 'src/app/lib/helpers';
 import { PuestoService } from '@services/puesto.service';
 import { ToastManager } from '@blocks/toast/toast.manager';
 import {
@@ -311,12 +311,11 @@ export class PostulacionComponent implements OnInit {
       warningMsg.push('El campo nombre es requerido.');
     }
 
-    const cedulaRegex = /^\d{3}-\d{7}-\d{1}$/;
     if (!this.candidato.cedula) {
       warningMsg.push('El campo cédula es requerido.');
-    } else if (!cedulaRegex.test(this.candidato.cedula)) {
+    } else if (!CedulaHelper.Regex.test(this.candidato.cedula)) {
       warningMsg.push('La cédula no tiene un formato válido.');
-    } else if (!this.validarCedula(this.candidato.cedula)) {
+    } else if (!CedulaHelper.ValidarCedula(this.candidato.cedula)) {
       warningMsg.push('La cédula ingresada no es válida.');
     }
 
@@ -352,28 +351,6 @@ export class PostulacionComponent implements OnInit {
     }
 
     return warningMsg.length === 0;
-  }
-
-  private validarCedula(cedula: string): boolean {
-    cedula = cedula.replace(/-/g, '');
-    if (cedula.length !== 11) {
-      return false;
-    }
-
-    const digits = cedula.split('').map(Number);
-    const weights = [1, 2, 1, 2, 1, 2, 1, 2, 1, 2];
-    let sum = 0;
-
-    for (let i = 0; i < 10; i++) {
-      let product = digits[i] * weights[i];
-      if (product >= 10) {
-        product = Math.floor(product / 10) + (product % 10);
-      }
-      sum += product;
-    }
-
-    const checksumDigit = (10 - (sum % 10)) % 10;
-    return checksumDigit === digits[10];
   }
 
   protected onCancelar() {

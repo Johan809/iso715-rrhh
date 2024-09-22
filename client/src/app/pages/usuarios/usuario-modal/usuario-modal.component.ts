@@ -7,7 +7,7 @@ import { Usuario } from '@models/usuario.model';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UsuarioService } from '@services/usuario.service';
 import { StoreService } from '@services/store.service';
-import { ObjectHelper } from 'src/app/lib/object.helper';
+import { ObjectHelper } from 'src/app/lib/helpers';
 import { LabelValuePair, RoleType } from 'src/app/lib/types';
 import { RoleLevel } from '@enums/role-level.enum';
 

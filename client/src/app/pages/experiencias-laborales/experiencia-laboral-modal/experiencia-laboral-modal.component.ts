@@ -11,7 +11,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { ExperienciaLaboralService } from '@services/experienciaLaboral.service';
 import { StoreService } from '@services/store.service';
-import { ObjectHelper } from 'src/app/lib/object.helper';
+import { ObjectHelper } from 'src/app/lib/helpers';
 import { DateObject } from 'src/app/lib/types';
 
 @Component({

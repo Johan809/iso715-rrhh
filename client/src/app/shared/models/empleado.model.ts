@@ -6,7 +6,7 @@ export class Empleado {
   idsec: number;
   cedula?: string;
   nombre?: string;
-  fechaIngreso?: Date;
+  fechaIngreso?: Date | DateObject | string;
   departamento?: string;
   puesto: number | Puesto;
   salarioMensual: number;
@@ -28,12 +28,19 @@ export class Empleado {
     ];
   }
 
+  public initDates() {
+    if (this.fechaIngreso && typeof this.fechaIngreso == 'object') {
+      let dObj = <DateObject>this.fechaIngreso;
+      this.fechaIngreso = new Date(dObj.year, dObj.month - 1, dObj.day);
+    }
+  }
+
   static Where = class {
     nombre?: string;
     cedula?: string;
     puestoIdSec?: number;
     departamento?: string;
-    estado?: string;
+    estado?: string = '';
     fechaInicio?: Date | DateObject;
     fechaFin?: Date | DateObject;
     _puestoNombre?: string;

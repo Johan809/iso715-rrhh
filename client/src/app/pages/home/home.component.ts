@@ -10,7 +10,7 @@ import { RoleLevel } from '@enums/role-level.enum';
 import { StoreService } from '@services/store.service';
 import { StorageHelper } from '@helpers/storage.helper';
 import { PuestoService } from '@services/puesto.service';
-import { ObjectHelper } from 'src/app/lib/object.helper';
+import { ObjectHelper } from 'src/app/lib/helpers';
 import { ToastManager } from '@blocks/toast/toast.manager';
 import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
 import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';

@@ -13,7 +13,7 @@ import { FormConfirmComponent } from '@forms/form-confirm/form-confirm.component
 import { EmpleadoModalComponent } from './empleado-modal/empleado-modal.component';
 import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
 import { ESTADOS_DEFECTO } from 'src/app/lib/constants';
-import { ObjectHelper } from 'src/app/lib/object.helper';
+import { ObjectHelper } from 'src/app/lib/helpers';
 import { Puesto } from '@models/puesto.model';
 import { PuestoService } from '@services/puesto.service';
 import { AutocompleteLibModule } from 'angular-ng-autocomplete';
@@ -43,6 +43,12 @@ export class EmpleadosComponent implements OnInit {
     { label: 'Todos', value: '' },
     ...Empleado.ESTADOS_LIST,
   ];
+  private modalOptions = {
+    animation: true,
+    centered: true,
+    keyboard: true,
+    size: 'lg',
+  };
 
   constructor(
     public storeService: StoreService,
@@ -129,11 +135,10 @@ export class EmpleadosComponent implements OnInit {
   }
 
   public onCrear() {
-    const modalRef = this.modalService.open(EmpleadoModalComponent, {
-      animation: true,
-      centered: true,
-      keyboard: true,
-    });
+    const modalRef = this.modalService.open(
+      EmpleadoModalComponent,
+      this.modalOptions
+    );
 
     modalRef.result
       .then(() => {
@@ -147,11 +152,10 @@ export class EmpleadosComponent implements OnInit {
   }
 
   public onEdit(id: number) {
-    const modalRef = this.modalService.open(EmpleadoModalComponent, {
-      animation: true,
-      centered: true,
-      keyboard: true,
-    });
+    const modalRef = this.modalService.open(
+      EmpleadoModalComponent,
+      this.modalOptions
+    );
 
     modalRef.componentInstance.IdSec = id;
     modalRef.result

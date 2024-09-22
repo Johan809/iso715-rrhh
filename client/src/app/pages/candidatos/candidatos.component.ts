@@ -15,7 +15,7 @@ import { RoleLevel } from '@enums/role-level.enum';
 import { CandidatoService } from '@services/candidato.service';
 import { Candidato } from '@models/candidato.model';
 import { StorageHelper } from '@helpers/storage.helper';
-import { ObjectHelper } from 'src/app/lib/object.helper';
+import { ObjectHelper } from 'src/app/lib/helpers';
 import { Puesto } from '@models/puesto.model';
 import { PuestoService } from '@services/puesto.service';
 import { Competencia } from '@models/competencia.model';
