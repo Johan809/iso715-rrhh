@@ -42,20 +42,29 @@ const createCandidato = async (
       throw new Error(`No se encontró un puesto con idsec ${puestoIdSec}`);
     }
 
-    const competencias = await Competencia.find({
-      idsec: { $in: competenciaIdSecList },
-    });
-    const competenciasIds = competencias.map((x) => x._id);
+    let competenciasIds: any[] = [];
+    if (competenciaIdSecList) {
+      const competencias = await Competencia.find({
+        idsec: { $in: competenciaIdSecList },
+      });
+      competenciasIds = competencias.map((x) => x._id);
+    }
 
-    const capacitaciones = await Capacitacion.find({
-      idsec: { $in: capacitacionIdSecList },
-    });
-    const capacitacionesIds = capacitaciones.map((x) => x._id);
+    let capacitacionesIds: any[] = [];
+    if (capacitacionIdSecList) {
+      const capacitaciones = await Capacitacion.find({
+        idsec: { $in: capacitacionIdSecList },
+      });
+      capacitacionesIds = capacitaciones.map((x) => x._id);
+    }
 
-    const experencias = await ExperienciaLaboral.find({
-      idsec: { $in: experienciaLaboralIdSecList },
-    });
-    const experenciasIds = experencias.map((x) => x._id);
+    let experenciasIds: any[] = [];
+    if (experienciaLaboralIdSecList) {
+      const experencias = await ExperienciaLaboral.find({
+        idsec: { $in: experienciaLaboralIdSecList },
+      });
+      experenciasIds = experencias.map((x) => x._id);
+    }
 
     const candidatoInput: CandidatoInput = {
       cedula,

@@ -83,11 +83,11 @@ const getAllEmpleados = async (
     if (departamento) filter.departamento = departamento;
     if (estado) filter.estado = estado;
 
-    if (fechaInicio) {
-      filter.fechaIngreso = { $gte: new Date(fechaInicio as string) };
-    }
-    if (fechaFin) {
-      filter.fechaIngreso = { $lte: new Date(fechaFin as string) };
+    if (fechaInicio || fechaFin) {
+      filter.fechaIngreso = {};
+      if (fechaInicio)
+        filter.fechaIngreso.$gte = new Date(fechaInicio as string);
+      if (fechaFin) filter.fechaIngreso.$lte = new Date(fechaFin as string);
     }
 
     if (puestoIdSec) {
@@ -103,7 +103,7 @@ const getAllEmpleados = async (
 
     const empleados = await Empleado.find(filter)
       .populate("puesto")
-      .sort("-createdAt")
+      .sort("-idsec")
       .exec();
 
     return res.status(200).json({ data: empleados });

@@ -4,7 +4,7 @@ import { DateObject, LabelValuePair } from 'src/app/lib/types';
 
 export class Empleado {
   idsec: number;
-  cedula?: string;
+  cedula: string;
   nombre?: string;
   fechaIngreso?: Date | DateObject | string;
   departamento?: string;
@@ -16,6 +16,7 @@ export class Empleado {
     this.idsec = 0;
     this.puesto = 0;
     this.salarioMensual = 0;
+    this.cedula = '';
   }
 
   static get ESTADOS_LIST(): LabelValuePair[] {
@@ -41,19 +42,21 @@ export class Empleado {
     puestoIdSec?: number;
     departamento?: string;
     estado?: string = '';
-    fechaInicio?: Date | DateObject;
-    fechaFin?: Date | DateObject;
+    fechaInicio?: Date;
+    fechaInicioObj?: DateObject;
+    fechaFin?: Date;
+    fechaFinObj?: DateObject;
     _puestoNombre?: string;
 
     public initDates() {
-      if (this.fechaInicio && typeof this.fechaInicio == 'object') {
-        let dObj = <DateObject>this.fechaInicio;
+      if (this.fechaInicioObj && typeof this.fechaInicioObj == 'object') {
+        let dObj = this.fechaInicioObj;
         this.fechaInicio = new Date(dObj.year, dObj.month - 1, dObj.day);
-      }
-      if (this.fechaFin && typeof this.fechaFin == 'object') {
-        let dObj = <DateObject>this.fechaFin;
+      } else this.fechaInicio = undefined;
+      if (this.fechaFinObj && typeof this.fechaFinObj == 'object') {
+        let dObj = this.fechaFinObj;
         this.fechaFin = new Date(dObj.year, dObj.month - 1, dObj.day);
-      }
+      } else this.fechaFin = undefined;
     }
   };
 }

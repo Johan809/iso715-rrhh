@@ -100,7 +100,7 @@
                 placeholder="yyyy-mm-dd"
                 id="txtFechaDesde"
                 name="fechaDesde"
-                [(ngModel)]="where.fechaInicio"
+                [(ngModel)]="where.fechaInicioObj"
                 ngbDatepicker
                 #fDesde="ngbDatepicker"
               />
@@ -122,7 +122,7 @@
                 placeholder="yyyy-mm-dd"
                 id="txtFechaHasta"
                 name="fechaHasta"
-                [(ngModel)]="where.fechaFin"
+                [(ngModel)]="where.fechaFinObj"
                 ngbDatepicker
                 #fHasta="ngbDatepicker"
               />
@@ -142,12 +142,16 @@
             <i class="fa-solid fa-magnifying-glass"></i> Buscar
           </button>
 
+          <button class="btn btn-warning ms-2" (click)="onLimpiar()">
+            <i class="fa-solid fa-broom"></i> Limpiar
+          </button>
+
           <button class="btn btn-success mx-2" (click)="onCrear()">
             <i class="fa-solid fa-plus"></i> Crear Nuevo
           </button>
 
           <button class="btn btn-primary" (click)="onReporte()">
-            <i class="fa-solid fa-print"></i> Reporte
+            <i class="fa-solid fa-file-pdf"></i> Reporte
           </button>
         </div>
       </div>
@@ -173,7 +177,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let empleado of empleados">
-              <td>{{ empleado.cedula }}</td>
+              <td>{{ getCedulaFormatted(empleado.cedula) }}</td>
               <td>{{ empleado.nombre }}</td>
               <td>{{ getPuestoNombre(empleado.puesto) }}</td>
               <td>{{ empleado.departamento }}</td>

@@ -79,7 +79,11 @@ const getAllCapacitaciones = async (
       filter.institucion = { $regex: institucion, $options: "i" };
     }
     if (user_name) {
-      filter.user_name = { $regex: user_name, $options: "i" };
+      filter.$or = [
+        { user_name: { $regex: user_name, $options: "i" } },
+        { user_name: { $exists: false } },
+        { user_name: "" },
+      ];
     }
 
     const capacitaciones = await Capacitacion.find(filter)

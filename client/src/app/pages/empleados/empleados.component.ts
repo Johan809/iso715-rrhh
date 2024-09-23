@@ -2,6 +2,8 @@ import { CurrencyPipe, DatePipe, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 import { Empleado } from '@models/empleado.model';
 import { StoreService } from '@services/store.service';
@@ -93,6 +95,11 @@ export class EmpleadosComponent implements OnInit {
     this.buscar();
   }
 
+  public onLimpiar() {
+    this.where = new Empleado.Where();
+    this.buscar();
+  }
+
   public selectPuestoEvent(puesto: Puesto) {
     if (puesto && typeof puesto == 'object') {
       this.where.puestoIdSec = puesto.idsec;
@@ -105,6 +112,18 @@ export class EmpleadosComponent implements OnInit {
     this.where.puestoIdSec = undefined;
     this.where._puestoNombre = '';
     this.changeDetector.detectChanges();
+  }
+
+  public getCedulaFormatted(cedula: string): string {
+    if (cedula.includes('-')) return cedula;
+
+    const cleanedCedula = cedula.trim();
+    const formattedCedula = `${cleanedCedula.substring(
+      0,
+      3
+    )}-${cleanedCedula.substring(3, 10)}-${cleanedCedula.substring(10)}`;
+
+    return formattedCedula;
   }
 
   public getPuestoNombre(puesto: Puesto | number | undefined): string {
@@ -148,7 +167,50 @@ export class EmpleadosComponent implements OnInit {
   }
 
   public onReporte() {
-    //to-do: terminar esto
+    this.storeService.isLoading.set(true);
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text('Reporte de Empleados', 11, 8);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+
+    const empleadosData = this.empleados.map((emp) => [
+      emp.idsec,
+      emp.nombre,
+      this.getCedulaFormatted(emp.cedula),
+      emp.departamento,
+      this.getPuestoNombre(emp.puesto),
+      emp.fechaIngreso
+        ? this.toDate(emp.fechaIngreso)?.toLocaleDateString()
+        : '',
+      emp.salarioMensual,
+      this.getEstadoNombre(emp.estado),
+    ]);
+
+    const headers = [
+      [
+        'ID',
+        'Nombre',
+        'Cédula',
+        'Departamento',
+        'Puesto',
+        'Fecha Ingreso',
+        'Salario',
+        'Estado',
+      ],
+    ];
+
+    (<any>doc).autoTable({
+      head: headers,
+      body: empleadosData,
+      startY: 20,
+      styles: {
+        fontSize: 10,
+      },
+    });
+
+    doc.save('Reporte_Empleados.pdf');
+    this.storeService.isLoading.set(false);
   }
 
   public onEdit(id: number) {
