@@ -45,6 +45,7 @@ export class ExperienciaLaboralService extends AbstractService {
       fechaDesde: experiencia.fechaDesde,
       fechaHasta: experiencia.fechaHasta,
       salario: experiencia.salario,
+      user_name: experiencia.user_name,
     });
     return <ExperienciaLaboral>response.data['data'];
   }
@@ -60,6 +61,7 @@ export class ExperienciaLaboralService extends AbstractService {
       fechaDesde: experiencia.fechaDesde,
       fechaHasta: experiencia.fechaHasta,
       salario: experiencia.salario,
+      user_name: experiencia.user_name,
     });
     return <ExperienciaLaboral>response.data['data'];
   }

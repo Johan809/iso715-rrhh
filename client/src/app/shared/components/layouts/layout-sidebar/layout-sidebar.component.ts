@@ -68,6 +68,7 @@ export class LayoutSidebarComponent implements OnInit {
   public async onClickLogout(): Promise<void> {
     this.appService.logout();
     this.userInfo = null;
+    this.toastManager.quickShow('Sesión cerrada correctamente.', 'info', true);
     this.router.navigate(['/auth/login']);
   }
 }

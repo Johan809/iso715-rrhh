@@ -12,7 +12,7 @@ import { NIVEL_ROLES } from "../lib/constants";
 const competenciaRouter = () => {
   const router = Router();
 
-  router.use(authMiddleware(NIVEL_ROLES.RECURSOS));
+  router.use(authMiddleware(NIVEL_ROLES.USUARIO));
   router.post("/competencias", createCompetencia);
   router.get("/competencias", getAllCompetencias);
   router.get("/competencias/:id", getCompetencia);

@@ -123,7 +123,7 @@ export class Candidato {
     salarioMin?: number;
     salarioMax?: number;
     user_name?: string;
-    estado?: string;
+    estado?: string = '';
 
     _puestoNombre: string = '';
     _competenciaNombre: string = '';
