@@ -14,6 +14,7 @@ import { capacitacionRouter } from "./routes/capacitacion.route";
 import { idiomaRoute as idiomaRouter } from "./routes/idioma.route";
 import { usuarioRoute as usuarioRouter } from "./routes/usuario.route";
 import { experienciaLaboralRouter } from "./routes/experienciaLaboral.route";
+import { personaRoute as personaRouter } from "./routes/persona.route";
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use("/api", idiomaRouter());
 app.use("/api", empleadoRouter());
 app.use("/api", roleRouter());
 app.use("/api", usuarioRouter());
+app.use("/api", personaRouter());
 app.use(errorHandler);
 
 app.listen(PORT, async () => {
