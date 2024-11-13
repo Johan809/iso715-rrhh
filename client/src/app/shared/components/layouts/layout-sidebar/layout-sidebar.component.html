@@ -143,6 +143,17 @@
             </a>
           </li>
           <li class="nav-item">
+            <a
+              class="nav-link"
+              [routerLink]="['/personas']"
+              [routerLinkActive]="['active']"
+              [class.hidden]="userInfo.role < ROLES.ADMIN"
+            >
+              <i class="fa-solid fa-person-circle-exclamation"></i>
+              Personas
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link cursor-pointer" (click)="onClickLogout()">
               <i class="fa-solid fa-right-from-bracket"></i>
               {{ "LOGOUT" | translate }}

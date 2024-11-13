@@ -1,0 +1,96 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ modalTitle }}</h4>
+  <button
+    type="button"
+    class="btn-close text-dark d-flex"
+    aria-label="Close"
+    (click)="activeModal.dismiss()"
+  >
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+
+<div class="modal-body">
+  <app-progress-bar *ngIf="storeService.isLoading()" />
+
+  <section class="position-relative" [class.blockUI]="storeService.isLoading()">
+    <div class="row mb-2">
+      <div class="col">
+        <label for="txtNombre" class="form-label">Nombre</label>
+        <input
+          type="text"
+          class="form-control"
+          id="txtNombre"
+          [(ngModel)]="persona.nombre"
+        />
+      </div>
+
+      <div class="col">
+        <label for="txtEmail" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="txtEmail"
+          [(ngModel)]="persona.email"
+        />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col">
+        <label for="txtTelefono" class="form-label">Teléfono</label>
+        <input
+          type="text"
+          class="form-control"
+          id="txtTelefono"
+          [(ngModel)]="persona.telefono"
+          placeholder="(###) ###-####"
+        />
+      </div>
+
+      <div class="col">
+        <label for="txtDocumento" class="form-label">Documento</label>
+        <input
+          type="text"
+          class="form-control"
+          id="txtDocumento"
+          [(ngModel)]="persona.documento"
+          placeholder="###-#######-#"
+        />
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <label for="txtDireccion" class="form-label">Dirección</label>
+      <input
+        type="text"
+        class="form-control"
+        id="txtDireccion"
+        [(ngModel)]="persona.direccion"
+      />
+    </div>
+
+    <div class="row mb-2">
+      <div class="col">
+        <label for="ddlEstado" class="form-label">Estado</label>
+        <select id="ddlEstado" class="form-select" [(ngModel)]="persona.estado">
+          <option value="" selected disabled>Seleccione el estado</option>
+          <option *ngFor="let estado of EstadosList" [value]="estado.value">
+            {{ estado.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-success w-100"
+    (click)="onGrabarClick($event)"
+    [disabled]="storeService.isLoading()"
+  >
+    Grabar
+  </button>
+</div>

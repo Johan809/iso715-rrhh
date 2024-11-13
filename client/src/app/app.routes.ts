@@ -96,6 +96,15 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { requiredLevel: RoleLevel.ADMIN },
   },
+  {
+    path: 'personas',
+    loadComponent: () =>
+      import('./pages/personas/personas.component').then(
+        (m) => m.PersonasComponent
+      ),
+    canActivate: [AuthGuard],
+    data: { requiredLevel: RoleLevel.ADMIN },
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: '**',

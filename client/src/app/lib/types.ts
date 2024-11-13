@@ -63,6 +63,14 @@ export type UsuarioWhere = {
   role?: number;
 };
 
+export type PersonaWhere = {
+  nombre?: string;
+  documento?: string;
+  email?: string;
+  telefono?: string;
+  estado?: boolean;
+};
+
 export type DatosContratacionType = {
   departamento: string;
   fechaIngreso: DateObject;

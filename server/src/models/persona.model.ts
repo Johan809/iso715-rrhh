@@ -1,6 +1,6 @@
 import mongoose, { Schema, Model, Document } from "mongoose";
 import { Counter } from "./contador.schema";
-import { EMAIL_REGEX, PHONE_REGEX, DOCUMENTO_REGEX } from "../lib/constants"; // DOCUMENTO_REGEX es el patrón para cédulas
+import { EMAIL_REGEX, PHONE_REGEX, DOCUMENTO_REGEX } from "../lib/constants";
 
 const PERSONA_ESTADOS = {
   ACTIVO: "A",

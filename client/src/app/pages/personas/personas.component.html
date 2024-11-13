@@ -1,0 +1,140 @@
+<app-page-layout>
+  <div class="container my-3">
+    <app-progress-bar *ngIf="storeService.isLoading()" />
+
+    <ng-container *ngIf="!storeService.isLoading()">
+      <div class="text-center">
+        <h1>Personas</h1>
+        <hr />
+      </div>
+
+      <div id="filters-form">
+        <div class="row mb-2">
+          <div class="col">
+            <label for="txtNombreFiltro" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtNombreFiltro"
+              [(ngModel)]="where.nombre"
+              placeholder="Nombre de la persona"
+            />
+          </div>
+
+          <div class="col">
+            <label for="txtEmailFiltro" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="txtEmailFiltro"
+              [(ngModel)]="where.email"
+              placeholder="Correo electrónico"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col">
+            <label for="txtDocumentoFiltro" class="form-label">Documento</label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtDocumentoFiltro"
+              [(ngModel)]="where.documento"
+              placeholder="000-0000000-0"
+              pattern="^[0-9\-]*$"
+              title="Ingrese solo los números"
+              (keydown)="onDocumentoKeyDown($event)"
+            />
+          </div>
+
+          <div class="col">
+            <label for="txtTelefonoFiltro" class="form-label">Teléfono</label>
+            <input
+              type="text"
+              class="form-control"
+              id="txtTelefonoFiltro"
+              [(ngModel)]="where.telefono"
+              placeholder="(000) 000-0000"
+              pattern="^[0-9\-\(\) ]*$"
+              title="Ingrese solo los números"
+              (keydown)="onTelefonoKeyDown($event)"
+            />
+          </div>
+
+          <div class="col">
+            <label for="ddlEstado" class="form-label">Estado</label>
+            <select
+              id="ddlEstado"
+              class="form-select"
+              [(ngModel)]="where.estado"
+              aria-label="Seleccione el estado"
+            >
+              <option *ngFor="let estado of EstadosList" [value]="estado.value">
+                {{ estado.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex">
+          <button class="btn btn-secondary me-2" (click)="onBuscar()">
+            <i class="fa-solid fa-magnifying-glass"></i> Buscar
+          </button>
+
+          <button class="btn btn-success" (click)="onCrear()">
+            <i class="fa-solid fa-plus"></i> Crear Nuevo
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="tabla-list"
+        class="table-responsive mt-3"
+        *ngIf="personas.length > 0"
+      >
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Documento</th>
+              <th>Teléfono</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let persona of personas">
+              <td>{{ persona.nombre }}</td>
+              <td>{{ persona.email }}</td>
+              <td>{{ persona.documento }}</td>
+              <td>{{ persona.telefono }}</td>
+              <td>{{ getEstadoLabel(persona.estado) }}</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary"
+                  (click)="onEdit(persona.idsec)"
+                  title="Editar"
+                >
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button
+                  class="btn btn-sm btn-danger mx-2"
+                  (click)="onDelete(persona.idsec)"
+                  title="Desactivar"
+                >
+                  <i class="fa-solid fa-ban"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="personas.length === 0" class="alert alert-info mt-3">
+        No se encontraron personas.
+      </div>
+    </ng-container>
+  </div>
+</app-page-layout>

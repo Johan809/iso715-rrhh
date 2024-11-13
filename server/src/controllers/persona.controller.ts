@@ -55,7 +55,7 @@ const getAllPersonas = async (
   next: NextFunction
 ) => {
   try {
-    const { nombre, email, estado, documento } = req.query;
+    const { nombre, email, estado, documento, telefono } = req.query;
 
     const filter: any = {};
     if (nombre) {
@@ -66,6 +66,9 @@ const getAllPersonas = async (
     }
     if (documento) {
       filter.nombre = { $regex: documento, $options: "i" };
+    }
+    if (telefono) {
+      filter.telefono = { $regex: telefono, $option: "i" };
     }
     if (estado) {
       filter.estado = estado;

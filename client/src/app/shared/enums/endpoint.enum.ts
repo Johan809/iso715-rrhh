@@ -11,4 +11,5 @@ export enum Endpoint {
   CANDIDATO = 'candidatos',
   USUARIO = 'usuarios',
   EMPLEADO = 'empleados',
+  PERSONA = 'personas',
 }
