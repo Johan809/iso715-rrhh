@@ -43,6 +43,88 @@ export class PersonasModalComponent implements OnInit {
     }
   }
 
+  public onDocumentoKeyDown(event: KeyboardEvent) {
+    const controlKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+    ];
+    if (controlKeys.includes(event.key)) {
+      return;
+    }
+
+    const isNumber = /^[0-9]$/.test(event.key);
+    if (!isNumber) {
+      event.preventDefault();
+      return;
+    }
+
+    let rawValue = this.persona.documento?.replace(/\D+/g, '') ?? '';
+    rawValue += event.key;
+
+    if (rawValue.length > 11) {
+      event.preventDefault();
+      return;
+    }
+
+    let formattedCedula = rawValue;
+    if (rawValue.length > 3) {
+      formattedCedula = `${rawValue.slice(0, 3)}-${rawValue.slice(3)}`;
+    }
+    if (rawValue.length > 10) {
+      formattedCedula = `${rawValue.slice(0, 3)}-${rawValue.slice(
+        3,
+        10
+      )}-${rawValue.slice(10)}`;
+    }
+
+    this.persona.documento = formattedCedula;
+    event.preventDefault();
+  }
+
+  public onTelefonoKeyDown(event: KeyboardEvent) {
+    const controlKeys = [
+      'Backspace',
+      'Delete',
+      'ArrowLeft',
+      'ArrowRight',
+      'Tab',
+    ];
+    if (controlKeys.includes(event.key)) {
+      return;
+    }
+
+    const isNumber = /^[0-9]$/.test(event.key);
+    if (!isNumber) {
+      event.preventDefault();
+      return;
+    }
+
+    let rawValue = this.persona.telefono?.replace(/\D+/g, '') ?? '';
+    rawValue += event.key;
+
+    if (rawValue.length > 10) {
+      event.preventDefault();
+      return;
+    }
+
+    let formattedTelefono = rawValue;
+    if (rawValue.length > 3) {
+      formattedTelefono = `(${rawValue.slice(0, 3)}) ${rawValue.slice(3)}`;
+    }
+    if (rawValue.length > 6) {
+      formattedTelefono = `(${rawValue.slice(0, 3)}) ${rawValue.slice(
+        3,
+        6
+      )}-${rawValue.slice(6)}`;
+    }
+
+    this.persona.telefono = formattedTelefono;
+    event.preventDefault();
+  }
+
   private async cargar() {
     this.storeService.isLoading.set(true);
     const data = await this.personaService.getOne(this.IdSec);

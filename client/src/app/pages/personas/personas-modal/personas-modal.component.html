@@ -44,6 +44,7 @@
           class="form-control"
           id="txtTelefono"
           [(ngModel)]="persona.telefono"
+          (keydown)="onTelefonoKeyDown($event)"
           placeholder="(###) ###-####"
         />
       </div>
@@ -55,6 +56,7 @@
           class="form-control"
           id="txtDocumento"
           [(ngModel)]="persona.documento"
+          (keydown)="onDocumentoKeyDown($event)"
           placeholder="###-#######-#"
         />
       </div>
