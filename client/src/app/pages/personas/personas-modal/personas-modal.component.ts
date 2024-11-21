@@ -162,6 +162,9 @@ export class PersonasModalComponent implements OnInit {
     }
     if (!this.persona.documento)
       warningMsg.push('El campo documento es requerido');
+    else if (!this.isValidDocument(this.persona.documento))
+      warningMsg.push('El formato del documento no es válido');
+
     if (this.persona.estado === undefined)
       warningMsg.push('El campo estado es requerido');
 
@@ -186,6 +189,11 @@ export class PersonasModalComponent implements OnInit {
   private isValidPhone(phone: string): boolean {
     const phonePattern = /^(?:\(\d{3}\)|\d{3})[-\s]?\d{3}[-\s]?\d{4}$/;
     return phonePattern.test(phone);
+  }
+
+  private isValidDocument(document: string): boolean {
+    const documentPattern = /^^\d{3}-\d{7}-\d{1}$/;
+    return documentPattern.test(document);
   }
 
   public onGrabarClick(event: Event) {
