@@ -21,26 +21,18 @@ import { RoleLevel } from '@enums/role-level.enum';
 import { NgIf } from '@angular/common';
 
 @Component({
+  standalone: true,
   selector: 'app-layout-sidebar',
   templateUrl: './layout-sidebar.component.html',
   styleUrl: './layout-sidebar.component.scss',
-  standalone: true,
-  imports: [
-    NgIf,
-    RouterLink,
-    NgbCollapse,
-    RouterLinkActive,
-    NgbDropdown,
-    NgbDropdownToggle,
-    NgbDropdownMenu,
-    TranslateModule,
-  ],
+  imports: [NgIf, RouterLink, NgbCollapse, RouterLinkActive, TranslateModule],
 })
 export class LayoutSidebarComponent implements OnInit {
   public appName: string = environment.appName;
   public isMenuCollapsed: boolean = true;
   public userInfo: UserInfo | null = null;
   public activeLink: string = 'home';
+  public isPropietariaPresentationMode = false;
   public ROLES = {
     NOT_LOGGED: RoleLevel.NOT_LOGGED,
     USER: RoleLevel.USER,
@@ -52,7 +44,10 @@ export class LayoutSidebarComponent implements OnInit {
     private router: Router,
     private appService: AppService,
     private toastManager: ToastManager
-  ) {}
+  ) {
+    this.isPropietariaPresentationMode =
+      appService.isPropietariaPresentationMode;
+  }
 
   public ngOnInit(): void {
     this.userInfo = StorageHelper.getUserInfo();

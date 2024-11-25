@@ -14,6 +14,7 @@ import { ObjectHelper } from 'src/app/lib/helpers';
 import { ToastManager } from '@blocks/toast/toast.manager';
 import { PageLayoutComponent } from '@layouts/page-layout/page-layout.component';
 import { ProgressBarComponent } from '@blocks/progress-bar/progress-bar.component';
+import { AppService } from '@services/app.service';
 
 @Component({
   selector: 'app-home',
@@ -36,6 +37,8 @@ export class HomeComponent implements OnInit {
   public currentPage: number = 1;
   public itemsPerPage: number = 8;
   public totalPages: number = 0;
+  public isPropietariaPresentationMode: boolean = false;
+
   public ROLES = {
     NOT_LOGGED: RoleLevel.NOT_LOGGED,
     USER: RoleLevel.USER,
@@ -47,10 +50,16 @@ export class HomeComponent implements OnInit {
     public storeService: StoreService,
     private puestoService: PuestoService,
     private toast: ToastManager,
-    private router: Router
+    private router: Router,
+    private appService: AppService
   ) {
     this.storeService.isLoading.set(false);
     this.userInfo = StorageHelper.getUserInfo();
+    this.isPropietariaPresentationMode =
+      appService.isPropietariaPresentationMode;
+    if (this.isPropietariaPresentationMode) {
+      this.router.navigate(['/personas']);
+    }
   }
 
   public ngOnInit(): void {

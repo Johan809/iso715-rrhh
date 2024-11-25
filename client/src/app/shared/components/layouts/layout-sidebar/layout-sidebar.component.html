@@ -16,7 +16,10 @@
     <span class="fs-4"> {{ appName }} </span>
   </a>
   <hr />
-  <ul class="nav nav-pills flex-column mb-auto">
+  <ul
+    class="nav nav-pills flex-column mb-auto"
+    *ngIf="!isPropietariaPresentationMode"
+  >
     <li class="nav-item">
       <a
         class="nav-link text-white"
@@ -111,6 +114,19 @@
     </li>
   </ul>
 
+  <ul class="nav flex-columns mb-auto" *ngIf="isPropietariaPresentationMode">
+    <li class="nav-item">
+      <a
+        class="nav-link text-white"
+        [routerLink]="['/personas']"
+        [routerLinkActive]="['active']"
+      >
+        <i class="fa-solid fa-person-circle-exclamation"></i>
+        Personas
+      </a>
+    </li>
+  </ul>
+
   <!-- Sección de usuario -->
   <div class="user-section mt-auto sticky-bottom">
     <hr />
@@ -142,7 +158,7 @@
               Usuarios
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" *ngIf="isPropietariaPresentationMode">
             <a
               class="nav-link"
               [routerLink]="['/personas']"
