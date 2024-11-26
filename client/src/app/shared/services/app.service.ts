@@ -10,7 +10,7 @@ import { StoreService } from './store.service';
 
 @Injectable()
 export class AppService extends AbstractService {
-  public isPropietariaPresentationMode: boolean = true;
+  public isPropietariaPresentationMode: boolean = false;
 
   constructor(storeService: StoreService, toastManager: ToastManager) {
     super(storeService, toastManager);
